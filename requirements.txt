@@ -1,0 +1,4 @@
+django==4.0
+django-registration==3.2
+django-bootstrap3==21.2
+sqlite==3.37.0
