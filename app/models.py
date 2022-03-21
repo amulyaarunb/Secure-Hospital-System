@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.urls import reverse
 
 class Doctor(models.Model):
     doctorID = models.CharField(max_length=255, unique=True)
@@ -26,9 +25,9 @@ class Appointment(models.Model):
     patientID = models.ForeignKey(Patient, on_delete=models.CASCADE)
     doctorID = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     status = models.CharField(max_length=255)
-    diagnosisID = models.ForeignKey(Diagnosis, on_delete=models.CASCADE)
-    testID = models.ForeignKey(Test, on_delete=models.CASCADE)
-    paymentID = models.ForeignKey(Payment, on_delete=models.CASCADE)
+    diagnosisID = models.ForeignKey('Diagnosis', on_delete=models.CASCADE)
+    testID = models.ForeignKey('Test', on_delete=models.CASCADE)
+    paymentID = models.ForeignKey('Payment', on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
 
 class Payment(models.Model):
@@ -39,17 +38,17 @@ class Payment(models.Model):
     amount = models.IntegerField()
     status = models.CharField(max_length=255)
     patientID = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    testID = models.ForeignKey(Test, on_delete=models.CASCADE)
+    testID = models.ForeignKey('Test', on_delete=models.CASCADE)
     appointmentID = models.ForeignKey(Appointment, on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
 
 class Insurance(models.Model) :
-    paymentID = models.BigAutoField(unique=True)
+    paymentID = models.ForeignKey(Payment, on_delete=models.CASCADE)
     patientID = models.ForeignKey(Patient, on_delete=models.CASCADE)
     status = models.CharField(max_length=100)
 
 class Diagnosis(models.Model):
-    diagnosisID = models.BigAutoField(unique=True)
+    diagnosisID = models.BigAutoField(unique=True, primary_key=True)
     doctorID = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     patientID = models.ForeignKey(Patient, on_delete=models.CASCADE)
     appointmentID = models.ForeignKey(Appointment, on_delete=models.CASCADE)
