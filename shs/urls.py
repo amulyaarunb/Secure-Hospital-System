@@ -11,6 +11,7 @@ from django_registration.backends.activation.views import RegistrationView
 urlpatterns = [
     path('', views.index, name="index"),
     path('admin/', admin.site.urls),
+    path('administrator/', views.admin, name="admin"),
     path('accounts/register/',
          views.CustomRegistrationView.as_view(success_url='/'),
          name='django_registration_register'),
