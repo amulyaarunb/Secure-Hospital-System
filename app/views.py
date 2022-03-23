@@ -38,9 +38,11 @@ class CustomRegistrationView(RegistrationView):
         patient_group = Group.objects.get(name='patient')
         patient_group.user_set.add(user)
 
+''' Lab Staff View Starts Here'''
+
 
 @login_required
-@check_view_permissions("admin")
+@check_view_permissions("lab_staff")
 def admin(request):
     return render(request=request, template_name="admin/index.html", context={'hello': "hello"})
     
