@@ -42,9 +42,11 @@ INSTALLED_APPS = [
     'app',
     'bootstrap3',
     'django_registration',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -137,5 +139,6 @@ ACCOUNT_ACTIVATION_DAYS = 7
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
 
+CSRF_TRUSTED_ORIGINS = ['https://damp-hollows-93595.herokuapp.com/']
 
 django_heroku.settings(locals())
