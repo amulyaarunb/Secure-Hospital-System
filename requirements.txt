@@ -9,3 +9,4 @@ setuptools==60.10.0
 sqlparse==0.4.2
 typing_extensions==4.1.1
 wheel==0.37.1
+django_heroku==0.3.1
