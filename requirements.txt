@@ -1,4 +1,11 @@
-django==4.0
-django-registration==3.2
+asgiref==3.5.0
+confusable-homoglyphs==3.2.0
+Django==4.0
 django-bootstrap3==21.2
-sqlite==3.37.0
+django-registration==3.2
+pip==22.0.4
+pytz==2022.1
+setuptools==60.10.0
+sqlparse==0.4.2
+typing_extensions==4.1.1
+wheel==0.37.1

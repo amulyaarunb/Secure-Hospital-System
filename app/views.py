@@ -1,3 +1,4 @@
+import re
 from django.contrib.auth.models import Group
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
@@ -9,7 +10,24 @@ from app.decorators import check_view_permissions
 
 @login_required
 def index(request):
-    return render(request, "home.html")
+    print(request.user.groups.all())
+    if request.user.groups.filter(name__in='patient').exists():
+        # return patient stuff
+        return render(request, "home.html")
+    if request.user.groups.filter(name__in='doctor').exists():
+            # return patient stuff
+        return render(request, "home.html")
+    if request.user.groups.filter(name__in='hospital_staff').exists():
+            # return patient stuff
+        return render(request, "home.html")
+    if request.user.groups.filter(name__in='lab_staff').exists():
+            # return patient stuff
+        return render(request, "home.html")
+    if request.user.groups.filter(name__in='insurance_staff').exists():
+        # return patient stuff
+        return render(request, "home.html")
+    if request.user.groups.filter(name__in='admin').exists():
+        return redirect('/administrator')
 
 
 class CustomRegistrationView(RegistrationView):
@@ -22,5 +40,5 @@ class CustomRegistrationView(RegistrationView):
 @login_required
 @check_view_permissions("admin")
 def admin(request):
-    return render("hello")
+    return render(request=request, template_name="admin/index.html", context={'hello': "hello"})
     

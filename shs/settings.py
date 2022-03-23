@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
+import django_heroku
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -20,10 +21,10 @@ BASE_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '-$qm_tyz+xfkp^x-!90v0l7hy8(!yphb&$trps9a@fo-@6uf_0'
+# SECRET_KEY = '-$qm_tyz+xfkp^x-!90v0l7hy8(!yphb&$trps9a@fo-@6uf_0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -131,3 +132,6 @@ ACCOUNT_ACTIVATION_DAYS = 7
 
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+
+
+django_heroku.settings(locals())
