@@ -10,23 +10,22 @@ from app.decorators import check_view_permissions
 
 @login_required
 def index(request):
-    print(request.user.groups.all())
-    if request.user.groups.filter(name__in='patient').exists():
+    if request.user.groups.filter(name='patient').exists():
         # return patient stuff
         return render(request, "home.html")
-    if request.user.groups.filter(name__in='doctor').exists():
+    if request.user.groups.filter(name='doctor').exists():
             # return patient stuff
         return render(request, "home.html")
-    if request.user.groups.filter(name__in='hospital_staff').exists():
+    if request.user.groups.filter(name='hospital_staff').exists():
             # return patient stuff
         return render(request, "home.html")
-    if request.user.groups.filter(name__in='lab_staff').exists():
+    if request.user.groups.filter(name='lab_staff').exists():
             # return patient stuff
         return render(request, "home.html")
-    if request.user.groups.filter(name__in='insurance_staff').exists():
+    if request.user.groups.filter(name='insurance_staff').exists():
         # return patient stuff
         return render(request, "home.html")
-    if request.user.groups.filter(name__in='admin').exists():
+    if request.user.groups.filter(name='admin').exists():
         return redirect('/administrator')
 
 
