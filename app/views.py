@@ -36,15 +36,15 @@ class CustomRegistrationView(RegistrationView):
         patient_group = Group.objects.get(name='patient')
         patient_group.user_set.add(user)
 
-''' Lab Staff View Starts Here'''
-
 
 @login_required
-@check_view_permissions("lab_staff")
+@check_view_permissions("admin")
 def admin(request):
     return render(request=request, template_name="admin/index.html", context={'hello': "hello"})
     
-    
+
+''' Lab Staff View Starts Here'''
+
 @login_required
 @check_view_permissions("lab_staff")
 def viewDiagnosis(request,pk):
@@ -68,7 +68,6 @@ def denyTestRequest(request,pk):
     obj.status = 'deny'
     obj.save()
     return HttpResponse("Successfully Denied Request")
-    
     
 '''Lab Staff View Ends Here'''
     
