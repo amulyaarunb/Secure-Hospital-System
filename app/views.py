@@ -70,4 +70,69 @@ def denyTestRequest(request,pk):
     return HttpResponse("Successfully Denied Request")
     
 '''Lab Staff View Ends Here'''
-    
+
+'''Hospital Staff View ''' 
+@login_required
+@check_view_permissions("hospital_staff")
+def hospital_appointment_view(request):
+    return render(request,'hospital_staff.html')
+
+#To show appointments to hospital staff for approval
+@login_required
+@check_view_permissions("hospital_staff")
+def hospital_appointment(request):
+    #those whose approval are needed
+    appointments=models.Appointment.objects.all().filter(status='initiated')
+    return render(request,'hospital_staff.html',{'appointments':appointments})
+
+@login_required
+@check_view_permissions("hospital_staff")
+def hospital_appointment_approve(request,pk):
+    appointment=models.Appointment.objects.get(id=pk)
+    appointment.status='approved'
+    appointment.save()
+    return HttpResponse("Approved appointment")
+
+@login_required
+@check_view_permissions("hospital_staff")
+def hospital_appointment_reject(request,pk):
+    appointment=models.Appointment.objects.get(id=pk)
+    appointment.status='rejected'
+    appointment.save()
+    return HttpResponse("Rejected appointment")
+
+def hospital_search(request):
+    # whatever user write in search box we get in query
+    query = request.GET['query']
+    patients=models.Patient.objects.all().filter(Q(patientID__icontains=query)|Q(name__icontains=query))
+    return render(request,'hospital/search_patient.html',{'patients':patients})
+
+def hospital_patient_details(request,pID):
+    patient_details = model.Patient.objects.get(patientID = pID)
+    appointment_details=models.Appointment.objects.get(patientID=pID)
+    test_details = models.Test.objects.get(patientID = pID)
+    return render(request,'hospital/search_patient.html',{'patient_details':patient_details,'appointment_details':appointment_details,'test_details':test_details})
+'''
+def hospital_patient_diagnosis(request, appointmentID):
+    patient_diagnosis = models.Diagnosis.objects.get(appointmentID=appointmentID)
+    pdiag = {
+        'diagnosisID': i.diagnosisID,
+        'doctorID': i.doctorID,
+        'patientID': i.patientID,
+        'appointmentID': i.appointmentID,
+        'diagnosis': i.diagnosis,
+        'test_recommendation': i.test_recommendation,
+        'prescription': i.prescription
+    }
+    return HttpResponse(pdiag)
+'''
+def update_patient_record(request,patientID):
+    patient=models.Patient.objects.get(id=patientID)
+    patientForm=forms.PatientForm(request.POST,request.FILES)
+    if request.method=='POST':
+        patientForm=forms.PatientForm(request.POST,request.FILES,instance=patient)
+        if  patientForm.is_valid():
+            patient=patientForm.save(commit=False)
+            patient.save()
+    return HttpResponse("Updated")
+
