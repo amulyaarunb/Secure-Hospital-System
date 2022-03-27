@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Hospital Staff Page</title>
+    <style>
+        body {
+            font-family: Arial;
+        }
+    </style>
+
+</head>
+
+<body style="background-color:whitesmoke">
+
+    <div style="margin-left: -8px; margin-right: -8px;margin-top: -8px;background-color:gray">
+        <span style="max-width: 10px;">
+            space for logo |
+        </span>
+        <span style="color:black;font-size: 50px;">
+            Secure Hospital System
+        </span>
+    </div>
+
+    <br>
+
+
+    <div id="Appointments">
+        {% for app in appointments %}
+        <li>
+            <p>Patient Name: {{ app.name }}</p>
+            <p>Type: {{ app.type}}</p>
+            <p>Doctor: {{ app.doc }}</p>
+            <p>Status: {{ app.status }}</p>
+        </li>
+        {% endfor %}
+
+    </div>
+
+
+    <script>
+    </script>
+
+</body>
+
+</html>

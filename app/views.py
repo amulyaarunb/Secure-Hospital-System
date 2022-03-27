@@ -75,7 +75,7 @@ def denyTestRequest(request,pk):
 @login_required
 @check_view_permissions("hospital_staff")
 def hospital_appointment_view(request):
-    return render(request,'hospital_staff.html')
+    return render(request,'hospital_staff_appointments.html')
 
 #To show appointments to hospital staff for approval
 @login_required
@@ -83,7 +83,7 @@ def hospital_appointment_view(request):
 def hospital_appointment(request):
     #those whose approval are needed
     appointments=models.Appointment.objects.all().filter(status='initiated')
-    return render(request,'hospital_staff.html',{'appointments':appointments})
+    return render(request,'hospital_staff_appointments.html',{'appointments':appointments})
 
 @login_required
 @check_view_permissions("hospital_staff")
@@ -105,13 +105,13 @@ def hospital_search(request):
     # whatever user write in search box we get in query
     query = request.GET['query']
     patients=models.Patient.objects.all().filter(Q(patientID__icontains=query)|Q(name__icontains=query))
-    return render(request,'hospital/search_patient.html',{'patients':patients})
+    return render(request,'hospital_search_patients.html',{'patients':patients})
 
 def hospital_patient_details(request,pID):
     patient_details = model.Patient.objects.get(patientID = pID)
     appointment_details=models.Appointment.objects.get(patientID=pID)
     test_details = models.Test.objects.get(patientID = pID)
-    return render(request,'hospital/search_patient.html',{'patient_details':patient_details,'appointment_details':appointment_details,'test_details':test_details})
+    return render(request,'hospital_search_patients.html',{'patient_details':patient_details,'appointment_details':appointment_details,'test_details':test_details})
 '''
 def hospital_patient_diagnosis(request, appointmentID):
     patient_diagnosis = models.Diagnosis.objects.get(appointmentID=appointmentID)

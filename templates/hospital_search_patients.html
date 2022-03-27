@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Hospital Staff Page</title>
+    <style>
+        body {
+            font-family: Arial;
+        }
+        /* Style the tab */
+    </style>
+
+</head>
+
+<body style="background-color:whitesmoke">
+
+    <div style="margin-left: -8px; margin-right: -8px;margin-top: -8px;background-color:gray">
+        <span style="max-width: 10px;">
+            space for logo |
+        </span>
+        <span style="color:black;font-size: 50px;">
+            Secure Hospital System
+        </span>
+    </div>
+
+    <br>
+
+
+    <div>
+        <div>Patient ID: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text"></div> <br>
+        <div>Patient Name: <input type="text"></div> <br>
+        <div>Date of Birth:&nbsp;&nbsp; <input type="date"> </div>
+        <br>
+        <input type="button" value="search" style="padding: 14px 14px;transition: 0.3s;font-size: 17px;">
+    </div>
+    <br>
+    <div>
+        {% for p in patients %}
+        <br>
+        <li>
+            <p>Patient ID: {{ p.patientID }}</p>
+            <p>Patient Name: {{ p.name }}</p>
+            <p>Patient Age: {{ p.age}}</p>
+            <p>Patient Gender: {{ p.gender }}</p>
+            <p>Patient Height: {{ p.height }}</p>
+            <p>Patient Weight: {{ p.weight }}</p>
+            <p>Patient Insurace ID: {{ p.insuranceID }}</p>
+        </li>
+        {% endfor %}
+    </div>
+
+    <script>
+    </script>
+
+</body>
+
+</html>
