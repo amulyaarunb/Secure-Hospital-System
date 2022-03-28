@@ -11,6 +11,7 @@ from app.decorators import check_view_permissions
 
 @login_required
 def index(request):
+    print(request.user.groups)
     if request.user.groups.filter(name='patient').exists():
         # return patient stuff
         return render(request, "home.html")
@@ -19,7 +20,7 @@ def index(request):
         return render(request, "home.html")
     if request.user.groups.filter(name='hospital_staff').exists():
             # return patient stuff
-        return render(request, "home.html")
+        return render(request, "hospital_staff_home.html")
     if request.user.groups.filter(name='lab_staff').exists():
             # return patient stuff
         return render(request, "home.html")

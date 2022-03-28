@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Insurance Staff Page</title>
+    <style>
+        body {
+            font-family: Arial;
+        }
+    </style>
+
+</head>
+
+<body style="background-color:whitesmoke">
+
+    <div style="margin-left: -8px; margin-right: -8px;margin-top: -8px;background-color:gray">
+        <span style="max-width: 10px;">
+            space for logo |
+        </span>
+        <span style="color:black;font-size: 50px;">
+            Secure Hospital System
+        </span>
+    </div>
+
+    <br>
+
+
+    <div id="Claims">
+        {% for c in claims %}
+        <li>
+            <p>Patient ID: {{ c.patientID }}</p>
+            <p>Payment ID: {{ c.paymentID }}</p>
+            <p>Requst ID: {{ c.request_id }}</p>
+            <p>Status: {{ c.status }}</p>
+        </li>
+        {% endfor %}
+
+    </div>
+
+
+    <script>
+    </script>
+
+</body>
+
+</html>
