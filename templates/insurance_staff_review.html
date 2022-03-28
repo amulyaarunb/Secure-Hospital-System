@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Insurance Staff Page</title>
+    <style>
+        body {
+            font-family: Arial;
+        }
+    </style>
+
+</head>
+
+<body style="background-color:whitesmoke">
+
+    <div style="margin-left: -8px; margin-right: -8px;margin-top: -8px;background-color:gray">
+        <span style="max-width: 10px;">
+            space for logo |
+        </span>
+        <span style="color:black;font-size: 50px;">
+            Secure Hospital System
+        </span>
+    </div>
+
+    <br>
+
+
+    <div id="Claims">
+        <p>Patient ID: {{ claim.patientID }}</p>
+        <p>Payment ID: {{ claim.paymentID }}</p>
+        <p>Amount: {{ claim.amount }}</p>
+        <p>Test ID: {{ claim.testID }}</p>
+        <p>Appointment ID: {{ claim.appointmentID }}</p>
+        <p>Status: {{ claim.status }}</p>
+        <p>Created on: {{ claim.created_on }}</p>
+
+    </div>
+
+
+    <script>
+    </script>
+
+</body>
+
+</html>
