@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django_registration.backends.activation.views import RegistrationView
 from django.contrib.auth.models import Group
 from django.http import HttpResponse
-from . models import Diagnosis,Test
+from . models import Diagnosis,Test,Insurance,Payment
 from app.decorators import check_view_permissions
 
 
@@ -71,6 +71,38 @@ def denyTestRequest(request,pk):
     return HttpResponse("Successfully Denied Request")
     
 '''Lab Staff View Ends Here'''
+
+'''Insurance Staff View starts here'''
+@login_required
+@check_view_permissions("insurance_staff")
+def denyClaim(request,pk):
+    obj = Insurance.objects.filter(id=pk)
+    obj.status = 'denied'
+    return("Successfully Denied Request")
+@login_required
+@check_view_permissions("insurance_staff")
+def approveClaim(request,pk):
+    obj = Insurance.objects.filter(id=pk)
+    obj.status = 'approved'
+    return("Successfully Approved Request")
+@login_required
+@check_view_permissions("insurance_staff")
+def authorizeFund(request,pk):
+    obj = Insurance.objects.filter(id=pk)
+    obj1 = Payment.objects.filter(id=obj.paymentID)
+    obj1.status = 'completed'
+    return("Funds authorized and approved")
+@login_required
+@check_view_permissions("insurance_staff")
+def viewClaim(request):
+    obj = Insurance.objects.filter(status='initiated')
+    return obj
+@login_required
+@check_view_permissions("insurance_staff")
+def validate(request,pk):
+    obj = Payment.objects.filter(id=pk)
+    return obj
+'''Insurance Staff View ends here'''
 
 '''Hospital Staff View ''' 
 @login_required
