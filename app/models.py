@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
 
 
 class Doctor(models.Model):
@@ -73,10 +72,3 @@ class Test(models.Model):
     result = models.CharField(max_length=255)
     diagnosisID = models.ForeignKey(Diagnosis, on_delete=models.CASCADE)
     paymentID = models.ForeignKey(Payment, on_delete=models.CASCADE)
-
-
-class Auth(models.Model):
-    userID = models.CharField(max_length=255, primary_key=True)
-    role = models.CharField(max_length=255)
-    date = models.DateField()
-    password = models.CharField(max_length=255)
