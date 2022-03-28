@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django_registration.backends.activation.views import RegistrationView
 from django.contrib.auth.models import Group
 from django.http import HttpResponse
-from . models import Diagnosis,Test,Insurance,Payment
+from . models import Diagnosis,Test,Insurance,Payment,Appointment,Patient
 from app.decorators import check_view_permissions
 
 
@@ -115,13 +115,13 @@ def hospital_appointment_view(request):
 @check_view_permissions("hospital_staff")
 def hospital_appointment(request):
     #those whose approval are needed
-    appointments=models.Appointment.objects.all().filter(status='initiated')
+    appointments=Appointment.objects.all().filter(status='initiated')
     return render(request,'hospital_staff_appointments.html',{'appointments':appointments})
 
 @login_required
 @check_view_permissions("hospital_staff")
 def hospital_appointment_approve(request,pk):
-    appointment=models.Appointment.objects.get(id=pk)
+    appointment=Appointment.objects.get(id=pk)
     appointment.status='approved'
     appointment.save()
     return HttpResponse("Approved appointment")
@@ -129,7 +129,7 @@ def hospital_appointment_approve(request,pk):
 @login_required
 @check_view_permissions("hospital_staff")
 def hospital_appointment_reject(request,pk):
-    appointment=models.Appointment.objects.get(id=pk)
+    appointment=Appointment.objects.get(id=pk)
     appointment.status='rejected'
     appointment.save()
     return HttpResponse("Rejected appointment")
@@ -137,13 +137,13 @@ def hospital_appointment_reject(request,pk):
 def hospital_search(request):
     # whatever user write in search box we get in query
     query = request.GET['query']
-    patients=models.Patient.objects.all().filter(Q(patientID__icontains=query)|Q(name__icontains=query))
+    patients=Patient.objects.all().filter(Q(patientID__icontains=query)|Q(name__icontains=query))
     return render(request,'hospital_search_patients.html',{'patients':patients})
 
 def hospital_patient_details(request,pID):
-    patient_details = model.Patient.objects.get(patientID = pID)
-    appointment_details=models.Appointment.objects.get(patientID=pID)
-    test_details = models.Test.objects.get(patientID = pID)
+    patient_details = Patient.objects.get(patientID = pID)
+    appointment_details=Appointment.objects.get(patientID=pID)
+    test_details = Test.objects.get(patientID = pID)
     return render(request,'hospital_search_patients.html',{'patient_details':patient_details,'appointment_details':appointment_details,'test_details':test_details})
 '''
 def hospital_patient_diagnosis(request, appointmentID):
@@ -160,7 +160,7 @@ def hospital_patient_diagnosis(request, appointmentID):
     return HttpResponse(pdiag)
 '''
 def update_patient_record(request,patientID):
-    patient=models.Patient.objects.get(id=patientID)
+    patient=Patient.objects.get(id=patientID)
     patientForm=forms.PatientForm(request.POST,request.FILES)
     if request.method=='POST':
         patientForm=forms.PatientForm(request.POST,request.FILES,instance=patient)
