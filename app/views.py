@@ -66,9 +66,26 @@ def updateRecord(request,pk,record):
 @check_view_permissions("lab_staff")
 def denyTestRequest(request,pk):
     obj = Test.objects.filter(id=pk)
-    obj.status = 'deny'
+    obj.status = 'denied'
     obj.save()
     return HttpResponse("Successfully Denied Request")
+    
+@login_required
+@check_view_permissions("lab_staff")   
+def approveTest(request,pk):
+    obj = Test.objects.filter(id=pk)
+    obj.status = 'approved'
+    obj.save()
+    return HttpResponse("Successfully Approved Request")
+    
+@login_required
+@check_view_permissions("lab_staff") 
+def deleteTestReport(request,pk):
+    obj = Test.objects.filter(id=pk)
+    obj.results = ""
+    obj.save()
+    return HttpResponse("Succesfully Deleted Report")
+    
     
 '''Lab Staff View Ends Here'''
 
@@ -79,12 +96,14 @@ def denyClaim(request,pk):
     obj = Insurance.objects.filter(id=pk)
     obj.status = 'denied'
     return("Successfully Denied Request")
+    
 @login_required
 @check_view_permissions("insurance_staff")
 def approveClaim(request,pk):
     obj = Insurance.objects.filter(id=pk)
     obj.status = 'approved'
     return("Successfully Approved Request")
+    
 @login_required
 @check_view_permissions("insurance_staff")
 def authorizeFund(request,pk):
@@ -92,11 +111,13 @@ def authorizeFund(request,pk):
     obj1 = Payment.objects.filter(id=obj.paymentID)
     obj1.status = 'completed'
     return("Funds authorized and approved")
+    
 @login_required
 @check_view_permissions("insurance_staff")
 def viewClaim(request):
     obj = Insurance.objects.filter(status='initiated')
     return obj
+    
 @login_required
 @check_view_permissions("insurance_staff")
 def validate(request,pk):
