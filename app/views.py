@@ -7,7 +7,7 @@ from django.contrib.auth.models import Group
 from django.http import HttpResponse
 from . models import Diagnosis,Test
 from app.decorators import check_view_permissions
-
+from . import forms, models
 
 @login_required
 def index(request):
@@ -136,3 +136,127 @@ def update_patient_record(request,patientID):
             patient.save()
     return HttpResponse("Updated")
 
+
+# ---------------------------------------------------------------------------------
+# ------------------------ PATIENT RELATED VIEWS START ------------------------------
+# ---------------------------------------------------------------------------------
+
+
+
+# @app.route("/diagnosis")
+@login_required
+@check_view_permissions("patient")
+def patient_diagnosis_details(request, patientID):
+    patient_diagnosis_details = models.Diagnosis.objects.all().filter(patientID=patientID)
+    d={}
+    for i in patient_diagnosis_details:
+        mydict = {
+        'diagnosisID': i.diagnosisID,
+        'doctorID': i.doctorID,
+        'patientID': i.patientID,
+        'appointmentID': i.appointmentID,
+        'diagnosis': i.diagnosis,
+        'test_recommendation': i.test_recommendation,
+        'prescription': i.prescription
+        }
+        d[i]=mydict
+    return HttpResponse(d)
+
+@login_required
+@check_view_permissions("patient")
+def patient_details(request, patientID):
+     patient = models.Patient.objects.get(patientID=patientID)
+     mydict = {
+         'patientID': patientID,
+         'name': patient.name,
+         'age': patient.age,
+         'gender': patient.gender,
+         'height': patient.height,
+         'weight': patient.weight,
+         'insuranceID': patient.insuranceID,
+     }
+     return HttpResponse(mydict)
+
+@login_required
+@check_view_permissions("patient")
+def patient_payments_details(request,patientID):
+    patient_payments_details = models.Payment.objects.all().filter(patientID=patientID)
+    d={}
+    for i in patient_payments_details:
+        mydict = {
+        'paymentID': i.paymentID,
+        'method': i.method,
+        'type':i.type,
+        'mode':i.mode,
+        'amount':i.amount,
+        'status':i.status,
+        'patientID': i.patientID,
+        'testID':i.testID,
+        'appointmentID': i.appointmentID,
+        'created_on':i.created_on
+        }
+        d[i]=mydict
+    return HttpResponse(d)
+
+@login_required
+@check_view_permissions("patient")
+def request_test(request):
+    if request.method=='POST':
+        testform=forms.RequestLabTestForm(request.POST)
+        if  testform.is_valid():
+            test=testform.save(commit=False)
+            test.status='requested'
+            test.save()
+    return HttpResponse("Requested lab test")
+
+@login_required
+@check_view_permissions("patient")
+def update_patient_record(request,patientID):
+    patient=models.Patient.objects.get(patientID=patientID)
+    patientForm=forms.PatientForm(request.POST,request.FILES)
+    if request.method=='POST':
+        patientForm=forms.PatientForm(request.POST,request.FILES,instance=patient)
+        if  patientForm.is_valid():
+            patient=patientForm.save(commit=False)
+            patient.save()
+    return HttpResponse("Updated")
+
+@login_required
+@check_view_permissions("patient")
+def patient_book_appointment_view(request,patientID):
+    appointmentForm=forms.PatientAppointmentForm()
+    patient=models.Patient.objects.get(patientID=patientID) 
+    if request.method=='POST':
+        appointmentForm=forms.PatientAppointmentForm(request.POST)
+        if appointmentForm.is_valid():
+            appointment=appointmentForm.save(commit=False)
+            appointment.status='initiated'
+            appointment.save()
+    return HttpResponse("Appointment request initiated")
+
+
+@login_required
+@check_view_permissions("patient")
+def make_payment(request):
+    if request.method=='POST':
+        payform=forms.MakePaymentForm(request.POST)
+        if  payform.is_valid():
+            pay=payform.save(commit=False)
+            pay.status='initiated'
+            pay.save()
+    return HttpResponse("Payment")
+
+
+@login_required
+@check_view_permissions("patient")
+def view_lab_report(request,diagnosisID):
+    lab_test_details=models.Test.objects.get(diagnosisID=diagnosisID)
+    mydict={
+        'result':lab_test_details.result
+    }
+    return HttpResponse(mydict)
+
+   
+
+# ------------------------ PATIENT RELATED VIEWS END ------------------------------
+# ---------------------------------------------------------------------------------
