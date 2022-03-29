@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from . models import Diagnosis,Test,Insurance,Payment,Appointment,Patient
 from app.decorators import check_view_permissions
 from . import forms, models
+from .BotMain import chatgui # Botmain is chatbot directory
 
 @login_required
 def index(request):
@@ -216,6 +217,7 @@ def patient_diagnosis_details(request, patientID):
         d[i]=mydict
     return HttpResponse(d)
 
+
 @login_required
 @check_view_permissions("patient")
 def patient_details(request, patientID):
@@ -251,6 +253,21 @@ def patient_payments_details(request,patientID):
         }
         d[i]=mydict
     return HttpResponse(d)
+
+@login_required
+@check_view_permissions("patient")
+def patient_labtest_view(request):
+     return render(request, 'labtest/labtest.html')
+     
+@login_required
+@check_view_permissions("patient")
+def get_bot_response(request):
+    d = request.GET
+    # print(d)
+    userText = d['msg']
+    result = chatgui.chatbot_response(userText)
+    # print(result)
+    return HttpResponse(result, content_type="text/plain")
 
 @login_required
 @check_view_permissions("patient")
