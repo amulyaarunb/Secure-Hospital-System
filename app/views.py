@@ -5,12 +5,13 @@ from django.contrib.auth.decorators import login_required
 from django_registration.backends.activation.views import RegistrationView
 from django.contrib.auth.models import Group
 from django.http import HttpResponse
-from . models import Diagnosis,Test
+from . models import Diagnosis,Test,Insurance,Payment,Appointment,Patient
 from app.decorators import check_view_permissions
 from . import forms, models
 
 @login_required
 def index(request):
+    print(request.user.groups)
     if request.user.groups.filter(name='patient').exists():
         # return patient stuff
         return render(request, "home.html")
@@ -19,7 +20,7 @@ def index(request):
         return render(request, "home.html")
     if request.user.groups.filter(name='hospital_staff').exists():
             # return patient stuff
-        return render(request, "home.html")
+        return render(request, "hospital_staff_home.html")
     if request.user.groups.filter(name='lab_staff').exists():
             # return patient stuff
         return render(request, "home.html")
@@ -71,6 +72,38 @@ def denyTestRequest(request,pk):
     
 '''Lab Staff View Ends Here'''
 
+'''Insurance Staff View starts here'''
+@login_required
+@check_view_permissions("insurance_staff")
+def denyClaim(request,pk):
+    obj = Insurance.objects.filter(id=pk)
+    obj.status = 'denied'
+    return("Successfully Denied Request")
+@login_required
+@check_view_permissions("insurance_staff")
+def approveClaim(request,pk):
+    obj = Insurance.objects.filter(id=pk)
+    obj.status = 'approved'
+    return("Successfully Approved Request")
+@login_required
+@check_view_permissions("insurance_staff")
+def authorizeFund(request,pk):
+    obj = Insurance.objects.filter(id=pk)
+    obj1 = Payment.objects.filter(id=obj.paymentID)
+    obj1.status = 'completed'
+    return("Funds authorized and approved")
+@login_required
+@check_view_permissions("insurance_staff")
+def viewClaim(request):
+    obj = Insurance.objects.filter(status='initiated')
+    return obj
+@login_required
+@check_view_permissions("insurance_staff")
+def validate(request,pk):
+    obj = Payment.objects.filter(id=pk)
+    return obj
+'''Insurance Staff View ends here'''
+
 '''Hospital Staff View ''' 
 @login_required
 @check_view_permissions("hospital_staff")
@@ -82,13 +115,13 @@ def hospital_appointment_view(request):
 @check_view_permissions("hospital_staff")
 def hospital_appointment(request):
     #those whose approval are needed
-    appointments=models.Appointment.objects.all().filter(status='initiated')
+    appointments=Appointment.objects.all().filter(status='initiated')
     return render(request,'hospital_staff_appointments.html',{'appointments':appointments})
 
 @login_required
 @check_view_permissions("hospital_staff")
 def hospital_appointment_approve(request,pk):
-    appointment=models.Appointment.objects.get(id=pk)
+    appointment=Appointment.objects.get(id=pk)
     appointment.status='approved'
     appointment.save()
     return HttpResponse("Approved appointment")
@@ -96,7 +129,7 @@ def hospital_appointment_approve(request,pk):
 @login_required
 @check_view_permissions("hospital_staff")
 def hospital_appointment_reject(request,pk):
-    appointment=models.Appointment.objects.get(id=pk)
+    appointment=Appointment.objects.get(id=pk)
     appointment.status='rejected'
     appointment.save()
     return HttpResponse("Rejected appointment")
@@ -104,13 +137,13 @@ def hospital_appointment_reject(request,pk):
 def hospital_search(request):
     # whatever user write in search box we get in query
     query = request.GET['query']
-    patients=models.Patient.objects.all().filter(Q(patientID__icontains=query)|Q(name__icontains=query))
+    patients=Patient.objects.all().filter(Q(patientID__icontains=query)|Q(name__icontains=query))
     return render(request,'hospital_search_patients.html',{'patients':patients})
 
 def hospital_patient_details(request,pID):
-    patient_details = model.Patient.objects.get(patientID = pID)
-    appointment_details=models.Appointment.objects.get(patientID=pID)
-    test_details = models.Test.objects.get(patientID = pID)
+    patient_details = Patient.objects.get(patientID = pID)
+    appointment_details=Appointment.objects.get(patientID=pID)
+    test_details = Test.objects.get(patientID = pID)
     return render(request,'hospital_search_patients.html',{'patient_details':patient_details,'appointment_details':appointment_details,'test_details':test_details})
 '''
 def hospital_patient_diagnosis(request, appointmentID):
@@ -127,7 +160,7 @@ def hospital_patient_diagnosis(request, appointmentID):
     return HttpResponse(pdiag)
 '''
 def update_patient_record(request,patientID):
-    patient=models.Patient.objects.get(id=patientID)
+    patient=Patient.objects.get(id=patientID)
     patientForm=forms.PatientForm(request.POST,request.FILES)
     if request.method=='POST':
         patientForm=forms.PatientForm(request.POST,request.FILES,instance=patient)
