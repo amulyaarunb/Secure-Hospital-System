@@ -202,7 +202,7 @@ def patient(request):
 def patient_diagnosis_details(request, patientID):
     patient_diagnosis_details = models.Diagnosis.objects.all().filter(patientID=patientID)
     print(patient_diagnosis_details)
-    return render(request,'Patient/diagnosis.html',{'patient':patient})
+    return render(request,'Patient/diagnosis.html',{'patient_diagnosis_details':patient_diagnosis_details})
 
 
 #patient details views
@@ -214,16 +214,18 @@ def patient_details(request, patientID):
 
 def update_patient_record(request,patientID):
     patient=Patient.objects.get(patientID=patientID)
+    print(patient)
     patientForm=forms.PatientForm(request.POST,request.FILES)
+    print(patientForm)
     if request.method=='POST':
+        print("Hi from POST")
         patientForm=forms.PatientForm(request.POST,request.FILES,instance=patient)
         if  patientForm.is_valid():
-            patient=patientForm.save(commit=False)
+            patient=patientForm.save(commit=True)
             patient.save()
             return redirect('patient_details.html')
     mydict={'patientForm':patientForm}
     return render(request,'Patient/update_patient_details.html', context=mydict)
-
 
 # Lab views
 @login_required
@@ -247,7 +249,7 @@ def request_test(request):
 @check_view_permissions("patient")
 def view_lab_report(request,diagnosisID):
     lab_test_details=models.Test.objects.get(diagnosisID=diagnosisID)
-    return render(request, 'Patient/labtest/labtest.html',{"user": request.user})
+    return render(request, 'Patient/labtest/patient_view_lab_report.html',{"user": request.user})
 
 #Chatbot Views
 @login_required

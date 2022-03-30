@@ -65,7 +65,8 @@
     <div class="row">
         <div class="col-md-4 col-xl-6">
             <div class="card-block">
-                <a href="patient_view_lab_report/{{user.username}}">
+                <a href=  "{% url 'patient_view_lab_report' user.username %}" ></a>
+                <!-- <a href="patient_view_lab_report/{{user.username}}"> -->
                     <h4>View Your previous lab tests</h4>
                 </a>
                 <h1 class="text-right"><i class="fas fa-file f-left"></i></h1>
@@ -76,7 +77,8 @@
 
         <div class="col-md-4 col-xl-6">
             <div class="card-block">
-                <a href="request_labtest">
+                <a href=  "{% url 'request_labtest' user.username %}" ></a>
+                <!-- <a href="request_labtest"> -->
                     <h4>Request Lab Test</h4>
                 </a>
                 <h1 class="text-right"><i class="fas fa-flask f-left"></i></h1>
