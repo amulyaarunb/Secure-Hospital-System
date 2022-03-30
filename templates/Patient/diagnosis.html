@@ -1,4 +1,4 @@
-{% extends 'patient.html' %}
+{% extends 'Patient/patient.html' %}
 {% block content %}
    
 <!-- <!DOCTYPE html> -->
@@ -44,15 +44,14 @@
                     </tr>
                 </thead>
                 <tr>
-                    {% for k,v in diagnosis.items %}
-                    <td> {{ v }}</td>
-                    <!-- <td> {{a.diagnosisID}}</td>
+                    {% for p in patient %}
+                    <td> {{a.diagnosisID}}</td>
                     <td>{{a.doctorID}}</td>
                     <td>{{a.patientID}}</td>
                     <td> {{a.appointmentID}}</td>
                     <td>{{a.diagnosis}}</td>
                     <td>{{a.test_recommendation}}</td>
-                    <td>{{a.prescription}}</td> -->
+                    <td>{{a.prescription}}</td>
                     {% endfor %}
                 </tr>
                

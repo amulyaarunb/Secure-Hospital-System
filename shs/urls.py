@@ -22,22 +22,25 @@ urlpatterns = [
     path('hospital_search_patients/', views.hospital_search, name='hospital_search_patients'),
 
     # Patient urls
-    path("patient", views.index, name='patient'),
+    path("patient", views.patient, name='patient'),
     path('bot', views.get_bot_response),
-    # path("appointment", views.patient_appointment_view),
+    path('patient_details/<str:patientID>', views.patient_details, name='patient_details'),
+    path('patient_details/update_patient_details/<str:patientID>', views.update_patient_record,name='update_patient_record'),
+    path("patient_appointment", views.patient_appointment_view),
     # path('patient-book-appointment', views.patient_book_appointment_view,
     #      name='patient-book-appointment'),
     # path('patient-view-appointment', views.patient_view_appointment_view,
     #      name='patient-view-appointment'),
-    path('diagnosis/<str:patientID>', views.patient_diagnosis_details,
+    path('patient_diagnosis/<str:patientID>', views.patient_diagnosis_details,
          name='diagnosis'),
-    path('prescription/<str:patientID>', views.patient_diagnosis_details,
+    path('patient_prescription/<str:patientID>', views.patient_diagnosis_details,
          name='diagnosis'),
-    path("labtest", views.patient_labtest_view),
-    path("request_labtest/<str:patientID>", views.request_test),
+    path("patient_labtest/<str:patientID>", views.patient_labtest_view),
+    path("patient_labtest/request_labtest", views.request_test),
+    path("/patient_labtest/patient_view_lab_report/<str:patientID>", views.view_lab_report),
   
 #doctor urls
-    path('doctor', views.doctor_view_appointment_view, name='doctor_view_appointment_view'),
+    # path('doctor', views.doctor_view_appointment_view, name='doctor_view_appointment_view'),
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

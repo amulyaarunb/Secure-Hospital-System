@@ -106,7 +106,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/patient">Home</a>
+            <a class="navbar-brand" href="/home">Home</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -114,16 +114,19 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/appointment">Appointments</a>
+                        <a class="nav-link active" aria-current="page" href="patient_appointment">Appointments</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/diagnosis/{{user.id}}">Diagnosis</a> 
+                        <a class="nav-link" href="patient_diagnosis/{{user.username}}">Diagnosis</a> 
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/prescription/{{user.id}}">Prescription</a>
+                        <a class="nav-link" href="patient_prescription/{{user.username}}">Prescription</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/labtest/{{user.id}}">Lab Tests</a>
+                        <a class="nav-link" href="patient_labtest/{{user.username}}">Lab Tests</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="patient_details/{{user.username}}">Patient Details</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Medical Records</a>
@@ -133,9 +136,6 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#"> Insurance </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">User Information</a>
                     </li>
                 </ul>
             </div>
