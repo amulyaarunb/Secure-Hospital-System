@@ -25,7 +25,7 @@ print(BASE_DIR)
 SECRET_KEY = '-$qm_tyz+xfkp^x-!90v0l7hy8(!yphb&$trps9a@fo-@6uf_0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'app',
+    'app.apps.AppConfig',
     'bootstrap3',
     'django_registration',
     'corsheaders',
