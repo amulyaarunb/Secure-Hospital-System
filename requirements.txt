@@ -34,11 +34,8 @@ h5py==3.6.0
 idna==3.3
 importlib-metadata==4.11.3
 joblib==1.1.0
-keras==2.7.0
-Keras-Preprocessing==1.1.2
 Markdown==3.3.6
 multidict==6.0.2
-nltk==3.7
 numpy==1.22.3
 oauthlib==3.2.0
 opt-einsum==3.3.0
@@ -62,11 +59,6 @@ scipy==1.8.0
 setuptools==60.10.0
 six==1.16.0
 sqlparse==0.4.2
-tensorboard==2.6.0
-tensorboard-data-server==0.6.0
-tensorboard-plugin-wit==1.8.1
-tensorflow==2.7.0
-tensorflow-estimator==2.7.0
 termcolor==1.1.0
 toml==0.10.2
 tqdm==4.63.1
