@@ -18,7 +18,7 @@ def index(request):
         return render(request, "home.html")
     if request.user.groups.filter(name='doctor').exists():
             # return patient stuff
-        return render(request, "home.html")
+        return render(request, "Doctor\doctorhome.html")
     if request.user.groups.filter(name='hospital_staff').exists():
             # return patient stuff
         return render(request, "hospital_staff_home.html")
@@ -331,3 +331,12 @@ def view_lab_report(request,diagnosisID):
 
 # ------------------------ PATIENT RELATED VIEWS END ------------------------------
 # ---------------------------------------------------------------------------------
+
+
+# -------------------- Doctor Views --------------------
+
+def doctor_view_appointment_view(request):
+    appointments=models.Appointment.objects.all().filter(doctorID=request.user.id)
+    return render(request,'Doctor/doctorhome.html')
+
+    # return render(request,'Doctor/doctor_view_appointments.html',{'appointments':l})
