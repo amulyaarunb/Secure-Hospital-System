@@ -26,9 +26,10 @@ class Appointment(models.Model):
     patientID = models.ForeignKey(Patient, on_delete=models.CASCADE)
     doctorID = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     status = models.CharField(max_length=255)
-    diagnosisID = models.ForeignKey('Diagnosis', on_delete=models.CASCADE)
-    testID = models.ForeignKey('Test', on_delete=models.CASCADE)
-    paymentID = models.ForeignKey('Payment', on_delete=models.CASCADE)
+    diagnosisID = models.ForeignKey(
+        'Diagnosis', on_delete=models.CASCADE, blank=True, null=True)
+    testID = models.ForeignKey('Test', on_delete=models.CASCADE, blank=True, null=True)
+    paymentID = models.ForeignKey('Payment', on_delete=models.CASCADE, blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
 
 
