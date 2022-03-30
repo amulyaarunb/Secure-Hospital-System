@@ -38,11 +38,9 @@ class CustomRegistrationView(RegistrationView):
         patient_group = Group.objects.get(name='patient')
         patient_group.user_set.add(user)
 
-''' Lab Staff View Starts Here'''
-
 
 @login_required
-@check_view_permissions("lab_staff")
+@check_view_permissions("admin")
 def admin(request):
     return render(request=request, template_name="admin/index.html", context={'hello': "hello"})
     
@@ -218,11 +216,7 @@ def patient_diagnosis_details(request, patientID):
         }
         d[i]=mydict
     return HttpResponse(d)
-    
-@login_required
-@check_view_permissions("patient")
-def patient(request):
-    return render(request, 'patient.html', {"user": request.user})
+
 
 @login_required
 @check_view_permissions("patient")
@@ -264,7 +258,7 @@ def patient_payments_details(request,patientID):
 @check_view_permissions("patient")
 def patient_labtest_view(request):
      return render(request, 'labtest/labtest.html')
-
+     
 @login_required
 @check_view_permissions("patient")
 def get_bot_response(request):
