@@ -18,7 +18,7 @@ urlpatterns = [
     path('accounts/', include('django_registration.backends.activation.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('hospital_staff_appointments/', views.hospital_appointment, name='hospital_staff_appointments'),
-    path('hospital_staff_create_payment/', views.hospital_transaction, name='hospital_staff_create_payment'),
+#     path('hospital_staff_create_payment/', views.hospital_transaction, name='hospital_staff_create_payment'),
     path('hospital_search_patients/', views.hospital_search, name='hospital_search_patients'),
 
     # Patient urls
@@ -36,6 +36,8 @@ urlpatterns = [
     path("labtest", views.patient_labtest_view),
     path("request_labtest/<str:patientID>", views.request_test),
   
+#doctor urls
+    path('doctor', views.doctor_view_appointment_view, name='doctor_view_appointment_view'),
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

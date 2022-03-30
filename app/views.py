@@ -331,3 +331,13 @@ def view_lab_report(request,diagnosisID):
 
 # ------------------------ PATIENT RELATED VIEWS END ------------------------------
 # ---------------------------------------------------------------------------------
+
+
+
+# -------------------- Doctor Views --------------------
+
+def doctor_view_appointment_view(request):
+    appointments=models.Appointment.objects.all().filter(doctorID=request.user.id)
+    return render(request,'Doctor/doctorhome.html')
+
+    # return render(request,'Doctor/doctor_view_appointments.html',{'appointments':l})
