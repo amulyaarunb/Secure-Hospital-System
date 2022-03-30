@@ -216,7 +216,11 @@ def patient_diagnosis_details(request, patientID):
         }
         d[i]=mydict
     return HttpResponse(d)
-
+    
+@login_required
+@check_view_permissions("patient")
+def patient(request):
+    return render(request, 'patient.html', {"user": request.user})
 
 @login_required
 @check_view_permissions("patient")
@@ -258,7 +262,7 @@ def patient_payments_details(request,patientID):
 @check_view_permissions("patient")
 def patient_labtest_view(request):
      return render(request, 'labtest/labtest.html')
-     
+
 @login_required
 @check_view_permissions("patient")
 def get_bot_response(request):
