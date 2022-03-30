@@ -39,8 +39,9 @@ urlpatterns = [
     path("patient_labtest/request_labtest", views.request_test),
     path("/patient_labtest/patient_view_lab_report/<str:patientID>", views.view_lab_report),
   
-#doctor urls
-    # path('doctor', views.doctor_view_appointment_view, name='doctor_view_appointment_view'),
+# doctor urls
+    path('doctor/', views.doctor, name='doctor'),
+    path('doctor_view_appointment_view/', views.doctor_view_appointment_view, name='doctor_appointment')
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

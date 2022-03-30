@@ -19,7 +19,8 @@ def index(request):
         return redirect('/patient')
     if request.user.groups.filter(name='doctor').exists():
             # return patient stuff
-        return render(request, "home.html")
+        return redirect('/doctor')
+        # return render(request, "home.html")
     if request.user.groups.filter(name='hospital_staff').exists():
             # return patient stuff
         return render(request, "hospital_staff_home.html")
@@ -299,3 +300,33 @@ def patient_payments_details(request,patientID):
 
 # ------------------------ PATIENT RELATED VIEWS END ------------------------------
 # ---------------------------------------------------------------------------------
+
+
+# -------------------------Doctor View--------------------------
+
+@login_required
+@check_view_permissions("doctor")
+def doctor(request):
+    return render(request,'Doctor/doctorhome.html', {"user": request.user})
+
+@login_required
+@check_view_permissions("doctor")
+def doctor_view_appointment_view(request):
+    appointments=models.Appointment.objects.all().filter(doctorID=request.user.id)
+    l=[]
+    for i in appointments:
+        mydict = {
+        'appointmentID': i.appointmentID,
+        'date': i.date,
+        'time': i.time,
+        'type': i.type,
+        'patientID': i.patientID,
+        'doctorID': i.doctorID,
+        'status': i.status,
+		'diagnosisID': i.diagnosisID,
+		'testID': i.testID,
+		'paymentID':i.paymentID,
+		'created_on': i.created_on
+        }
+        l[i]=mydict
+    return render(request,'Doctor/doctor_view_appointment_view.html', {'appointments':l})
