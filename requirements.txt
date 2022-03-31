@@ -12,3 +12,4 @@ gunicorn
 nltk
 django-widget-tweaks
 django-cors-headers
+tensorflow
