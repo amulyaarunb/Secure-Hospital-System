@@ -44,7 +44,7 @@ urlpatterns = [
          views.patient_labtest_view, name="patient_labtest"),
     path("patient_labtest/request_labtest",
          views.request_test, name="request_labtest"),
-    path("/patient_labtest/patient_view_lab_report/<str:patientID>",
+    path("patient_labtest/patient_view_lab_report/<str:patientID>",
          views.view_lab_report, name="view_lab_report"),
     path('doctor/', views.doctor, name='doctor'),
     path('doctor_view_appointment_view/',

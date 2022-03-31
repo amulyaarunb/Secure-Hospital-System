@@ -10,3 +10,4 @@ sqlparse==0.4.2
 wheel==0.37.1
 gunicorn
 nltk
+django-widget-tweaks
