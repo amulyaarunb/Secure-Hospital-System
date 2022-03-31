@@ -2,8 +2,7 @@ import re
 from django.contrib.auth.models import Group
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
-from django.test import TransactionTestCase
-from django_registration.backends.activation.views import RegistrationView
+from django_registration.backends.one_step.views import RegistrationView
 from django.contrib.auth.models import Group
 from django.http import HttpResponse
 from . models import Diagnosis,Test,Insurance,Payment,Appointment,Patient,Doctor
