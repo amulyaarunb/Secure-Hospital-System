@@ -44,7 +44,7 @@ class CustomRegistrationView(RegistrationView):
 @login_required
 @check_view_permissions("admin")
 def admin(request):
-    return render(request=request, template_name="admin/index.html", context={'hello': "hello"})
+    return render(request=request, template_name="administrator/index.html", context={'hello': "hello"})
     
 
 ''' Lab Staff View Starts Here'''
