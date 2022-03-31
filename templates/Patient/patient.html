@@ -155,7 +155,7 @@
             <label for="msg"><b>Message</b></label>
             <div id = userInput>
                 <textarea id = "textInput" placeholder="Type your message" name="msg" required ></textarea>
-                <textarea id = "textoutput" name="textoutput" readonly></textarea>   
+                <p id = "textoutput" name="textoutput"></p>   
 
                 <button type="submit" onclick="getResponse()" class="btn">Send</button>
                 <button type="button" id="buttonInput" class="btn cancel" onclick="closeForm()">Close</button>
@@ -186,7 +186,20 @@
                 // var botHtml = '<p class="botText"><span>' + data + '</span></p>';
                 console.log(data)
                 $("#textoutput").val("");
-                $("#textoutput").val(data)
+                //$("#textoutput").val(data)
+                if (data.startsWith("Navigate"))
+                {
+                    var temp = data.substring(12)
+                    var botHtml = '<p>Go to:<a href="'+temp+'">'+temp+'</a></p>';
+                    document.getElementById('textoutput').innerHTML = botHtml
+                    $("#textoutput").innerHtml = botHtml;
+                }
+                else
+                {
+                    var botHtml = '<p class="botText"><span>' + data + '</span></p>';
+                    document.getElementById('textoutput').innerHTML = botHtml
+                    $("#textoutput").innerHtml = botHtml;
+                }
 
                 // document.getElementById('textoutput').append(data);
                 // $('#txtarea').append(document.createTextNode($(this).val()));
