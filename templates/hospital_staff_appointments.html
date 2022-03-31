@@ -34,8 +34,8 @@
             <p>Time: {{ app.time}}</p>
             <p>Doctor: {{ app.doctorName }}</p>
             <p>Status: {{ app.status }}</p>
-            <a href="hospital_staff_approve/{{app.ID}}">Approve</a>
-            <a href="hospital_staff_reject/{{app.ID}}">Reject</a>
+            <a href="{% url 'hospital_appointment_approve' app.appointmentID %}">Approve</a>
+            <a href="{% url 'hospital_appointment_reject' app.appointmentID %}">Reject</a>
         </li>
         {% endfor %}
 

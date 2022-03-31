@@ -165,19 +165,19 @@ def hospital_appointment(request):
 
 @login_required
 @check_view_permissions("hospital_staff")
-def hospital_appointment_approve(request,pk):
-    appointment=Appointment.objects.get(id=pk)
+def hospital_appointment_approve(request,ID):
+    appointment=Appointment.objects.get(appointmentID=ID)
     appointment.status='approved'
     appointment.save()
-    return HttpResponse("Approved appointment")
+    return redirect('/hospital_appointment')
 
 @login_required
 @check_view_permissions("hospital_staff")
-def hospital_appointment_reject(request,pk):
-    appointment=Appointment.objects.get(id=pk)
+def hospital_appointment_reject(request,ID):
+    appointment=Appointment.objects.get(appointmentID=ID)
     appointment.status='rejected'
     appointment.save()
-    return HttpResponse("Rejected appointment")
+    return redirect('/hospital_appointment')
 
 @login_required
 @check_view_permissions("hospital_staff")
