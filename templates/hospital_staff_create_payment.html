@@ -24,6 +24,7 @@
         <input type="submit" class="tablinks" onclick="appointments()" value="Appointments">
         <input type="button" class="tablinks" onclick="transactions()" value="Create Payment">
         <input type="button" class="tablinks" onclick="search()" value="View Patient Records">
+        <a href="/accounts/logout">Log out</a>
     </div>
 
 
@@ -37,16 +38,17 @@
     </div>
 
     <script>
-        function appointments(){
-            window.location.href="hospital_staff_appointments";
+        function appointments() {
+            window.location.href = "hospital_staff_appointments";
         }
-        function transactions(){
-            window.location.href="hospital_staff_create_payment";
+
+        function transactions() {
+            window.location.href = "hospital_staff_create_payment";
         }
-        function search(){
-            window.location.href="hospital_search_patients";
-        }  
-        
+
+        function search() {
+            window.location.href = "hospital_search_patients";
+        }
     </script>
 
 </body>
