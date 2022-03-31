@@ -2,11 +2,12 @@
 <html>
 
 <head>
-    <title>Hospital Staff Page</title>
+    <title>Hospital Staff Update Patients</title>
     <style>
         body {
             font-family: Arial;
         }
+        /* Style the tab */
     </style>
 
 </head>
@@ -25,22 +26,12 @@
 
     <br>
 
+    <br>
+    <form action="hospital_staff_update_patients_done/" method="post">
+        {% csrf_token %} {{ form }}
+        <input type="Submit" value="Submit">
+    </form>
 
-    <div id="Appointments">
-        {% for app in appointments %}
-        <li>
-            <p>Patient Name: {{ app.patientName }}</p>
-            <p>Type: {{ app.type}}</p>
-            <p>Date: {{ app.date}}</p>
-            <p>Time: {{ app.time}}</p>
-            <p>Doctor: {{ app.doctorName }}</p>
-            <p>Status: {{ app.status }}</p>
-            <a href="{% url 'hospital_appointment_approve' app.appointmentID %}">Approve</a>
-            <a href="{% url 'hospital_appointment_reject' app.appointmentID %}">Reject</a>
-        </li>
-        {% endfor %}
-
-    </div>
 
 </body>
 

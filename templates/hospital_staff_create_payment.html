@@ -15,18 +15,22 @@
 <body style="background-color:whitesmoke">
 
     <div style="margin-left: -8px; margin-right: -8px;margin-top: -8px;background-color:gray">
-        <span style="max-width: 10px;">
-            space for logo |
-        </span>
+    </div>
+
+    <div style="margin-left: -8px; margin-right: -8px;margin-top: -8px;background-color:gray">
         <span style="color:black;font-size: 50px;">
             Secure Hospital System
         </span>
+        <input type="submit" class="tablinks" onclick="appointments()" value="Appointments">
+        <input type="button" class="tablinks" onclick="transactions()" value="Create Payment">
+        <input type="button" class="tablinks" onclick="search()" value="View Patient Records">
+        <a href="/accounts/logout">Log out</a>
     </div>
+
 
     <div>
         <form>
             <br><span>Patient ID:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="text"> </span>
-            <br><br><span>Test ID:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text"> </span>
             <br><br><span>Appointment ID:&nbsp;&nbsp;&nbsp;&nbsp;<input type="text"> </span>
             <br><br><span>Amount:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text"> </span>
             <br><br><input type="submit" value="Create New Payment">
@@ -34,6 +38,17 @@
     </div>
 
     <script>
+        function appointments() {
+            window.location.href = "hospital_staff_appointments";
+        }
+
+        function transactions() {
+            window.location.href = "hospital_staff_create_payment";
+        }
+
+        function search() {
+            window.location.href = "hospital_search_patients";
+        }
     </script>
 
 </body>

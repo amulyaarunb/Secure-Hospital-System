@@ -23,6 +23,9 @@ urlpatterns = [
     path('hospital_search_patients/', views.hospital_search,
          name='hospital_search_patients'),
 
+    path('hospital_appointment_approve/<str:ID>',views.hospital_appointment_approve,name='hospital_appointment_approve'),
+    path('hospital_appointment_reject/<str:ID>',views.hospital_appointment_reject,name='hospital_appointment_reject'),
+
     # Patient urls
     path("patient", views.patient, name='patient'),
     path('bot', views.get_bot_response),

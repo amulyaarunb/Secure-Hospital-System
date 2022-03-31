@@ -1,0 +1,40 @@
+{% extends 'Doctor\doctor_navbar.html' %}
+
+{% block content %}
+
+<style>
+    th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+     
+</style>
+
+<h1>Patients diagnosis</h1>
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Date</th>
+        <th>Update</th>
+        <th>Modify</th>
+      </tr>
+      {% for i in appointments %}
+      <tr>
+        <th> {{ appointments.name }}</th>
+        <th> {{ appointments.date }}</th>
+        <th> 
+            <div class="btn-group">
+                <a href="#"> <button type="button" class="btn btn-secondary">Update</button> </a>
+            </div>
+        </th>
+        <th>
+            <div class="btn-group"></div>
+                <a href="#"> <button type="button" class="btn btn-secondary">Modify</button> </a>
+            </div>
+        </th>
+      </tr> 
+      {% endfor %}
+</table>
+
+{% endblock content %}

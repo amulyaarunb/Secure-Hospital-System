@@ -14,12 +14,10 @@
 <body style="background-color:whitesmoke">
 
     <div style="margin-left: -8px; margin-right: -8px;margin-top: -8px;background-color:gray">
-        <span style="max-width: 10px;">
-            space for logo |
-        </span>
         <span style="color:black;font-size: 50px;">
             Secure Hospital System
         </span>
+        <a href="/accounts/logout">Log out</a>
     </div>
 
     <br>
@@ -29,19 +27,19 @@
         <input type="button" class="tablinks" onclick="transactions()" value="Create Payment" style="font-size: 18px;width: 200px;height: 50px;font-weight: bold;background-color:silver;">
         <input type="button" class="tablinks" onclick="search()" value="View Patient Records" style="font-size: 18px;width: 200px;height: 50px;font-weight: bold;background-color:silver;">
     </div>
-    
+
     <script>
-    function appointments(){
-        window.location.href="hospital_staff_appointments";
-    }
-    function transactions(){
-        window.location.href="hospital_staff_create_payment";
-    }
-    function search(){
-        window.location.href="hospital_search_patients";
-    }
-    
-    
+        function appointments() {
+            window.location.href = "hospital_staff_appointments";
+        }
+
+        function transactions() {
+            window.location.href = "hospital_staff_create_payment";
+        }
+
+        function search() {
+            window.location.href = "hospital_search_patients";
+        }
     </script>
 
 </body>
