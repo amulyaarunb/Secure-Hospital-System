@@ -12,7 +12,7 @@ ENV DEBUG 0
 
 # install psycopg2
 RUN apk update \
-    && apk add --no-cache --virtual build-essential gcc g++ libffi-dev musl-dev gfortran lapack-dev\
+    && apk add --no-cache --virtual build-essential gcc python3-dev musl-dev
     # && apk add postgresql-dev 
     # && pip install psycopg2
 
