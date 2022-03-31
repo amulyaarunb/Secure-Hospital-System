@@ -1,12 +1,8 @@
-from re import template
+from app import views
 from django.conf import settings
-from django.urls import path, include
 from django.conf.urls.static import static
 from django.contrib import admin
-
-from app import views
-from django_registration.backends.activation.views import RegistrationView
-
+from django.urls import include, path
 
 urlpatterns = [
     path('', views.index, name="index"),
@@ -15,7 +11,7 @@ urlpatterns = [
     path('accounts/register/',
          views.CustomRegistrationView.as_view(success_url='/'),
          name='django_registration_register'),
-    path('accounts/', include('django_registration.backends.activation.urls')),
+    path('accounts/', include('django_registration.backends.one_step.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('hospital_staff_appointments/', views.hospital_appointment,
          name='hospital_staff_appointments'),
