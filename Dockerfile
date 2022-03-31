@@ -38,4 +38,4 @@ RUN adduser -D myuser
 USER myuser
 
 # run gunicorn
-CMD gunicorn shs.wsgi:application
+CMD gunicorn shs.wsgi:application --log-file -
