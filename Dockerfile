@@ -1,6 +1,6 @@
 # pull official base image
 # FROM continuumio/miniconda3:4.10.3p0-alpine
-FROM python:3.10-alpine
+FROM python:3.9-alpine
 # set work directory
 WORKDIR /app
 
