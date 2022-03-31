@@ -2,8 +2,7 @@ import re
 from django.contrib.auth.models import Group
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
-from django.test import TransactionTestCase
-from django_registration.backends.activation.views import RegistrationView
+from django_registration.backends.one_step.views import RegistrationView
 from django.contrib.auth.models import Group
 from django.http import HttpResponse
 from . models import Diagnosis,Test,Insurance,Payment,Appointment,Patient,Doctor
@@ -44,7 +43,7 @@ class CustomRegistrationView(RegistrationView):
 @login_required
 @check_view_permissions("admin")
 def admin(request):
-    return render(request=request, template_name="admin/index.html", context={'hello': "hello"})
+    return render(request=request, template_name="administrator/index.html", context={'hello': "hello"})
     
 
 ''' Lab Staff View Starts Here'''

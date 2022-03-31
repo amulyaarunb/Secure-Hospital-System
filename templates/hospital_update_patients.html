@@ -15,23 +15,22 @@
 <body style="background-color:whitesmoke">
 
     <div style="margin-left: -8px; margin-right: -8px;margin-top: -8px;background-color:gray">
-        <span style="color:black;font-size: 50px;">
+        <ul style="color:black;font-size: 30px;list-style-type: none;margin: 0;padding: 5px;">
             Secure Hospital System
-        </span>
-        <a href="{% url 'hospital_staff_appointments' %}">Appointments</a>
-        <a href="{% url 'hospital_staff_create_payment' %}">Create Payment</a>
-        <a href="{% url 'hospital_search_patients' %}">View Patient Records</a>
-        <a href="/accounts/logout">Log out</a>
+            <a href="{% url 'hospital_staff_appointments' %} " style="color: black;font-size: 25px;text-decoration: none;padding: 10px;"> Appointments</a>
+            <a href="{% url 'hospital_staff_create_payment' %} " style="color: black;font-size: 25px;text-decoration: none;padding: 10px;"> Create Payment</a>
+            <a href="{% url 'hospital_search_patients' %} " style="color: black;font-size: 25px;text-decoration: none;padding: 10px;"> View Patient Records</a>
+            <a href="/accounts/logout" style="color: black;font-size: 25px;text-decoration: none;padding: 10px;"> Log Out</a>
+        </ul>
     </div>
 
     <br>
 
     <br>
-    <form action="hospital_staff_update_patients_done/" method="post">
+    <form action="hospital_update_patients/" method="post">
         {% csrf_token %} {{ form }}
         <input type="Submit" value="Submit">
     </form>
-
 
 </body>
 

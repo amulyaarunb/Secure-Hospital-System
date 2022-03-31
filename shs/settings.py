@@ -143,6 +143,6 @@ ACCOUNT_ACTIVATION_DAYS = 7
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
 
-CSRF_TRUSTED_ORIGINS = ['https://damp-hollows-93595.herokuapp.com/', '3.221.41.59', 'https://harshavamsi.com']
+CSRF_TRUSTED_ORIGINS = ['https://damp-hollows-93595.herokuapp.com/', 'https://harshavamsi.com']
 
 # django_heroku.settings(locals())

@@ -15,17 +15,16 @@
 <body style="background-color:whitesmoke">
 
     <div style="margin-left: -8px; margin-right: -8px;margin-top: -8px;background-color:gray">
-        <span style="color:black;font-size: 50px;">
+        <ul style="color:black;font-size: 30px;list-style-type: none;margin: 0;padding: 5px;">
             Secure Hospital System
-        </span>
-        <input type="submit" class="tablinks" onclick="appointments()" value="Appointments" style="font-size: 18px;width: 200px;height: 50px;font-weight: bold;background-color:silver">
-        <input type="button" class="tablinks" onclick="transactions()" value="Create Payment" style="font-size: 18px;width: 200px;height: 50px;font-weight: bold;background-color:silver;">
-        <input type="button" class="tablinks" onclick="search()" value="View Patient Records" style="font-size: 18px;width: 200px;height: 50px;font-weight: bold;background-color:silver;">
-        <a href="/accounts/logout">Log out</a>
+            <a href="{% url 'hospital_staff_appointments' %} " style="color: black;font-size: 25px;text-decoration: none;padding: 10px;"> Appointments</a>
+            <a href="{% url 'hospital_staff_create_payment' %} " style="color: black;font-size: 25px;text-decoration: none;padding: 10px;"> Create Payment</a>
+            <a href="{% url 'hospital_search_patients' %} " style="color: black;font-size: 25px;text-decoration: none;padding: 10px;"> View Patient Records</a>
+            <a href="/accounts/logout" style="color: black;font-size: 25px;text-decoration: none;padding: 10px;"> Log Out</a>
+        </ul>
     </div>
 
     <br>
-
 
     <div>
         <div>Patient ID: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text"></div> <br>
@@ -48,20 +47,6 @@
         </li>
         {% endfor %}
     </div>
-
-    <script>
-        function appointments() {
-            window.location.href = "hospital_staff_appointments";
-        }
-
-        function transactions() {
-            window.location.href = "hospital_staff_create_payment";
-        }
-
-        function search() {
-            window.location.href = "hospital_search_patients";
-        }
-    </script>
 
 </body>
 
