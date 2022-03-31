@@ -3,5 +3,6 @@
 db.sqlite3
 venv
 media/
-.DS_Store
 __pycache__
+staticfiles/
+ss-ec2.pem

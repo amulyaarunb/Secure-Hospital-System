@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
-import django_heroku
+# import django_heroku
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -25,10 +25,11 @@ print(BASE_DIR)
 SECRET_KEY = '-$qm_tyz+xfkp^x-!90v0l7hy8(!yphb&$trps9a@fo-@6uf_0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1',
+                 'damp-hollows-93595.herokuapp.com']
 
 
 # Application definition
@@ -63,7 +64,7 @@ ROOT_URLCONF = 'shs.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -126,13 +127,14 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR,'static')]
+STATIC_ROOT = 'staticfiles/'
 
-if not DEBUG:
-    STATIC_ROOT = '/home/django/www-data/site.com/static/'
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    BASE_DIR + "/" + "static",
+    ]
 
-MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 # LOGIN_REDIRECT_URL = "/"
 
@@ -143,4 +145,4 @@ if DEBUG:
 
 CSRF_TRUSTED_ORIGINS = ['https://damp-hollows-93595.herokuapp.com/']
 
-django_heroku.settings(locals())
+# django_heroku.settings(locals())
