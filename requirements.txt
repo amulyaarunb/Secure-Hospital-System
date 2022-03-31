@@ -12,4 +12,4 @@ gunicorn
 nltk
 django-widget-tweaks
 django-cors-headers
-tensorflow
+tensorflow==2.7.0
