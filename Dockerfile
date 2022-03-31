@@ -12,7 +12,7 @@ ENV DEBUG 0
 
 # install psycopg2
 RUN apt update \
-    && apt install --no-cache --virtual build-essential gcc python3-dev musl-dev
+    && apt install --virtual build-essential gcc python3-dev musl-dev
     # && apk add postgresql-dev 
     # && pip install psycopg2
 

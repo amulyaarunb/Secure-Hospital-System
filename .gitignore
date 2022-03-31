@@ -5,3 +5,4 @@ venv
 media/
 __pycache__
 staticfiles/
+ss-ec2.pem
