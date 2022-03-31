@@ -295,7 +295,7 @@ def patient_payments_details(request,patientID):
 # ---------------------------------------------------------------------------------
 
 
-# -------------------------Doctor View--------------------------
+# -------------------------Doctor View---------------------------------------------
 
 @login_required
 @check_view_permissions("doctor")
@@ -345,3 +345,28 @@ def doctor_appointmentID_search_view(request):
     #patients=models.Patient.objects.all().filter(doctorId=request.user.id).filter(Q(patientID__icontains=query)|Q(name__icontains=query))
     appointments=models.Appointment.objects.all().filter(doctorId=request.user.id).filter(Q(patientID__icontains=query)|Q(appointmentID__icontains=query)|Q(date__icontains=query))
     return render(request,'Doctor/doctor_view_appointment_view.html',{'appointments':appointments})
+
+@login_required
+@check_view_permissions("doctor")
+def doctor_createpatientdiagnosis_view(request,ID):
+    diagnosis=models.Diagnosis.objects.all().get(appointmentID=ID)
+    if request.method=='POST':
+        form=createDiagnosisForm(request.POST)
+        if form.is_valid():
+            return HttpResponseRedirect('/record modified/')
+        else:
+            form=createDiagnosisForm()
+    return render(request, 'Doctor/doctor_createpatientdiagnosis_view.html', {'form': form})
+
+@login_required
+@check_view_permissions("doctor")
+def doctor_create_prescription_view(request,ID):
+    prescription=models.Diagnosis.objects.all().get(appointmentID=ID)
+    #diag=models.Diagnosis.objects.all().get(diagnosisID=diagnosis.diagnosisID)
+    if request.method=='POST':
+        form=createprescriptionForm(request.POST)
+        if form.is_valid():
+            return HttpResponseRedirect('/record updated/')
+        else:
+            form=createprescriptionForm()
+    return render(request, 'doctor_create_prescription.html', {'form': form})

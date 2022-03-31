@@ -1,0 +1,17 @@
+{% extends 'Doctor\doctor_navbar.html' %}
+
+{% block content %}
+
+<head>
+
+    <h1>Prescription to patient</h1>
+
+    <form action="" method="get">
+        <label for="prescription">Prescription for patient: </label>
+        <textarea id="prescription" name="prescription" value="{{ prescription }}" rows="4" cols="50"></textarea>
+        <input type="submit" value="Submit">
+    </form>
+
+</head>
+
+{% endblock content %}
