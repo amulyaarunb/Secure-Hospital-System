@@ -6,7 +6,7 @@ from django.test import TransactionTestCase
 from django_registration.backends.activation.views import RegistrationView
 from django.contrib.auth.models import Group
 from django.http import HttpResponse
-from . models import Diagnosis,Test,Insurance,Payment,Appointment,Patient
+from . models import Diagnosis,Test,Insurance,Payment,Appointment,Patient,Doctor
 from app.decorators import check_view_permissions
 from . import forms, models
 from .BotMain import chatgui # Botmain is chatbot directory
@@ -140,7 +140,28 @@ def hospital_appointment_view(request):
 def hospital_appointment(request):
     #those whose approval are needed
     appointments=Appointment.objects.all().filter(status='initiated')
-    return render(request,'hospital_staff_appointments.html',{'appointments':appointments})
+    appt=[]
+    for i in appointments:
+        patient = Patient.objects.get(patientID = i.patientID.patientID)
+        doctor = Doctor.objects.get(doctorID = i.doctorID.doctorID)
+        mydict = {
+        'appointmentID': i.appointmentID,
+        'date': i.date,
+        'time': i.time,
+        'type': i.type,
+        'patientID': i.patientID,
+        'doctorID': i.doctorID,
+        'patientName':patient.name,
+        'doctorName':doctor.name,
+        'status': i.status,
+		'diagnosisID': i.diagnosisID,
+		'testID': i.testID,
+		'paymentID':i.paymentID,
+		'created_on': i.created_on
+        }
+        appt.append(mydict)
+    return render(request,'hospital_staff_appointments.html',{'appointments':appt})
+    
 
 @login_required
 @check_view_permissions("hospital_staff")
