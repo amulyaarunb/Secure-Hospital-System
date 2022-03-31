@@ -29,7 +29,7 @@ DEBUG = True
 
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1',
-                 'https://damp-hollows-93595.herokuapp.com/']
+                 'damp-hollows-93595.herokuapp.com']
 
 
 # Application definition
