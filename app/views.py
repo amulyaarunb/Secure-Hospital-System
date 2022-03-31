@@ -215,7 +215,6 @@ def patient_diagnosis_details(request, patientID):
     print(patient_diagnosis_details)
     return render(request,'Patient/diagnosis.html',{'patient_diagnosis_details':patient_diagnosis_details})
 
-
 #patient details views
 @login_required
 @check_view_permissions("patient")
@@ -226,15 +225,19 @@ def patient_details(request, patientID):
 def update_patient_record(request,patientID):
     patient=Patient.objects.get(patientID=patientID)
     print(patient)
-    patientForm=forms.PatientForm(request.POST,request.FILES)
+    # patientForm=forms.PatientForm(request.POST,request.FILES)
+    patientForm=forms.PatientForm(request.POST)
     print(patientForm)
     if request.method=='POST':
         print("Hi from POST")
-        patientForm=forms.PatientForm(request.POST,request.FILES,instance=patient)
-        if  patientForm.is_valid():
-            patient=patientForm.save(commit=True)
-            patient.save()
-            return redirect('patient_details.html')
+        # patientForm=forms.PatientForm(request.POST,request.FILES,instance=patient)
+        print(patientForm.errors)
+        # patientForm['patientID'] 
+        # if  patientForm.is_valid():
+        print("patientForm is valid")
+        patient=patientForm.save(commit=True)
+        patient.save(force_update=True)
+        return redirect('patient_details',patient.patientID)
     mydict={'patientForm':patientForm}
     return render(request,'Patient/update_patient_details.html', context=mydict)
 
