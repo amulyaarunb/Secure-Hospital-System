@@ -26,7 +26,14 @@
         <input type="button" class="tablinks" onclick="transactions()" value="Create Payment" style="font-size: 18px;width: 200px;height: 50px;font-weight: bold;background-color:silver;">
         <input type="button" class="tablinks" onclick="search()" value="View Patient Records" style="font-size: 18px;width: 200px;height: 50px;font-weight: bold;background-color:silver;">
     </div>
-    
+
+
+    <form action="#" method="get">
+        <input type="text" name="valuegiver">
+        <input type="submit" value="try me" name="valuebtn">
+
+    </form>
+
     <script>
     function appointments(){
         window.location.href="hospital_staff_appointments";
@@ -36,8 +43,7 @@
     }
     function search(){
         window.location.href="hospital_search_patients";
-    }
-    
+    }  
     
     </script>
 
