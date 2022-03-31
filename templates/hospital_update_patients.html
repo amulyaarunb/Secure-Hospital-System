@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Hospital Staff Update Patients</title>
+    <style>
+        body {
+            font-family: Arial;
+        }
+        /* Style the tab */
+    </style>
+
+</head>
+
+<body style="background-color:whitesmoke">
+
+    <div style="margin-left: -8px; margin-right: -8px;margin-top: -8px;background-color:gray">
+        <span style="color:black;font-size: 50px;">
+            Secure Hospital System
+        </span>
+        <a href="{% url 'hospital_staff_appointments' %}">Appointments</a>
+        <a href="{% url 'hospital_staff_create_payment' %}">Create Payment</a>
+        <a href="{% url 'hospital_search_patients' %}">View Patient Records</a>
+        <a href="/accounts/logout">Log out</a>
+    </div>
+
+    <br>
+
+    <br>
+    <form action="hospital_staff_update_patients_done/" method="post">
+        {% csrf_token %} {{ form }}
+        <input type="Submit" value="Submit">
+    </form>
+
+
+</body>
+
+</html>
