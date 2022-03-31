@@ -30,28 +30,21 @@
 </style>
 
 <body>
-          
-
-    <!-- <div class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="doctor-book-appointment.html"> <button style="font-size:24px;color:red"><i class="fa fa-plus" ></i></button></a>
-        </div>
-    </div> -->
     <!-- viewing doctor's Appointments -->
     <h1>Appointments</h1>
-    <div class="vertical-center">
-        <a href="doctor-book-appointment.html"> <button style="font-size:18px;color:red"><span style="color: grey">Add Appointment</span> <i class="fa fa-plus" ></i></button></a>
-    </div>
+        <a href="/doctor_book_appointment"> <button style="font-size:18px;color:red"><span style="color: grey">Add Appointment</span> <i class="fa fa-plus" ></i></button></a>
     <br>
     <br>
     <table>
         <tr>
             <th>Name</th>
+            <th>Patient ID</th>
             <th>Date</th>
           </tr>
           {% for i in appointments %}
           <tr>
             <th> {{ appointments.name }}</th>
+            <th> {{ appointments.patientID }}</th>
             <th> {{ appointments.date }}</th>
           </tr> 
           {% endfor %}
