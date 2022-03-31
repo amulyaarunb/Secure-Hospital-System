@@ -128,7 +128,7 @@ def validate(request,pk):
     return obj
 '''Insurance Staff View ends here'''
 
-'''Hospital Staff View ''' 
+'''------------------Hospital Staff View------------------- ''' 
 @login_required
 @check_view_permissions("hospital_staff")
 def hospital_appointment_view(request):
@@ -158,33 +158,24 @@ def hospital_appointment_reject(request,pk):
     appointment.save()
     return HttpResponse("Rejected appointment")
 
+@login_required
+@check_view_permissions("hospital_staff")
 def hospital_search(request):
     # whatever user write in search box we get in query
     query = request.GET['query']
     patients=Patient.objects.all().filter(Q(patientID__icontains=query)|Q(name__icontains=query))
     return render(request,'hospital_search_patients.html',{'patients':patients})
 
+@login_required
+@check_view_permissions("hospital_staff")
 def hospital_patient_details(request,pID):
     patient_details = Patient.objects.get(patientID = pID)
     appointment_details=Appointment.objects.get(patientID=pID)
     test_details = Test.objects.get(patientID = pID)
     return render(request,'hospital_search_patients.html',{'patient_details':patient_details,'appointment_details':appointment_details,'test_details':test_details})
-'''
-def hospital_patient_diagnosis(request, appointmentID):
-    patient_diagnosis = models.Diagnosis.objects.get(appointmentID=appointmentID)
-    pdiag = {
-        'diagnosisID': i.diagnosisID,
-        'doctorID': i.doctorID,
-        'patientID': i.patientID,
-        'appointmentID': i.appointmentID,
-        'diagnosis': i.diagnosis,
-        'test_recommendation': i.test_recommendation,
-        'prescription': i.prescription
-    }
-    return HttpResponse(pdiag)
-'''
 
 
+'''---------------Hospital end-------------'''
 
 # ---------------------------------------------------------------------------------
 # ------------------------ PATIENT RELATED VIEWS START ------------------------------
