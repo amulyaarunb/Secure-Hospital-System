@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
-import django_heroku
+# import django_heroku
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -28,7 +28,8 @@ SECRET_KEY = '-$qm_tyz+xfkp^x-!90v0l7hy8(!yphb&$trps9a@fo-@6uf_0'
 DEBUG = True
 
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1',
+                 'https://damp-hollows-93595.herokuapp.com/']
 
 
 # Application definition
@@ -43,7 +44,7 @@ INSTALLED_APPS = [
     'app.apps.AppConfig',
     'bootstrap3',
     'django_registration',
-    'corsheaders',
+    # 'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -54,7 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'shs.urls'
@@ -62,7 +63,7 @@ ROOT_URLCONF = 'shs.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -125,13 +126,17 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR,'static')]
+STATIC_ROOT = 'static/'
+
+STATIC_URL = 'static/'
+# STATICFILES_DIRS = [
+#     BASE_DIR + "/" + "static",
+#     os.path.join(BASE_DIR, 'static')]
 
 if not DEBUG:
     STATIC_ROOT = '/home/django/www-data/site.com/static/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 # LOGIN_REDIRECT_URL = "/"
 
@@ -142,4 +147,4 @@ if DEBUG:
 
 CSRF_TRUSTED_ORIGINS = ['https://damp-hollows-93595.herokuapp.com/']
 
-django_heroku.settings(locals())
+# django_heroku.settings(locals())
