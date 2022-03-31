@@ -29,7 +29,7 @@ DEBUG = False
 
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1',
-                 'damp-hollows-93595.herokuapp.com']
+        'damp-hollows-93595.herokuapp.com', '3.83.191.127','3.221.41.59','0.0.0.0','.harshavamsi.com']
 
 
 # Application definition
@@ -143,6 +143,6 @@ ACCOUNT_ACTIVATION_DAYS = 7
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
 
-CSRF_TRUSTED_ORIGINS = ['https://damp-hollows-93595.herokuapp.com/']
+CSRF_TRUSTED_ORIGINS = ['https://damp-hollows-93595.herokuapp.com/', '3.221.41.59', 'https://harshavamsi.com']
 
 # django_heroku.settings(locals())
