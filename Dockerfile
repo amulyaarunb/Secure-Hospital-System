@@ -20,12 +20,6 @@ RUN apk update \
 COPY ./requirements.txt .
 RUN pip install -r requirements.txt
 
-RUN apk update && apk add bash
-
-# RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-# RUN bash Miniconda3-latest-Linux-x86_64.sh -b -p /miniconda
-# ENV PATH=$PATH:/miniconda/condabin:/miniconda/bin
-
 RUN conda install -c kumatea tensorflow
 
 # copy project
