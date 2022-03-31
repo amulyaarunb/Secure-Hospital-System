@@ -1,3 +1,6 @@
+{% extends 'Doctor\doctor_navbar.html' %}
+{% block content %}
+
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
@@ -26,39 +29,6 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/doctor">Home</a>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/doctor_view_appointment_view">My Appointments</a>
-                    </li>
-                </ul>
-            </div>
-
-          <ul class="nav navbar-nav navbar-right">
-
-            <li><p class="navbar-text"> <b>{{ user.username }}</b></p><li>
-          </ul>
-
-            <!-- Search bar -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <!-- <input type="text" placeholder="Search..." name="search">
-            <button type="submit"><i class="fa fa-search"></i>
-            </button> -->
-            <form id=”search” method=”POST” action=”{% url 'doctor_appointmentID_search_view' %}”>
-                {% csrf_token %}
-                <input type=”text” class=”form-control” placeholder="Search..." name="search">
-                <button type=”submit”><i class="fa fa-search"></i></button>
-            </form>
-
-        </div>
-    </nav>
                
 
 <style media="screen">
@@ -133,11 +103,9 @@
             </div>
         </div>
     </div>
-<!-- content start-->
-{% block content %}
-{% endblock content %}
-<!-- content end-->
+
 
 </body>
 
 </html>
+{% endblock content%}
