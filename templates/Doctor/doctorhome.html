@@ -28,7 +28,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/home">Home</a>
+            <a class="navbar-brand" href="/doctor">Home</a>
             
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
@@ -48,9 +48,14 @@
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <input type="text" placeholder="Search..." name="search">
+            <!-- <input type="text" placeholder="Search..." name="search">
             <button type="submit"><i class="fa fa-search"></i>
-            </button>
+            </button> -->
+            <form id=”search” method=”POST” action=”{% url 'doctor_appointmentID_search_view' %}”>
+                {% csrf_token %}
+                <input type=”text” class=”form-control” placeholder="Search..." name="search">
+                <button type=”submit”><i class="fa fa-search"></i></button>
+            </form>
 
         </div>
     </nav>
@@ -119,7 +124,7 @@
             <div class="col-md-4 col-xl-6">
                 <!-- <div class="card bg-c-green order-card"> -->
                     <div class="card-block">
-                        <a href="/doctor_view_patientlist.html">
+                        <a href="/doctor_view_patientlist">
                             <h4 class="m-b-20">Patient Records</h4>
                         </a>
                         <h1 class="text-right"><i class="fas fa-book-medical f-left"></i></h1>

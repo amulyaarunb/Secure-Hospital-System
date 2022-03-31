@@ -41,7 +41,8 @@ urlpatterns = [
   
 # doctor urls
     path('doctor/', views.doctor, name='doctor'),
-    path('doctor_view_appointment_view/', views.doctor_view_appointment_view, name='doctor_appointment')
-
-
+    path('doctor_view_appointment_view/', views.doctor_view_appointment_view, name='doctor_appointment'),
+    path('doctor_book_appointment/', views.doctor_book_appointment, name='doctor_book_appointment'),
+    path('doctor_view_patientlist/', views.doctor_view_patientlist, name='doctor_view_patientlist'),
+    path('doctor_appointmentID_search_view/', views.doctor_appointmentID_search_view, name='doctor_appointmentID_search_view'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

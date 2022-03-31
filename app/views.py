@@ -332,3 +332,25 @@ def doctor_view_appointment_view(request):
         }
         l[i]=mydict
     return render(request,'Doctor/doctor_view_appointment_view.html', {'appointments':l})
+
+@login_required
+@check_view_permissions("doctor")
+def doctor_book_appointment(request,ID):
+    patient_details=models.Patient.objects.all().get(patientID=patientID)
+    return render(request, "Doctor/doctor_book_appointment.html", {"profile": patient_details})
+    
+    #patient records button views start here
+@login_required
+@check_view_permissions("doctor")
+def doctor_view_patientlist(request):
+    # patients=models.Patient.objects.all().filter(doctorId=doctorID)
+    return render(request, 'Doctor/doctor_view_patientlist.html')
+
+@login_required
+@check_view_permissions("doctor")
+def doctor_appointmentID_search_view(request):
+    # query stores the input given in search bar
+    query = request.GET['query']
+    #patients=models.Patient.objects.all().filter(doctorId=request.user.id).filter(Q(patientID__icontains=query)|Q(name__icontains=query))
+    appointments=models.Appointment.objects.all().filter(doctorId=request.user.id).filter(Q(patientID__icontains=query)|Q(appointmentID__icontains=query)|Q(date__icontains=query))
+    return render(request,'Doctor/doctor_view_appointment_view.html',{'appointments':appointments})
