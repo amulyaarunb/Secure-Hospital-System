@@ -390,4 +390,4 @@ def doctor_create_prescription_view(request,ID):
             return HttpResponseRedirect('/record updated/')
         else:
             form=createprescriptionForm()
-    return render(request, 'doctor_create_prescription.html', {'form': form})
+    return render(request, 'Doctor/doctor_create_prescription.html', {'form': form})
