@@ -390,3 +390,15 @@ def doctor_create_prescription_view(request,ID):
         else:
             form=createprescriptionForm()
     return render(request, 'Doctor/doctor_create_prescription.html', {'form': form})
+
+@login_required
+@check_view_permissions("doctor")
+def doctor_search_view(request):
+    if request.method == "POST":
+        searched = request.POST['searched']
+        patients = Patient.objects.filter(patientID__contains = searched)
+
+        return render(request, 'Doctor/doctor_search.html', {'searched':searched, 'patients':patients})
+    else:
+        return render(request, 'Doctor/doctor_search.html', {})
+		

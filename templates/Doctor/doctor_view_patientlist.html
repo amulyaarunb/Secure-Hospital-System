@@ -15,6 +15,14 @@
 </head>
 
 {% block content %}
+<style>
+    th {
+        border: 1px solid #dddddd;
+        text-align: center;
+        padding: 8px;
+    }
+</style>
+
 <body>
    
 <div class="btn-group-vertical btn-lg col-sm-3">
@@ -24,6 +32,23 @@
     <br>
     <a href="/doctor_create_prescription_view"><button type="button" class="btn btn-primary">Prescriptions</button></a>
   </div>
+
+  <table>
+    <tr>
+        <th>Name</th>
+        <th>Patient ID</th>
+        <th>Date</th>
+        <th>Doctor ID</th>
+      </tr>
+      {% for i in appointments %}
+      <tr>
+        <th> {{ appointments.name }}</th>
+        <th> {{ appointments.patientID }}</th>
+        <th> {{ appointments.date }}</th>
+        <th> {{ appointments.DoctorID }}</th>
+      </tr> 
+      {% endfor %}
+</table>
 
 </body>
 {% endblock content%}

@@ -1,0 +1,18 @@
+{% extends 'Doctor\doctor_navbar.html' %}
+
+{% block content %}
+    <center>
+        {% if searched %}
+            <h2>Here are the details on - {{ searched }}</h2>
+            <br>
+            {% for patients in Patient %}
+                <a href="#">{{ patient }}</a> 
+                <!-- add patients url here {% url 'patientpage' %} -->
+            {% endfor %}
+            <br>
+        {% else %}
+            <h2>Nothing's been searched!</h2>
+        {% endif %}
+    </center>
+
+{% endblock content%}
