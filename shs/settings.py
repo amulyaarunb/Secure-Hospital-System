@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'bootstrap3',
     'django_registration',
     # 'corsheaders',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [

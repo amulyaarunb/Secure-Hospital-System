@@ -2,6 +2,7 @@ import re
 from django.contrib.auth.models import Group
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
+from django.test import TransactionTestCase
 from django_registration.backends.activation.views import RegistrationView
 from django.contrib.auth.models import Group
 from django.http import HttpResponse
@@ -15,10 +16,11 @@ def index(request):
     print(request.user.groups)
     if request.user.groups.filter(name='patient').exists():
         # return patient stuff
-        return render(request, "home.html")
+        return redirect('/patient')
     if request.user.groups.filter(name='doctor').exists():
             # return patient stuff
-        return render(request, "home.html")
+        return redirect('/doctor')
+        # return render(request, "home.html")
     if request.user.groups.filter(name='hospital_staff').exists():
             # return patient stuff
         return render(request, "hospital_staff_home.html")
@@ -181,15 +183,7 @@ def hospital_patient_diagnosis(request, appointmentID):
     }
     return HttpResponse(pdiag)
 '''
-def update_patient_record(request,patientID):
-    patient=Patient.objects.get(id=patientID)
-    patientForm=forms.PatientForm(request.POST,request.FILES)
-    if request.method=='POST':
-        patientForm=forms.PatientForm(request.POST,request.FILES,instance=patient)
-        if  patientForm.is_valid():
-            patient=patientForm.save(commit=False)
-            patient.save()
-    return HttpResponse("Updated")
+
 
 
 # ---------------------------------------------------------------------------------
@@ -197,77 +191,47 @@ def update_patient_record(request,patientID):
 # ---------------------------------------------------------------------------------
 
 
+@login_required
+@check_view_permissions("patient")
+def patient(request):
+    return render(request, 'Patient/patient.html', {"user": request.user})
 
 # @app.route("/diagnosis")
 @login_required
 @check_view_permissions("patient")
 def patient_diagnosis_details(request, patientID):
     patient_diagnosis_details = models.Diagnosis.objects.all().filter(patientID=patientID)
-    d={}
-    for i in patient_diagnosis_details:
-        mydict = {
-        'diagnosisID': i.diagnosisID,
-        'doctorID': i.doctorID,
-        'patientID': i.patientID,
-        'appointmentID': i.appointmentID,
-        'diagnosis': i.diagnosis,
-        'test_recommendation': i.test_recommendation,
-        'prescription': i.prescription
-        }
-        d[i]=mydict
-    return HttpResponse(d)
+    print(patient_diagnosis_details)
+    return render(request,'Patient/diagnosis.html',{'patient_diagnosis_details':patient_diagnosis_details})
 
 
+#patient details views
 @login_required
 @check_view_permissions("patient")
 def patient_details(request, patientID):
-     patient = models.Patient.objects.get(patientID=patientID)
-     mydict = {
-         'patientID': patientID,
-         'name': patient.name,
-         'age': patient.age,
-         'gender': patient.gender,
-         'height': patient.height,
-         'weight': patient.weight,
-         'insuranceID': patient.insuranceID,
-     }
-     return HttpResponse(mydict)
+     patient = models.Patient.objects.filter(patientID=patientID)
+     return render(request,'Patient/patient_details.html',{'patient':patient, "user": request.user})
 
-@login_required
-@check_view_permissions("patient")
-def patient_payments_details(request,patientID):
-    patient_payments_details = models.Payment.objects.all().filter(patientID=patientID)
-    d={}
-    for i in patient_payments_details:
-        mydict = {
-        'paymentID': i.paymentID,
-        'method': i.method,
-        'type':i.type,
-        'mode':i.mode,
-        'amount':i.amount,
-        'status':i.status,
-        'patientID': i.patientID,
-        'testID':i.testID,
-        'appointmentID': i.appointmentID,
-        'created_on':i.created_on
-        }
-        d[i]=mydict
-    return HttpResponse(d)
+def update_patient_record(request,patientID):
+    patient=Patient.objects.get(patientID=patientID)
+    print(patient)
+    patientForm=forms.PatientForm(request.POST,request.FILES)
+    print(patientForm)
+    if request.method=='POST':
+        print("Hi from POST")
+        patientForm=forms.PatientForm(request.POST,request.FILES,instance=patient)
+        if  patientForm.is_valid():
+            patient=patientForm.save(commit=True)
+            patient.save()
+            return redirect('patient_details.html')
+    mydict={'patientForm':patientForm}
+    return render(request,'Patient/update_patient_details.html', context=mydict)
 
+# Lab views
 @login_required
 @check_view_permissions("patient")
-def patient_labtest_view(request):
-     return render(request, 'labtest/labtest.html')
-     
-@login_required
-@check_view_permissions("patient")
-def get_bot_response(request):
-    d = request.GET
-    # print(d)
-    userText = d['msg']
-    result = chatgui.chatbot_response(userText)
-    # print(result)
-    return HttpResponse(result, content_type="text/plain")
+def patient_labtest_view(request,patientID):
+     return render(request, 'Patient/labtest/labtest.html',{"user": request.user})
 
 @login_required
 @check_view_permissions("patient")
@@ -278,19 +242,30 @@ def request_test(request):
             test=testform.save(commit=False)
             test.status='requested'
             test.save()
-    return HttpResponse("Requested lab test")
+    mydict={"testform":testform}
+    return render(request,'Patient/labtest/request_labtest.html', context=mydict)
 
 @login_required
 @check_view_permissions("patient")
-def update_patient_record(request,patientID):
-    patient=models.Patient.objects.get(patientID=patientID)
-    patientForm=forms.PatientForm(request.POST,request.FILES)
-    if request.method=='POST':
-        patientForm=forms.PatientForm(request.POST,request.FILES,instance=patient)
-        if  patientForm.is_valid():
-            patient=patientForm.save(commit=False)
-            patient.save()
-    return HttpResponse("Updated")
+def view_lab_report(request,diagnosisID):
+    lab_test_details=models.Test.objects.get(diagnosisID=diagnosisID)
+    return render(request, 'Patient/labtest/patient_view_lab_report.html',{"user": request.user})
+
+#Chatbot Views
+@login_required
+@check_view_permissions("patient")
+def get_bot_response(request):
+    d = request.GET
+    userText = d['msg']
+    result = chatgui.chatbot_response(userText)
+    return HttpResponse(result, content_type="text/plain")
+
+
+# Appointment Views
+@login_required
+@check_view_permissions("patient")
+def patient_appointment_view(request):
+     return render(request, 'Patient/Appointment/appointment.html')
 
 @login_required
 @check_view_permissions("patient")
@@ -306,6 +281,7 @@ def patient_book_appointment_view(request,patientID):
     return HttpResponse("Appointment request initiated")
 
 
+# Payment and Transaction views
 @login_required
 @check_view_permissions("patient")
 def make_payment(request):
@@ -317,17 +293,64 @@ def make_payment(request):
             pay.save()
     return HttpResponse("Payment")
 
-
 @login_required
 @check_view_permissions("patient")
-def view_lab_report(request,diagnosisID):
-    lab_test_details=models.Test.objects.get(diagnosisID=diagnosisID)
-    mydict={
-        'result':lab_test_details.result
-    }
-    return HttpResponse(mydict)
-
+def patient_payments_details(request,patientID):
+    patient_payments_details = models.Payment.objects.all().filter(patientID=patientID)
+    return render(request,'Patient/', patient_payments_details)
    
 
 # ------------------------ PATIENT RELATED VIEWS END ------------------------------
 # ---------------------------------------------------------------------------------
+
+
+# -------------------------Doctor View--------------------------
+
+@login_required
+@check_view_permissions("doctor")
+def doctor(request):
+    return render(request,'Doctor/doctorhome.html', {"user": request.user})
+
+@login_required
+@check_view_permissions("doctor")
+def doctor_view_appointment_view(request):
+    appointments=models.Appointment.objects.all().filter(doctorID=request.user.id)
+    l=[]
+    for i in appointments:
+        mydict = {
+        'appointmentID': i.appointmentID,
+        'date': i.date,
+        'time': i.time,
+        'type': i.type,
+        'patientID': i.patientID,
+        'doctorID': i.doctorID,
+        'status': i.status,
+		'diagnosisID': i.diagnosisID,
+		'testID': i.testID,
+		'paymentID':i.paymentID,
+		'created_on': i.created_on
+        }
+        l[i]=mydict
+    return render(request,'Doctor/doctor_view_appointment_view.html', {'appointments':l})
+
+@login_required
+@check_view_permissions("doctor")
+def doctor_book_appointment(request,ID):
+    patient_details=models.Patient.objects.all().get(patientID=patientID)
+    return render(request, "Doctor/doctor_book_appointment.html", {"profile": patient_details})
+    
+    #patient records button views start here
+@login_required
+@check_view_permissions("doctor")
+def doctor_view_patientlist(request):
+    # patients=models.Patient.objects.all().filter(doctorId=doctorID)
+    return render(request, 'Doctor/doctor_view_patientlist.html')
+
+@login_required
+@check_view_permissions("doctor")
+def doctor_appointmentID_search_view(request):
+    # query stores the input given in search bar
+    query = request.GET['query']
+    #patients=models.Patient.objects.all().filter(doctorId=request.user.id).filter(Q(patientID__icontains=query)|Q(name__icontains=query))
+    appointments=models.Appointment.objects.all().filter(doctorId=request.user.id).filter(Q(patientID__icontains=query)|Q(appointmentID__icontains=query)|Q(date__icontains=query))
+    return render(request,'Doctor/doctor_view_appointment_view.html',{'appointments':appointments})
