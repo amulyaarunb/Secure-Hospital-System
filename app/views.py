@@ -525,15 +525,27 @@ def doctor_appointmentID_search_view(request):
 
 @login_required
 @check_view_permissions("doctor")
-def doctor_createpatientdiagnosis_view(request,ID):
-    diagnosis=models.Diagnosis.objects.all().get(appointmentID=ID)
+def doctor_createpatientdiagnosis_view(request):
+    diagnosis=models.Diagnosis.objects.all().get(doctorID=request.user.username)
+    l=[]
+    for i in diagnosis:
+        mydict = {
+        'appointmentID': i.appointmentID,
+        'patientID': i.patientID,
+        'doctorID': i.doctorID,
+		'diagnosisID': i.diagnosisID,
+		'diagnosis': i.diagnosis,
+        'test_recommendation': i.test_recommendation,
+        'prescription': i.prescription
+        }
+        l.append(mydict)
     if request.method=='POST':
         form=createDiagnosisForm(request.POST)
         if form.is_valid():
             return HttpResponseRedirect('/record modified/')
         else:
             form=createDiagnosisForm()
-    return render(request, 'Doctor/doctor_createpatientdiagnosis_view.html', {'form': form})
+    return render(request, 'Doctor/doctor_createpatientdiagnosis_view.html', {'form': form, 'diagnosis': l})
 
 @login_required
 @check_view_permissions("doctor")
@@ -558,5 +570,8 @@ def doctor_search_view(request):
         return render(request, 'Doctor/doctor_search.html', {'searched':searched, 'patients':patients})
     else:
         return render(request, 'Doctor/doctor_search.html', {})
+
+
+
 		
 

@@ -60,5 +60,7 @@ urlpatterns = [
          name='doctor_appointmentID_search_view'),
     path('doctor_search/', views.doctor_search_view,
          name='doctor_search'),
+    path('doctor_createpatientdiagnosis_view/', views.doctor_createpatientdiagnosis_view, 
+         name='doctor_patient_diagnosis'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

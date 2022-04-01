@@ -14,15 +14,23 @@
 <h1>Patients diagnosis</h1>
 <table>
     <tr>
-        <th>Name</th>
-        <th>Date</th>
+        <th>Patient ID</th>
+        <th>Doctor ID</th>
+        <th>Appointment ID</th>
+        <th>Diagnosis</th>
+        <th>Test Recommendation</th>
+        <th>Prescription</th>
         <th>Update</th>
         <th>Modify</th>
       </tr>
       {% for i in appointments %}
       <tr>
-        <th> {{ appointments.name }}</th>
-        <th> {{ appointments.date }}</th>
+        <th> {{ i.patientID }}</th>
+        <th> {{ i.doctorID }}</th>        
+        <th> {{ i.appointmentID }}</th>
+        <th> {{ i.diagnosis }}</th>
+        <th> {{ i.test_recommendation }}</th>
+        <th> {{ i.prescription }}</th>
         <th> 
             <div class="btn-group">
                 <a href="#"> <button type="button" class="btn btn-secondary">Update</button> </a>
