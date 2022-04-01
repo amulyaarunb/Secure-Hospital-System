@@ -435,9 +435,11 @@ def doctor(request):
 @login_required
 @check_view_permissions("doctor")
 def doctor_view_appointment_view(request):
-    appointments=models.Appointment.objects.all().filter(doctorID=request.user.id)
+    appointments=models.Appointment.objects.all().filter(doctorID=request.user.username)
     l=[]
     for i in appointments:
+        patient = Patient.objects.get(patientID = i.patientID.patientID)
+        doctor = Doctor.objects.get(doctorID = i.doctorID.doctorID)
         mydict = {
         'appointmentID': i.appointmentID,
         'date': i.date,
@@ -445,13 +447,15 @@ def doctor_view_appointment_view(request):
         'type': i.type,
         'patientID': i.patientID,
         'doctorID': i.doctorID,
+        'patientName':patient.name,
+        'doctorName':doctor.name,
         'status': i.status,
 		'diagnosisID': i.diagnosisID,
 		'testID': i.testID,
 		'paymentID':i.paymentID,
 		'created_on': i.created_on
         }
-        l[i]=mydict
+        l.append(mydict)
     return render(request,'Doctor/doctor_view_appointment_view.html', {'appointments':l})
 
 @login_required
