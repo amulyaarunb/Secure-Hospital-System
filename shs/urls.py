@@ -15,10 +15,10 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
 
     #insurance staff
-    path('insurance_staff/',views.viewClaim,name='viewClaim'),
-    path('insurance_staff_review/',views.claimDisb,name='claimDisb'),
-    path('approveClaim/<str:pk>',views.approveClaim,name='approveClaim'),
-    path('denyClaim/<str:pk>',views.denyClaim,name='denyClaim'),
+    path('insurance_staff/',views.viewClaim,name='insurance_staff'),
+#     path('insurance_staff_review/',views.claimDisb,name='claimDisb'),
+    #path('approveClaim/<str:pk>',views.approveClaim,name='approveClaim'),
+    #path('denyClaim/<str:pk>',views.denyClaim,name='denyClaim'),
     path('authorizeFund/',views.authorizeFund,name= 'authorizeFund'),
 
     #hospital staff
@@ -30,7 +30,7 @@ urlpatterns = [
     path('hospital_update_patients/',views.hospital_update_patients,name= 'hospital_update_patients'),
     path('hospital_appointment_approve/<str:ID>',views.hospital_appointment_approve,name='hospital_appointment_approve'),
     path('hospital_appointment_reject/<str:ID>',views.hospital_appointment_reject,name='hospital_appointment_reject'),
-    path('hospital_search_patients_filter/',views.hospital_search_patients_filter,name= 'hospital_search_patients_filter'),
+#     path('hospital_search_patients_filter/',views.hospital_search_patients_filter,name= 'hospital_search_patients_filter'),
     path('hospital_patient_details/<str:pID>',views.hospital_patient_details,name= 'hospital_patient_details'),
     
     # Patient urls
@@ -47,12 +47,10 @@ urlpatterns = [
     path("patient_labtest/<str:patientID>", views.patient_labtest_view, name="patient_labtest"),
     path("patient_labtest/request_labtest/<str:patientID>", views.request_test, name="request_labtest"),
     path("patient_labtest/patient_view_lab_report/<str:patientID>", views.view_lab_report, name="patient_view_lab_report"),
-         
-  
-# doctor urls
-    path('doctor/', views.doctor, name='doctor'),
-    path('doctor_view_appointment_view/', views.doctor_view_appointment_view, name='doctor_appointment'),
 
+    path("patient_payments/<str:patientID>", views.patient_payments_details, name="patient_payments"),
+    path("patient_make_payment/<str:patientID>",views.make_payment, name="patient_make_payment"),
+         
     # Doctor URLs
     path('doctor/', views.doctor, name='doctor'),
     path('doctor_view_appointment_view/',
@@ -65,5 +63,7 @@ urlpatterns = [
          name='doctor_appointmentID_search_view'),
     path('doctor_search/', views.doctor_search_view,
          name='doctor_search'),
+    path('doctor_createpatientdiagnosis_view/', views.doctor_createpatientdiagnosis_view, 
+         name='doctor_patient_diagnosis'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
