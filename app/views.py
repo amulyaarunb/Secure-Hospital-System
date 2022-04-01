@@ -113,6 +113,44 @@ def authorizeFund(request,pk):
     obj1 = Payment.objects.get(paymentID=obj.paymentID)
     obj1.status = 'completed'
     return redirect('/insurance_staff_review')
+
+@login_required
+@check_view_permissions("insurance_staff")
+def claimDisb(request):
+    obj = Insurance.objects.all().filter(status='approved')
+    arr = []
+    for i in obj:
+        obj1 = Patient.objects.get(id=i.patientID.patientID)
+        obj2 = Payment.objects.get(id=i.paymentID.paymentID)
+        dict = {
+            'patientName':obj1.name,
+            'insuranceID':obj1.insuranceID,
+            'amount':obj2.amount
+        }
+        arr.append(dict)
+
+    return render(request,'insurance_staff.html',{'Disbursal Pending':arr})
+
+
+@login_required
+@check_view_permissions("insurance_staff")
+def viewClaim(request):
+    obj = Insurance.objects.filter(status='initiated')
+    return obj
+    obj = Insurance.objects.all().filter(status='initiated')
+    arr = []
+    for i in obj:
+        obj1 = Patient.objects.get(id=i.patientID.patientID)
+        obj2 = Payment.objects.get(id=i.paymentID.paymentID)
+        dict = {
+            'patientName':obj1.name,
+            'insuranceID':obj1.insuranceID,
+            'amount':obj2.amount
+        }
+        arr.append(dict)
+
+    return render(request,'insurance_staff.html',{'claims':arr})
+
     
 '''Insurance Staff View ends here'''
 
@@ -521,3 +559,4 @@ def doctor_search_view(request):
     else:
         return render(request, 'Doctor/doctor_search.html', {})
 		
+
