@@ -166,11 +166,12 @@ def hospital_appointment(request):
 @check_view_permissions("hospital_staff")
 def hospital_appointment_approve(request,ID):
     appointment=Appointment.objects.get(appointmentID=ID)
+    patient = Patient.objects.get(patientID = appointment.patientID.patientID)
     appointment.status='approved'
     appointment.save()
-    patient = Patient.objects.get(patientID = appointment.patientID.patientID)
     if(patient.name == ''):
-        return redirect('/hospital_update_patients')
+        request.session['_patient_id'] = patient.patientID
+        return HttpResponseRedirect('/hospital_update_patients')
     return redirect('/hospital_staff_appointments')
 
 @login_required
@@ -184,11 +185,15 @@ def hospital_appointment_reject(request,ID):
 @login_required
 @check_view_permissions("hospital_staff")
 def hospital_update_patients(request):
+        #print(request.session)
+        pID = request.session.get('_patient_id')
+        print(pID)
         if request.method == 'POST':
             # create a form instance and populate it with data from the request:
             form = forms.PatientUpdateForm(request.POST)
             if form.is_valid():
-                obj = Patient() #gets new object
+                obj = Patient.objects.get(patientID = pID) 
+                #obj = Patient()
                 obj.name = form.cleaned_data['PatientName']
                 obj.age = form.cleaned_data['Age']
                 obj.gender = form.cleaned_data['Gender']
@@ -203,10 +208,56 @@ def hospital_update_patients(request):
             form = forms.PatientUpdateForm()
         return render(request, 'hospital_update_patients.html', {'form': form})
 
+def hospital_approved_appointment(request):
+    #those whose approval are needed
+    appointments=Appointment.objects.all().filter(status='approved')
+    appt=[]
+    for i in appointments:
+        patient = Patient.objects.get(patientID = i.patientID.patientID)
+        doctor = Doctor.objects.get(doctorID = i.doctorID.doctorID)
+        mydict = {
+        'appointmentID': i.appointmentID,
+        'date': i.date,
+        'time': i.time,
+        'type': i.type,
+        'patientID': i.patientID,
+        'doctorID': i.doctorID,
+        'patientName':patient.name,
+        'doctorName':doctor.name,
+        'status': i.status
+        }
+        appt.append(mydict)
+    return render(request,'',{'appointments':appt})
+
+def hospital_complete_appointment(request,ID):
+    appointment=Appointment.objects.get(appointmentID=ID)
+    patient = Patient.objects.get(patientID = appointment.patientID.patientID)
+    appointment.status='completed'
+    appointment.save()
+    request.session['_appointment_id'] = ID
+    return HttpResponseRedirect('/hospital_transaction')
+
 @login_required
 @check_view_permissions("hospital_staff")
 def hospital_transaction(request,ID):
-    return('/hospital_staff_appointments')
+    apptID = request.session.get('_appointment_id')
+    if request.method == 'POST':
+            # create a form instance and populate it with data from the request:
+            form = forms.CreatePaymentForm(request.POST)
+            if form.is_valid():
+                apptID = Appointment.objects.get(appointmentID = apptID)
+                pID = apptID.patientID
+                obj = Payment()
+                obj.amount = form.cleaned_data['Amount']
+                obj.appointmentID = apptID
+                obj.patientID =pID
+                obj.save()
+                return HttpResponseRedirect('/hospital_approved_appointments/')
+
+        # if a GET (or any other method) we'll create a blank form
+            else:
+                form = forms.CreatePaymentForm()
+            return render(request, '', {'form': form})
 
 @login_required
 @check_view_permissions("hospital_staff")
