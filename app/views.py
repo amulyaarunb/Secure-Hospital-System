@@ -436,15 +436,27 @@ def patient_book_appointment_view(request,patientID):
 # Payment and Transaction views
 @login_required
 @check_view_permissions("patient")
-def make_payment(request, patientID):
-    patient_payments = models.Payment.objects.all().filter(patientID=patientID)
+def make_payment(request, paymentID):
+    patient_payments = models.Payment.objects.get(paymentID=paymentID)
+    patientID=patient_payments.patientID
+    print(patientID.patientID)
+    payform=forms.MakePaymentForm(request.POST)
     if request.method=='POST':
-        payform=forms.MakePaymentForm(request.POST)
+        #print(payform.data)
+        patient_payments.method=payform.data['method']
+        #print(payform.data['method'])
+        if patient_payments.method=='Insurance':
+            patient_payments.status='initiated'
+        else:
+            patient_payments.status='completed'
+
+        patient_payments.save()
         if  payform.is_valid():
             pay=payform.save(commit=False)
             pay.status='initiated'
             pay.save()
-        return redirect("patient_payments", patient_payments.patientID)
+        #print(patient_payments.amount)
+        return redirect("patient_payments", patientID.patientID)
 
     # mydict={'MakePaymentForm': payform}
     return render(request,'Patient/payments_and_transactions/make_payment.html', {"patient_payments":patient_payments})
