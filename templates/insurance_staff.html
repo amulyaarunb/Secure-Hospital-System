@@ -7,6 +7,10 @@
         body {
             font-family: Arial;
         }
+        
+        a:hover:not(.active) {
+            background-color: whitesmoke;
+        }
     </style>
 
 </head>
@@ -14,29 +18,29 @@
 <body style="background-color:whitesmoke">
 
     <div style="margin-left: -8px; margin-right: -8px;margin-top: -8px;background-color:gray">
-        <span style="color:black;font-size: 50px;">
+        <ul style="color:black;font-size: 30px;list-style-type: none;margin: 0;padding: 5px;">
             Secure Hospital System
-        </span>
-        <a href="/accounts/logout">Log out</a>
+            <a href="{% url 'insurance_staff' %} " style="color: black;font-size: 25px;text-decoration: none;padding: 10px;"> Home</a>
+            <a href="{% url 'insurance_staff_review' %} " style="color: black;font-size: 25px;text-decoration: none;padding: 10px;"> Disemberse Funds</a>
+            <a href="/accounts/logout" style="color: black;font-size: 25px;text-decoration: none;padding: 10px;"> Log Out</a>
+        </ul>
     </div>
 
     <br>
 
-    <div id="Claims">
-        {% for c in obj %}
+
+    <div id="Appointments ">
+        {% for c in claims %}
         <li>
-            <p>Patient ID: {{ c.patientID }}</p>
+            <p>Patient Name: {{ c.name }}</p>
             <p>Payment ID: {{ c.paymentID }}</p>
-            <p>Requst ID: {{ c.request_id }}</p>
-            <p>Status: {{ c.status }}</p>
+            <p>Amount: {{ c.amount }}</p>
+            <a href="{% url 'approveClaim' c.paymentID %}" style="color: black;font-size: 10px;text-decoration: none;padding: 10px;border-style: solid;background-color: gray;">Approve</a>
+            <a href="{% url 'denyClaim' c.paymentID %}" style="color: black;font-size: 10px;text-decoration: none;padding: 10px;border-style: solid;background-color: gray;">Reject</a>
         </li>
         {% endfor %}
 
     </div>
-
-
-    <script>
-    </script>
 
 </body>
 

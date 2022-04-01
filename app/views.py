@@ -28,7 +28,7 @@ def index(request):
         return render(request, "home.html")
     if request.user.groups.filter(name='insurance_staff').exists():
         # return patient stuff
-        return render(request, "home.html")
+        return render(request, "insurance_staff.html")
     if request.user.groups.filter(name='admin').exists():
         return redirect('/administrator')
 
@@ -146,7 +146,7 @@ def claimDisb(request):
         }
         arr.append(dict)
 
-    return render(request,'insurance_staff.html',{'Disbursal Pending':arr})
+    return render(request,'insurance_staff_review.html',{'claims':arr})
     
 @login_required
 @check_view_permissions("insurance_staff")
