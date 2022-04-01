@@ -177,11 +177,12 @@ def hospital_appointment(request):
 @check_view_permissions("hospital_staff")
 def hospital_appointment_approve(request,ID):
     appointment=Appointment.objects.get(appointmentID=ID)
+    patient = Patient.objects.get(patientID = appointment.patientID.patientID)
     appointment.status='approved'
     appointment.save()
-    patient = Patient.objects.get(patientID = appointment.patientID.patientID)
     if(patient.name == ''):
-        return redirect('/hospital_update_patients')
+        request.session['_patient_id'] = patient.patientID
+        return HttpResponseRedirect('/hospital_update_patients')
     return redirect('/hospital_staff_appointments')
 
 @login_required
@@ -195,11 +196,15 @@ def hospital_appointment_reject(request,ID):
 @login_required
 @check_view_permissions("hospital_staff")
 def hospital_update_patients(request):
+        #print(request.session)
+        pID = request.session.get('_patient_id')
+        print(pID)
         if request.method == 'POST':
             # create a form instance and populate it with data from the request:
             form = forms.PatientUpdateForm(request.POST)
             if form.is_valid():
-                obj = Patient() #gets new object
+                obj = Patient.objects.get(patientID = pID) 
+                #obj = Patient()
                 obj.name = form.cleaned_data['PatientName']
                 obj.age = form.cleaned_data['Age']
                 obj.gender = form.cleaned_data['Gender']
