@@ -292,7 +292,7 @@ def patient_book_appointment_view(request,patientID):
             appointment=appointmentForm.save(commit=False)
             appointment.status='initiated'
             appointment.save()
-    return HttpResponse("Appointment request initiated")
+    return render(request, 'Patient/Appointment/book-appointment.html')
 
 
 # Payment and Transaction views
