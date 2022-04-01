@@ -34,25 +34,27 @@
             <table class="table table-hover" id="dev-table">
                 <thead>
                     <tr>
-                        <th>diagnosisID</th>
-                        <th>doctorID</th>
+                        <th>testID</th>
+                        <th>date</th>
+                        <th>time</th>
                         <th>patientID</th>
-                        <th>appointmentID</th>
-                        <th>diagnosis</th>
-                        <th>test_recommendation</th>
-                        <th>prescription</th>
+                        <th>status</th>
+                        <th>result</th>
+                        <th>diagnosisID</th>
+                        <th>paymentID</th>
                     </tr>
                 </thead>
-                {% for a in patient_diagnosis_details %}
+                {% for a in lab_test_details %}
                 <tr>
                     
-                    <td> {{a.diagnosisID}}</td>
-                    <td>{{a.doctorID.doctorID}}</td>
-                    <td>{{a.patientID.patientID}}</td>
-                    <td> {{a.appointmentID.appointmentID}}</td>
-                    <td>{{a.diagnosis}}</td>
-                    <td>{{a.test_recommendation}}</td>
-                    <td>{{a.prescription}}</td>
+                    <td> {{a.testID}}</td>
+                    <td>{{a.date}}</td>
+                    <td>{{a.time}}</td>
+                    <td> {{a.patientID}}</td>
+                    <td>{{a.status}}</td>
+                    <td>{{a.result}}</td>
+                    <td>{{a.diagnosisID.diagnosisID}}</td>
+                    <td>{{a.paymentID.paymentID}}</td>
                     
                 </tr>
                 {% endfor %}
