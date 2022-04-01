@@ -62,6 +62,16 @@
             <p>Test Payment ID: {{ test.paymentID }}</p>
         </li>
         {% endfor %}
+        <br><br> {% for d in diagnosis_details %}
+        <li>
+            <p>Diagnosis ID: {{ d.diagnosisID }}</p>
+            <p>Doctor for Diagnosis: {{ d.doctorID }}</p>
+            <p>Diagnosis: {{ d.diagnosis }}</p>
+            <p>Diagnosis for appointment: {{ d.appointmentID }}</p>
+            <p>Test recommendation for diagnosis: {{ d.test_recommendation }}</p>
+            <p>Diagnosis Prescription: {{ d.prescription }}</p>
+        </li>
+        {% endfor %}
     </div>
 </body>
 
