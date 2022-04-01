@@ -73,4 +73,4 @@ class Test(models.Model):
     status = models.CharField(max_length=255, blank=True)
     result = models.CharField(max_length=255, blank=True)
     diagnosisID = models.ForeignKey(Diagnosis, on_delete=models.CASCADE)
-    paymentID = models.ForeignKey(Payment, blank=True, on_delete=models.CASCADE)
+    paymentID = models.ForeignKey(Payment, blank=True, null = True, on_delete=models.CASCADE)
