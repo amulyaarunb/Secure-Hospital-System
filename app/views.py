@@ -614,3 +614,15 @@ def doctor_view_labreport_view(request):
     return render(request,'Doctor/doctor_view_labreport.html',{'labtestreport':l})
 		
 
+@login_required
+@check_view_permissions("doctor")
+def doctor_recommend_labtest_view(request):
+    # appt=models.Appointment.objects.all().filter(appointmentID=ID)
+    # t=models.Diagnosis.objects.get(diagnosisID=appt.diagnosisID)
+    # if request.method=='POST':
+    #     form=recommendlabtestForm(request.POST)
+    #     if form.is_valid():
+    #         return HttpResponseRedirect('/record updated/')
+    #     else:
+    #         form=recommendlabtestForm()
+    return render(request, 'Doctor/doctor_recommendlabtest.html')

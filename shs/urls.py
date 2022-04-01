@@ -70,12 +70,11 @@ urlpatterns = [
          name='doctor_appointmentID_search_view'),
     path('doctor_search/', views.doctor_search_view,
          name='doctor_search'),
-<<<<<<< HEAD
-=======
     path('doctor_createpatientdiagnosis_view/', views.doctor_createpatientdiagnosis_view, 
          name='doctor_patient_diagnosis'),
     path('doctor_view_labreport_view/',
          views.doctor_view_labreport_view, name='doctor_view_labreport_view'),
->>>>>>> 88d719645ee663b4437f153518406e49fc254345
+    path('doctor_recommend_labtest/',
+         views.doctor_recommend_labtest_view, name='doctor_recommend_labtest_view'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

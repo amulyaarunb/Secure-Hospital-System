@@ -1,0 +1,16 @@
+{% extends 'Doctor\doctor_navbar.html' %}
+
+{% block content %}
+
+<head>
+
+    <h1>Recommend lab tests for this patient</h1>
+    <br>
+    <form action="" method="get">
+        <label for="recommend_labtest">Lab tests required: </label>
+        <textarea id="recommend_labtest" name="recommend_labtest" value="{{ labtest }}" rows="4" cols="50"></textarea>
+        <input type="submit" value="Submit">
+    </form>
+
+</head>
+{% endblock content %}
