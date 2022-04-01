@@ -48,11 +48,6 @@ urlpatterns = [
     path("patient_labtest/request_labtest/<str:patientID>", views.request_test, name="request_labtest"),
     path("patient_labtest/patient_view_lab_report/<str:patientID>", views.view_lab_report, name="patient_view_lab_report"),
          
-  
-# doctor urls
-    path('doctor/', views.doctor, name='doctor'),
-    path('doctor_view_appointment_view/', views.doctor_view_appointment_view, name='doctor_appointment'),
-
     # Doctor URLs
     path('doctor/', views.doctor, name='doctor'),
     path('doctor_view_appointment_view/',
