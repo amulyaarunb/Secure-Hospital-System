@@ -454,6 +454,7 @@ def make_payment(request, paymentID):
     patientID=patient_payments.patientID
     print(patientID.patientID)
     payform=forms.MakePaymentForm(request.POST)
+    patient_payments = models.Payment.objects.all().filter(paymentID=paymentID)
     if request.method=='POST':
         #print(payform.data)
         patient_payments.method=payform.data['method']
