@@ -130,6 +130,23 @@ def viewClaim(request):
         arr.append(dict)
 
     return render(request,'insurance_staff.html',{'claims':arr})
+
+@login_required
+@check_view_permissions("insurance_staff")
+def claimDisb(request):
+    obj = Insurance.objects.all().filter(status='approved')
+    arr = []
+    for i in obj:
+        obj1 = Patient.objects.get(id=i.patientID.patientID)
+        obj2 = Payment.objects.get(id=i.paymentID.paymentID)
+        dict = {
+            'patientName':obj1.name,
+            'insuranceID':obj1.insuranceID,
+            'amount':obj2.amount
+        }
+        arr.append(dict)
+
+    return render(request,'insurance_staff.html',{'Disbursal Pending':arr})
     
 @login_required
 @check_view_permissions("insurance_staff")
