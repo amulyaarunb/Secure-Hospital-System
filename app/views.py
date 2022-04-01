@@ -28,7 +28,7 @@ def index(request):
         return render(request, "home.html")
     if request.user.groups.filter(name='insurance_staff').exists():
         # return patient stuff
-        return render(request, "home.html")
+        return redirect('/insurance_staff')
     if request.user.groups.filter(name='admin').exists():
         return redirect('/administrator')
 
@@ -135,13 +135,11 @@ def claimDisb(request):
 @login_required
 @check_view_permissions("insurance_staff")
 def viewClaim(request):
-    obj = Insurance.objects.filter(status='initiated')
-    return obj
     obj = Insurance.objects.all().filter(status='initiated')
     arr = []
     for i in obj:
-        obj1 = Patient.objects.get(id=i.patientID.patientID)
-        obj2 = Payment.objects.get(id=i.paymentID.paymentID)
+        obj1 = Patient.objects.get(patientID=i.patientID.patientID)
+        obj2 = Payment.objects.get(paymentID=i.paymentID.paymentID)
         dict = {
             'patientName':obj1.name,
             'insuranceID':obj1.insuranceID,

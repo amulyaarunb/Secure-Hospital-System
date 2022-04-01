@@ -15,10 +15,10 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
 
     #insurance staff
-    path('insurance_staff/',views.viewClaim,name='viewClaim'),
+    path('insurance_staff/',views.viewClaim,name='insurance_staff'),
 #     path('insurance_staff_review/',views.claimDisb,name='claimDisb'),
-    path('approveClaim/<str:pk>',views.approveClaim,name='approveClaim'),
-    path('denyClaim/<str:pk>',views.denyClaim,name='denyClaim'),
+    #path('approveClaim/<str:pk>',views.approveClaim,name='approveClaim'),
+    #path('denyClaim/<str:pk>',views.denyClaim,name='denyClaim'),
     path('authorizeFund/',views.authorizeFund,name= 'authorizeFund'),
 
     #hospital staff

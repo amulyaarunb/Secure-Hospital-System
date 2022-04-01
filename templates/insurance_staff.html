@@ -21,7 +21,6 @@
         <ul style="color:black;font-size: 30px;list-style-type: none;margin: 0;padding: 5px;">
             Secure Hospital System
             <a href="{% url 'insurance_staff' %} " style="color: black;font-size: 25px;text-decoration: none;padding: 10px;"> Home</a>
-            <a href="{% url 'insurance_staff_review' %} " style="color: black;font-size: 25px;text-decoration: none;padding: 10px;"> Disemberse Funds</a>
             <a href="/accounts/logout" style="color: black;font-size: 25px;text-decoration: none;padding: 10px;"> Log Out</a>
         </ul>
     </div>
@@ -32,11 +31,10 @@
     <div id="Appointments ">
         {% for c in claims %}
         <li>
-            <p>Patient Name: {{ c.name }}</p>
-            <p>Payment ID: {{ c.paymentID }}</p>
-            <p>Amount: {{ c.amount }}</p>
-            <a href="{% url 'approveClaim' c.paymentID %}" style="color: black;font-size: 10px;text-decoration: none;padding: 10px;border-style: solid;background-color: gray;">Approve</a>
-            <a href="{% url 'denyClaim' c.paymentID %}" style="color: black;font-size: 10px;text-decoration: none;padding: 10px;border-style: solid;background-color: gray;">Reject</a>
+            <p>Patient Name: {{c.patientName}} </p>
+            <p>Insurance ID: {{ c.insuranceID}}</p>
+            <p>Amount: {{ c.amount}}</p>
+            
         </li>
         {% endfor %}
 
