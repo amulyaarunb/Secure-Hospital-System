@@ -579,6 +579,25 @@ def doctor_search_view(request):
         return render(request, 'Doctor/doctor_search.html', {})
 
 
-
+@login_required
+@check_view_permissions("doctor")
+def doctor_view_labreport_view(request):
+    appointments=models.Appointment.objects.all().filter(doctorID=request.user.username)
+    l=[]
+    for i in appointments:
+        j=models.Test.objects.get(patientID=i.patientID.patientID)
+        mydict = {
+        'testID': j.testID,
+        'date': j.date,
+        'time': j.time,
+        'type': j.type,
+        'patientID': j.patientID,
+        'status': j.status,
+        'result': j.result,
+        'diagnosisID': j.diagnosisID,
+		'paymentID': j.paymentID
+        }
+        l.append(mydict)
+    return render(request,'Doctor/doctor_view_labreport.html',{'labtestreport':l})
 		
 
