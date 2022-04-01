@@ -4,7 +4,7 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django_registration.backends.one_step.views import RegistrationView
 from django.contrib.auth.models import Group
-from django.http import HttpResponse
+from django.http import HttpResponse,HttpResponseRedirect
 from . models import Diagnosis,Test,Insurance,Payment,Appointment,Patient,Doctor
 from app.decorators import check_view_permissions
 from . import forms, models
@@ -170,7 +170,7 @@ def hospital_appointment_approve(request,ID):
     appointment.save()
     patient = Patient.objects.get(patientID = appointment.patientID.patientID)
     if(patient.name == ''):
-        return render(request,'hospital_update_patients.html',{'patient':patient})
+        return redirect('/hospital_update_patients')
     return redirect('/hospital_staff_appointments')
 
 @login_required
@@ -196,7 +196,7 @@ def hospital_update_patients(request):
                 obj.weight = form.cleaned_data['Weight']
                 obj.insuranceID = form.cleaned_data['InsuranceID']
                 obj.save()
-                return HttpResponseRedirect('/thanks/')
+                return HttpResponseRedirect('/hospital_staff_appointments/')
 
         # if a GET (or any other method) we'll create a blank form
         else:
