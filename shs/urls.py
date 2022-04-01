@@ -31,6 +31,7 @@ urlpatterns = [
     path('hospital_appointment_approve/<str:ID>',views.hospital_appointment_approve,name='hospital_appointment_approve'),
     path('hospital_appointment_reject/<str:ID>',views.hospital_appointment_reject,name='hospital_appointment_reject'),
     path('hospital_search_patients_filter/',views.hospital_search_patients_filter,name= 'hospital_search_patients_filter'),
+    path('hospital_patient_details/<str:pID>',views.hospital_patient_details,name= 'hospital_patient_details'),
     
     # Patient urls
     path("patient", views.patient, name='patient'),

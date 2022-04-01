@@ -31,29 +31,8 @@
 
     <div>
 
-        <form action="/hospital_search_patients_filter/" method="post">
-            <div style="font-size: 20px;">Enter text: <input type="text" name="search"></div> <br>
-            <input type="Submit" value="Search" style="background-color: gray;">
-        </form>
-        <br>
 
     </div>
-    <br>
-    <div>
-        {% for p in patients %}
-        <br>
-        <li>
-            <p><a href="{% url 'hospital_patient_details' p.patientID %}">Patient ID: {{ p.patientID }}</a></p>
-            <p>Patient Name: {{ p.name }}</p>
-            <p>Patient Age: {{ p.age}}</p>
-            <p>Patient Gender: {{ p.gender }}</p>
-            <p>Patient Height: {{ p.height }}</p>
-            <p>Patient Weight: {{ p.weight }}</p>
-            <p>Patient Insurace ID: {{ p.insuranceID }}</p>
-        </li>
-        {% endfor %}
-    </div>
-
 </body>
 
 </html>
