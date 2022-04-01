@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Hospital Staff Update Patients</title>
+    <title>Authorize Insurance Funds</title>
     <style>
         body {
             font-family: Arial;
@@ -21,18 +21,26 @@
         <ul style="color:black;font-size: 30px;list-style-type: none;margin: 0;padding: 5px;">
             Secure Hospital System
             <a href="{% url 'insurance_staff' %} " style="color: black;font-size: 25px;text-decoration: none;padding: 10px;"> Home</a>
-            <a href="{% url 'insurance_staff_review' %} " style="color: black;font-size: 25px;text-decoration: none;padding: 10px;"> Disemberse Funds</a>
             <a href="/accounts/logout" style="color: black;font-size: 25px;text-decoration: none;padding: 10px;"> Log Out</a>
         </ul>
     </div>
 
     <br>
 
-    <br>
-    <form action="/authorizeFund/" method="post">
-        {% csrf_token %} {{ form }}
-        <input type="Submit" value="Disemberse Funds">
-    </form>
+
+    <div id="Appointments ">
+        {% for c in disbursal %}
+        <li>
+            <p>Patient Name: {{c.patientName}} </p>
+            <p>Insurance ID: {{ c.insuranceID}}</p>
+            <p>Amount: {{ c.amount}}</p>
+            <a href="{% url 'insurance_staff_auth' c.requestID %}" style="color: black;font-size: 10px;text-decoration: none;padding: 10px;border-style: solid;background-color: gray;">Authorize</a>
+        
+            
+        </li>
+        {% endfor %}
+
+    </div>
 
 </body>
 

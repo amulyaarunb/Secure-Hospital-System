@@ -1,4 +1,5 @@
 from django.db import models
+from numpy import delete
 
 
 class Doctor(models.Model):
