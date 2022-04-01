@@ -153,12 +153,13 @@ def viewClaim(request):
         }
         arr.append(dict)
 
-    return render(request,'insurance_staff.html',{'claims':arr})
+    return render(request,'insurance/insurance_staff.html',{'claims':arr})
 
     
 '''Insurance Staff View ends here'''
 
 
+'''------------------Hospital Staff View------------------- ''' 
 '''------------------Hospital Staff View------------------- ''' 
 @login_required
 @check_view_permissions("hospital_staff")
@@ -233,13 +234,15 @@ def hospital_update_patients(request):
                 obj.weight = form.cleaned_data['Weight']
                 obj.insuranceID = form.cleaned_data['InsuranceID']
                 obj.save()
-                return HttpResponseRedirect('/hospital_staff_appointments/')
+                return HttpResponseRedirect('/hospital_staff_appointment/')
 
         # if a GET (or any other method) we'll create a blank form
         else:
             form = forms.PatientUpdateForm()
         return render(request, 'hospital_update_patients.html', {'form': form})
 
+@login_required
+@check_view_permissions("hospital_staff")
 def hospital_approved_appointment(request):
     #those whose approval are needed
     appointments=Appointment.objects.all().filter(status='approved')
@@ -259,11 +262,12 @@ def hospital_approved_appointment(request):
         'status': i.status
         }
         appt.append(mydict)
-    return render(request,'',{'appointments':appt})
+    return render(request,'hospital_staff_create_payment.html',{'appointments':appt})
 
+@login_required
+@check_view_permissions("hospital_staff")
 def hospital_complete_appointment(request,ID):
     appointment=Appointment.objects.get(appointmentID=ID)
-    patient = Patient.objects.get(patientID = appointment.patientID.patientID)
     appointment.status='completed'
     appointment.save()
     request.session['_appointment_id'] = ID
@@ -271,25 +275,28 @@ def hospital_complete_appointment(request,ID):
 
 @login_required
 @check_view_permissions("hospital_staff")
-def hospital_transaction(request,ID):
+def hospital_transaction(request):
     apptID = request.session.get('_appointment_id')
+    print(apptID)
     if request.method == 'POST':
             # create a form instance and populate it with data from the request:
             form = forms.CreatePaymentForm(request.POST)
             if form.is_valid():
                 apptID = Appointment.objects.get(appointmentID = apptID)
+                print(apptID)
                 pID = apptID.patientID
                 obj = Payment()
                 obj.amount = form.cleaned_data['Amount']
-                obj.appointmentID = apptID
-                obj.patientID =pID
+                #obj.appointmentID = apptID
+                #obj.patientID =pID
+                #obj.status= 'initiated'
                 obj.save()
-                return HttpResponseRedirect('/hospital_approved_appointments/')
+                return HttpResponseRedirect('/hospital_staff_create_payment/')
 
         # if a GET (or any other method) we'll create a blank form
             else:
                 form = forms.CreatePaymentForm()
-            return render(request, '', {'form': form})
+            return render(request, 'hospital_update_amount.html', {'form': form})
 
 @login_required
 @check_view_permissions("hospital_staff")
@@ -361,9 +368,14 @@ def update_patient_record(request,patientID):
             print("patientForm is valid")
             patient=patientForm.save(commit=True)
             patient.save(force_update=True)
-            return redirect('patient_details',patient.patientID)
+
+        patient=Patient.objects.get(patientID=patientID)   
+        # return redirect("{% url 'patient_details' patient.patientID %}")
+        return redirect("patient_details", patient.patientID)
+
     mydict={'patientForm':patientForm}
     return render(request,'Patient/update_patient_details.html', context=mydict)
+    
 
 # Lab views
 @login_required
@@ -437,20 +449,24 @@ def patient_book_appointment_view(request,patientID):
 # Payment and Transaction views
 @login_required
 @check_view_permissions("patient")
-def make_payment(request):
+def make_payment(request, patientID):
+    patient_payments = models.Payment.objects.all().filter(patientID=patientID)
     if request.method=='POST':
         payform=forms.MakePaymentForm(request.POST)
         if  payform.is_valid():
             pay=payform.save(commit=False)
             pay.status='initiated'
             pay.save()
-    return HttpResponse("Payment")
+        return redirect("patient_payments", patient_payments.patientID)
+
+    # mydict={'MakePaymentForm': payform}
+    return render(request,'Patient/payments_and_transactions/make_payment.html', {"patient_payments":patient_payments})
 
 @login_required
 @check_view_permissions("patient")
 def patient_payments_details(request,patientID):
-    patient_payments_details = models.Payment.objects.all().filter(patientID=patientID)
-    return render(request,'Patient/', patient_payments_details)
+    patient_payments = models.Payment.objects.all().filter(patientID=patientID)
+    return render(request,'Patient/payments_and_transactions/patient_payments.html', {"patient_payments":patient_payments})
    
 
 # ------------------------ PATIENT RELATED VIEWS END ------------------------------
@@ -492,7 +508,7 @@ def doctor_view_appointment_view(request):
 
 @login_required
 @check_view_permissions("doctor")
-def doctor_book_appointment(request,ID):
+def doctor_book_appointment(request,patinetID):
     patient_details=models.Patient.objects.all().get(patientID=patientID)
     return render(request, "Doctor/doctor_book_appointment.html", {"profile": patient_details})
     
@@ -576,6 +592,25 @@ def doctor_search_view(request):
         return render(request, 'Doctor/doctor_search.html', {})
 
 
-
+@login_required
+@check_view_permissions("doctor")
+def doctor_view_labreport_view(request):
+    appointments=models.Appointment.objects.all().filter(doctorID=request.user.username)
+    l=[]
+    for i in appointments:
+        j=models.Test.objects.get(patientID=i.patientID.patientID)
+        mydict = {
+        'testID': j.testID,
+        'date': j.date,
+        'time': j.time,
+        'type': j.type,
+        'patientID': j.patientID,
+        'status': j.status,
+        'result': j.result,
+        'diagnosisID': j.diagnosisID,
+		'paymentID': j.paymentID
+        }
+        l.append(mydict)
+    return render(request,'Doctor/doctor_view_labreport.html',{'labtestreport':l})
 		
 

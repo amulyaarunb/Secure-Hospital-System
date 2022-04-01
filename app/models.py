@@ -1,4 +1,5 @@
 from django.db import models
+from numpy import delete
 
 
 class Doctor(models.Model):
@@ -38,12 +39,12 @@ class Payment(models.Model):
     paymentID = models.BigAutoField(primary_key=True)
     method = models.CharField(max_length=255)
     type = models.CharField(max_length=255)
-    mode = models.CharField(max_length=255)
+    mode = models.CharField(max_length=255, blank=True, null=True)
     amount = models.IntegerField()
     status = models.CharField(max_length=255)
     patientID = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    testID = models.ForeignKey('Test', on_delete=models.CASCADE)
-    appointmentID = models.ForeignKey(Appointment, on_delete=models.CASCADE)
+    testID = models.ForeignKey('Test', on_delete=models.CASCADE, blank=True, null=True)
+    appointmentID = models.ForeignKey('Appointment', on_delete=models.CASCADE, blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
 
 

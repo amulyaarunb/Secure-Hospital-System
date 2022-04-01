@@ -22,7 +22,8 @@ class RequestLabTestForm(forms.ModelForm):
 class MakePaymentForm(forms.ModelForm):
     class Meta:
         model=models.Payment
-        fields=['method','type','mode','patientID','testID','appointmentID']
+        # fields=['method','type','mode','patientID','testID','appointmentID']
+        fields=['method','patientID','testID','appointmentID' ]
 
 class PatientUpdateForm(forms.Form):
     PatientName = forms.CharField(label = 'Patient Name', max_length=100)

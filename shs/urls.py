@@ -24,7 +24,9 @@ urlpatterns = [
     #hospital staff
     path('hospital_staff_appointments/', views.hospital_appointment,
          name='hospital_staff_appointments'),
-    path('hospital_staff_create_payment/', views.hospital_transaction, name='hospital_staff_create_payment'),
+    path('hospital_staff_create_payment/', views.hospital_approved_appointment, name='hospital_staff_create_payment'),
+    path('hospital_complete_appointment/<str:ID>', views.hospital_complete_appointment , name = 'hospital_complete_appointment'),
+    path('hospital_transaction/', views.hospital_transaction, name = 'hospital_transaction'),
     path('hospital_search_patients/', views.hospital_search,
          name='hospital_search_patients'),
     path('hospital_update_patients/',views.hospital_update_patients,name= 'hospital_update_patients'),
@@ -47,6 +49,9 @@ urlpatterns = [
     path("patient_labtest/<str:patientID>", views.patient_labtest_view, name="patient_labtest"),
     path("patient_labtest/request_labtest/<str:patientID>", views.request_test, name="request_labtest"),
     path("patient_labtest/patient_view_lab_report/<str:patientID>", views.view_lab_report, name="patient_view_lab_report"),
+
+    path("patient_payments/<str:patientID>", views.patient_payments_details, name="patient_payments"),
+    path("patient_make_payment/<str:patientID>",views.make_payment, name="patient_make_payment"),
          
   
 # doctor urls
@@ -65,5 +70,12 @@ urlpatterns = [
          name='doctor_appointmentID_search_view'),
     path('doctor_search/', views.doctor_search_view,
          name='doctor_search'),
+<<<<<<< HEAD
+=======
+    path('doctor_createpatientdiagnosis_view/', views.doctor_createpatientdiagnosis_view, 
+         name='doctor_patient_diagnosis'),
+    path('doctor_view_labreport_view/',
+         views.doctor_view_labreport_view, name='doctor_view_labreport_view'),
+>>>>>>> 88d719645ee663b4437f153518406e49fc254345
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
