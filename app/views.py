@@ -256,20 +256,29 @@ def patient_details(request, patientID):
 
 def update_patient_record(request,patientID):
     patient=Patient.objects.get(patientID=patientID)
-    print(patient)
+    #print(patient)
     # patientForm=forms.PatientForm(request.POST,request.FILES)
     patientForm=forms.PatientForm(request.POST)
-    print(patientForm)
+    
     if request.method=='POST':
-        print("Hi from POST")
+        #print("Hi from POST")
+        #print(patientForm.data['age'])
+        patient.name=patientForm.data['name']
+        patient.age=patientForm.data['age']
+        patient.gender=patientForm.data['gender']
+        patient.height=patientForm.data['height']
+        patient.weight=patientForm.data['weight']
+        patient.insuranceID=patientForm.data['insuranceID']
+        patient.save()
+        
         # patientForm=forms.PatientForm(request.POST,request.FILES,instance=patient)
-        print(patientForm.errors)
+        #print(patientForm.errors)
         # patientForm['patientID'] 
-        # if  patientForm.is_valid():
-        print("patientForm is valid")
-        patient=patientForm.save(commit=True)
-        patient.save(force_update=True)
-        return redirect('patient_details',patient.patientID)
+        if  patientForm.is_valid():
+            print("patientForm is valid")
+            patient=patientForm.save(commit=True)
+            patient.save(force_update=True)
+            return redirect('patient_details',patient.patientID)
     mydict={'patientForm':patientForm}
     return render(request,'Patient/update_patient_details.html', context=mydict)
 
