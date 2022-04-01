@@ -17,8 +17,8 @@ words=[]
 classes = []
 documents = []
 ignore_words = ['?', '!']
-data_file = open('intents.json').read()
-intents = json.loads(data_file)
+dirpath = os.path.dirname(os.path.abspath(__file__))
+intents = json.loads(open(dirpath + '/intents.json').read())
 
 
 for intent in intents['intents']:
