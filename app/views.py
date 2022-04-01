@@ -147,7 +147,7 @@ def viewClaim(request):
         }
         arr.append(dict)
 
-    return render(request,'insurance_staff.html',{'claims':arr})
+    return render(request,'insurance/insurance_staff.html',{'claims':arr})
 
     
 '''Insurance Staff View ends here'''
