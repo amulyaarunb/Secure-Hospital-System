@@ -180,6 +180,28 @@ def hospital_appointment_reject(request,ID):
 
 @login_required
 @check_view_permissions("hospital_staff")
+def hospital_update_patients(request):
+        if request.method == 'POST':
+            # create a form instance and populate it with data from the request:
+            form = forms.PatientUpdateForm(request.POST)
+            if form.is_valid():
+                obj = Patient() #gets new object
+                obj.name = form.cleaned_data['PatientName']
+                obj.age = form.cleaned_data['Age']
+                obj.gender = form.cleaned_data['Gender']
+                obj.height = form.cleaned_data['Height']
+                obj.weight = form.cleaned_data['Weight']
+                obj.insuranceID = form.cleaned_data['InsuranceID']
+                obj.save()
+                return HttpResponseRedirect('/thanks/')
+
+        # if a GET (or any other method) we'll create a blank form
+        else:
+            form = forms.PatientUpdateForm()
+        return render(request, 'hospital_update_patients.html', {'form': form})
+
+@login_required
+@check_view_permissions("hospital_staff")
 def hospital_transaction(request,ID):
     return('/hospital_staff_appointments')
 
@@ -200,13 +222,6 @@ def hospital_patient_details(request,pID):
     test_details = Test.objects.get(patientID = pID)
     return render(request,'hospital_search_patients.html',{'patient_details':patient_details,'appointment_details':appointment_details,'test_details':test_details})
 
-@login_required
-@check_view_permissions("hospital_staff")
-def hospital_patient_details(request,pID):
-    patient_details = Patient.objects.get(patientID = pID)
-    appointment_details=Appointment.objects.get(patientID=pID)
-    test_details = Test.objects.get(patientID = pID)
-    return render(request,'hospital_search_patients.html',{'patient_details':patient_details,'appointment_details':appointment_details,'test_details':test_details})
 
 
 '''---------------Hospital end-------------'''
