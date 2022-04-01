@@ -329,9 +329,14 @@ def update_patient_record(request,patientID):
             print("patientForm is valid")
             patient=patientForm.save(commit=True)
             patient.save(force_update=True)
-            return redirect('patient_details',patient.patientID)
+
+        patient=Patient.objects.get(patientID=patientID)   
+        # return redirect("{% url 'patient_details' patient.patientID %}")
+        return redirect("patient_details", patient.patientID)
+
     mydict={'patientForm':patientForm}
     return render(request,'Patient/update_patient_details.html', context=mydict)
+    
 
 # Lab views
 @login_required
@@ -405,20 +410,24 @@ def patient_book_appointment_view(request,patientID):
 # Payment and Transaction views
 @login_required
 @check_view_permissions("patient")
-def make_payment(request):
+def make_payment(request, patientID):
+    patient_payments = models.Payment.objects.all().filter(patientID=patientID)
     if request.method=='POST':
         payform=forms.MakePaymentForm(request.POST)
         if  payform.is_valid():
             pay=payform.save(commit=False)
             pay.status='initiated'
             pay.save()
-    return HttpResponse("Payment")
+        return redirect("patient_payments", patient_payments.patientID)
+
+    # mydict={'MakePaymentForm': payform}
+    return render(request,'Patient/payments_and_transactions/make_payment.html', {"patient_payments":patient_payments})
 
 @login_required
 @check_view_permissions("patient")
 def patient_payments_details(request,patientID):
-    patient_payments_details = models.Payment.objects.all().filter(patientID=patientID)
-    return render(request,'Patient/', patient_payments_details)
+    patient_payments = models.Payment.objects.all().filter(patientID=patientID)
+    return render(request,'Patient/payments_and_transactions/patient_payments.html', {"patient_payments":patient_payments})
    
 
 # ------------------------ PATIENT RELATED VIEWS END ------------------------------
@@ -460,7 +469,7 @@ def doctor_view_appointment_view(request):
 
 @login_required
 @check_view_permissions("doctor")
-def doctor_book_appointment(request,ID):
+def doctor_book_appointment(request,patinetID):
     patient_details=models.Patient.objects.all().get(patientID=patientID)
     return render(request, "Doctor/doctor_book_appointment.html", {"profile": patient_details})
     
