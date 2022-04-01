@@ -61,7 +61,7 @@
       </div>
       <div class="form-content">
         <div class="row">
-          <div class="col-md-6">
+          <!-- <div class="col-md-8"> -->
             <div class="form-group">
               {% render_field patientForm.patientID class="form-control" placeholder="patientID" %}
             </div>
@@ -81,9 +81,9 @@
                 {% render_field patientForm.weight class="form-control" placeholder="Weight" %}
             </div>
             <div class="form-group">
-                {% render_field patientForm.insuraneID class="form-control" placeholder="InsuranceID" %}
-              </div>
-          </div>
+                {% render_field patientForm.insuranceID class="form-control" placeholder="InsuranceID" %}
+            </div>
+          <!-- </div> -->
         </div>
         <button type="submit" class="btnSubmit">Update</button>
       </div>

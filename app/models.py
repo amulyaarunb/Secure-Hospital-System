@@ -15,7 +15,7 @@ class Patient(models.Model):
     gender = models.CharField(max_length=128)
     height = models.DecimalField(decimal_places=2, max_digits=6)
     weight = models.DecimalField(decimal_places=2, max_digits=6)
-    insuranceID = models.IntegerField()
+    insuranceID = models.IntegerField(blank=True, null=True)
 
 
 class Appointment(models.Model):
@@ -70,7 +70,7 @@ class Test(models.Model):
     time = models.TimeField()
     type = models.CharField(max_length=255)
     patientID = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    status = models.CharField(max_length=255)
-    result = models.CharField(max_length=255)
+    status = models.CharField(max_length=255, blank=True)
+    result = models.CharField(max_length=255, blank=True)
     diagnosisID = models.ForeignKey(Diagnosis, on_delete=models.CASCADE)
-    paymentID = models.ForeignKey(Payment, on_delete=models.CASCADE)
+    paymentID = models.ForeignKey(Payment, blank=True, on_delete=models.CASCADE)
