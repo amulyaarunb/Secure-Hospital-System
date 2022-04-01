@@ -157,7 +157,7 @@
     
             <label for="msg"><b>Message</b></label>
             <div id = userInput>
-                <textarea id = "textInput" placeholder="Type your message" name="msg" required ></textarea>
+                <textarea id = "textInput" placeholder="Type your message" name="msg" rows="10" cols="50" required ></textarea>
                 <p id = "textoutput" name="textoutput"></p>   
 
                 <button type="submit" onclick="getResponse()" class="btn">Send</button>
@@ -192,10 +192,30 @@
                 //$("#textoutput").val(data)
                 if (data.startsWith("Navigate"))
                 {
+                    var user = "{{user.username}}"
+                    console.log("{{user.username}}")
                     var temp = data.substring(12)
-                    var botHtml = '<p>Go to:<a href="'+temp+'">'+temp+'</a></p>';
-                    document.getElementById('textoutput').innerHTML = botHtml
-                    $("#textoutput").innerHtml = botHtml;
+                    var temp2 = data.substring(35)
+                    var finalurl = temp + "/" + user
+                    if (data.includes("appointment"))
+                    {
+                        var botHtml = '<p>Go to:<a href="'+temp+'">'+temp2+'</a></p>'
+                        document.getElementById('textoutput').innerHTML = botHtml
+                        $("#textoutput").innerHtml = botHtml;
+                    }
+                    else if (data.includes("request_labtest"))
+                    {
+                        var botHtml = '<p>Go to:<a href="'+temp+'">'+temp2+'</a></p>'
+                        document.getElementById('textoutput').innerHTML = botHtml
+                        $("#textoutput").innerHtml = botHtml;
+
+                    }
+                    else
+                    {
+                        var botHtml = '<p>Go to:<a href="'+finalurl+'">'+temp2+'</a></p>'
+                        document.getElementById('textoutput').innerHTML = botHtml
+                        $("#textoutput").innerHtml = botHtml;
+                    }
                 }
                 else
                 {
@@ -203,7 +223,6 @@
                     document.getElementById('textoutput').innerHTML = botHtml
                     $("#textoutput").innerHtml = botHtml;
                 }
-
                 // document.getElementById('textoutput').append(data);
                 // $('#txtarea').append(document.createTextNode($(this).val()));
                 // $("#textoutput")
