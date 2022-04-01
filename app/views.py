@@ -168,7 +168,7 @@ def hospital_appointment_approve(request,ID):
     appointment=Appointment.objects.get(appointmentID=ID)
     appointment.status='approved'
     appointment.save()
-    return redirect('/hospital_appointment')
+    return redirect('/hospital_staff_appointments')
 
 @login_required
 @check_view_permissions("hospital_staff")
@@ -176,15 +176,29 @@ def hospital_appointment_reject(request,ID):
     appointment=Appointment.objects.get(appointmentID=ID)
     appointment.status='rejected'
     appointment.save()
-    return redirect('/hospital_appointment')
+    return redirect('/hospital_staff_appointments')
+
+@login_required
+@check_view_permissions("hospital_staff")
+def hospital_transaction(request,ID):
+    return('/hospital_staff_appointments')
 
 @login_required
 @check_view_permissions("hospital_staff")
 def hospital_search(request):
     # whatever user write in search box we get in query
-    query = request.GET['query']
+    query = '12345'
+    print(request)
     patients=Patient.objects.all().filter(Q(patientID__icontains=query)|Q(name__icontains=query))
     return render(request,'hospital_search_patients.html',{'patients':patients})
+
+@login_required
+@check_view_permissions("hospital_staff")
+def hospital_patient_details(request,pID):
+    patient_details = Patient.objects.get(patientID = pID)
+    appointment_details=Appointment.objects.get(patientID=pID)
+    test_details = Test.objects.get(patientID = pID)
+    return render(request,'hospital_search_patients.html',{'patient_details':patient_details,'appointment_details':appointment_details,'test_details':test_details})
 
 @login_required
 @check_view_permissions("hospital_staff")
