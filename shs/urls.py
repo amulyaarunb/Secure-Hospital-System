@@ -16,7 +16,7 @@ urlpatterns = [
 
     #insurance staff
     path('insurance_staff/',views.viewClaim,name='viewClaim'),
-    path('insurance_staff_review/',views.claimDisb,name='claimDisb'),
+#     path('insurance_staff_review/',views.claimDisb,name='claimDisb'),
     path('approveClaim/<str:pk>',views.approveClaim,name='approveClaim'),
     path('denyClaim/<str:pk>',views.denyClaim,name='denyClaim'),
     path('authorizeFund/',views.authorizeFund,name= 'authorizeFund'),
@@ -30,7 +30,7 @@ urlpatterns = [
     path('hospital_update_patients/',views.hospital_update_patients,name= 'hospital_update_patients'),
     path('hospital_appointment_approve/<str:ID>',views.hospital_appointment_approve,name='hospital_appointment_approve'),
     path('hospital_appointment_reject/<str:ID>',views.hospital_appointment_reject,name='hospital_appointment_reject'),
-    path('hospital_search_patients_filter/',views.hospital_search_patients_filter,name= 'hospital_search_patients_filter'),
+#     path('hospital_search_patients_filter/',views.hospital_search_patients_filter,name= 'hospital_search_patients_filter'),
     path('hospital_patient_details/<str:pID>',views.hospital_patient_details,name= 'hospital_patient_details'),
     
     # Patient urls
