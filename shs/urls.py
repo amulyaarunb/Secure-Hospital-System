@@ -16,17 +16,15 @@ urlpatterns = [
 
     #insurance staff
     path('insurance_staff/',views.viewClaim,name='insurance_staff'),
-    path('insurance_staff_auth/<str:pk>',views.authorizeFund,name='insurance_staff_auth'),
-    path('insurance_staff_approve/<str:pk>',views.approveClaim,name='insurance_staff_approve'),
-    path('insurance_staff_reject/<str:pk>',views.denyClaim,name='insurance_staff_reject'),
-    path('insurance_staff_review/',views.claimDisb,name= 'insurance_staff_review'),
+#     path('insurance_staff_review/',views.claimDisb,name='claimDisb'),
+    #path('approveClaim/<str:pk>',views.approveClaim,name='approveClaim'),
+    #path('denyClaim/<str:pk>',views.denyClaim,name='denyClaim'),
+    path('authorizeFund/',views.authorizeFund,name= 'authorizeFund'),
 
     #hospital staff
     path('hospital_staff_appointments/', views.hospital_appointment,
          name='hospital_staff_appointments'),
-    path('hospital_staff_create_payment/', views.hospital_approved_appointment, name='hospital_staff_create_payment'),
-    path('hospital_complete_appointment/<str:ID>', views.hospital_complete_appointment , name = 'hospital_complete_appointment'),
-    path('hospital_transaction/', views.hospital_transaction, name = 'hospital_transaction'),
+    path('hospital_staff_create_payment/', views.hospital_transaction, name='hospital_staff_create_payment'),
     path('hospital_search_patients/', views.hospital_search,
          name='hospital_search_patients'),
     path('hospital_update_patients/',views.hospital_update_patients,name= 'hospital_update_patients'),
@@ -53,11 +51,6 @@ urlpatterns = [
     path("patient_payments/<str:patientID>", views.patient_payments_details, name="patient_payments"),
     path("patient_make_payment/<str:paymentID>",views.make_payment, name="patient_make_payment"),
          
-  
-# doctor urls
-    path('doctor/', views.doctor, name='doctor'),
-    path('doctor_view_appointment_view/', views.doctor_view_appointment_view, name='doctor_appointment'),
-
     # Doctor URLs
     path('doctor/', views.doctor, name='doctor'),
     path('doctor_view_appointment_view/',
@@ -72,9 +65,5 @@ urlpatterns = [
          name='doctor_search'),
     path('doctor_createpatientdiagnosis_view/', views.doctor_createpatientdiagnosis_view, 
          name='doctor_patient_diagnosis'),
-    path('doctor_view_labreport_view/',
-         views.doctor_view_labreport_view, name='doctor_view_labreport_view'),
-    path('doctor_recommend_labtest/',
-         views.doctor_recommend_labtest_view, name='doctor_recommend_labtest_view'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

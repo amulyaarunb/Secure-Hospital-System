@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Hospital Staff Create Payment</title>
+    <title>Hospital Staff Update Patients</title>
     <style>
         body {
             font-family: Arial;
@@ -30,7 +30,7 @@
     <br>
 
     <br>
-    <form action="/hospital_transaction/" method="post">
+    <form action="/hospital_staff_amount/" method="post">
         {% csrf_token %} {{ form }}
         <input type="Submit" value="Submit">
     </form>
