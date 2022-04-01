@@ -43,8 +43,9 @@
           <ul class="nav navbar-nav navbar-right">
 
             <li><p class="navbar-text"> <b>{{ user.username }}</b></p><li>
-          </ul>
 
+          </ul>
+          <a href="/accounts/logout" style="color: grey; padding: 5px;"> Log Out</a>
             <!-- Search bar -->
 
             <form class="d-flex" id="text" method="POST" action="{% url 'doctor_search' %}">

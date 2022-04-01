@@ -409,12 +409,27 @@ def doctor_book_appointment(request,ID):
     patient_details=models.Patient.objects.all().get(patientID=patientID)
     return render(request, "Doctor/doctor_book_appointment.html", {"profile": patient_details})
     
-    #patient records button views start here
+#patient records button views start here
 @login_required
 @check_view_permissions("doctor")
 def doctor_view_patientlist(request):
-    # patients=models.Patient.objects.all().filter(doctorId=doctorID)
-    return render(request, 'Doctor/doctor_view_patientlist.html')
+    appointments=models.Appointment.objects.all().filter(doctorID=request.user.username)
+    # patients=models.Patient.objects.all().filter(patientID=appointments.patientID)
+    l=[]
+    for p in appointments:
+        i=models.Patient.objects.get(patientID=p.patientID.patientID)
+        # doctor = Doctor.objects.get(doctorID = i.doctorID.doctorID)
+        mydict = {
+        'name': i.name,
+        'age': i.age,
+        'gender': i.gender,
+        'patientID': i.patientID,
+        'doctorID': p.doctorID,
+        'height': i.height,
+		'weight': i.weight
+        }
+        l.append(mydict)
+    return render(request, 'Doctor/doctor_view_patientlist.html',{'patients':l})
 
 @login_required
 @check_view_permissions("doctor")
