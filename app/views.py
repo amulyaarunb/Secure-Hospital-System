@@ -168,6 +168,9 @@ def hospital_appointment_approve(request,ID):
     appointment=Appointment.objects.get(appointmentID=ID)
     appointment.status='approved'
     appointment.save()
+    patient = Patient.objects.get(patientID = appointment.patientID.patientID)
+    if(patient.name == ''):
+        return render(request,'hospital_update_patients.html',{'patient':patient})
     return redirect('/hospital_staff_appointments')
 
 @login_required
