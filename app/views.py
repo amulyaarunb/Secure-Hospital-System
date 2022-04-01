@@ -4,7 +4,7 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django_registration.backends.one_step.views import RegistrationView
 from django.contrib.auth.models import Group
-from django.http import HttpResponse
+from django.http import HttpResponse,HttpResponseRedirect
 from . models import Diagnosis,Test,Insurance,Payment,Appointment,Patient,Doctor
 from app.decorators import check_view_permissions
 from . import forms, models
@@ -181,7 +181,7 @@ def hospital_appointment_approve(request,ID):
     appointment.save()
     patient = Patient.objects.get(patientID = appointment.patientID.patientID)
     if(patient.name == ''):
-        return render(request,'hospital_update_patients.html',{'patient':patient})
+        return redirect('/hospital_update_patients')
     return redirect('/hospital_staff_appointments')
 
 @login_required
@@ -207,7 +207,7 @@ def hospital_update_patients(request):
                 obj.weight = form.cleaned_data['Weight']
                 obj.insuranceID = form.cleaned_data['InsuranceID']
                 obj.save()
-                return HttpResponseRedirect('/thanks/')
+                return HttpResponseRedirect('/hospital_staff_appointments/')
 
         # if a GET (or any other method) we'll create a blank form
         else:
@@ -267,20 +267,29 @@ def patient_details(request, patientID):
 
 def update_patient_record(request,patientID):
     patient=Patient.objects.get(patientID=patientID)
-    print(patient)
+    #print(patient)
     # patientForm=forms.PatientForm(request.POST,request.FILES)
     patientForm=forms.PatientForm(request.POST)
-    print(patientForm)
+    
     if request.method=='POST':
-        print("Hi from POST")
+        #print("Hi from POST")
+        #print(patientForm.data['age'])
+        patient.name=patientForm.data['name']
+        patient.age=patientForm.data['age']
+        patient.gender=patientForm.data['gender']
+        patient.height=patientForm.data['height']
+        patient.weight=patientForm.data['weight']
+        patient.insuranceID=patientForm.data['insuranceID']
+        patient.save()
+        
         # patientForm=forms.PatientForm(request.POST,request.FILES,instance=patient)
-        print(patientForm.errors)
+        #print(patientForm.errors)
         # patientForm['patientID'] 
-        # if  patientForm.is_valid():
-        print("patientForm is valid")
-        patient=patientForm.save(commit=True)
-        patient.save(force_update=True)
-        return redirect('patient_details',patient.patientID)
+        if  patientForm.is_valid():
+            print("patientForm is valid")
+            patient=patientForm.save(commit=True)
+            patient.save(force_update=True)
+            return redirect('patient_details',patient.patientID)
     mydict={'patientForm':patientForm}
     return render(request,'Patient/update_patient_details.html', context=mydict)
 
@@ -304,9 +313,9 @@ def request_test(request):
 
 @login_required
 @check_view_permissions("patient")
-def view_lab_report(request,diagnosisID):
-    lab_test_details=models.Test.objects.get(diagnosisID=diagnosisID)
-    return render(request, 'Patient/labtest/patient_view_lab_report.html',{"user": request.user})
+def view_lab_report(request,patientID):
+    lab_test_details=models.Test.objects.all().filter(patientID=patientID)
+    return render(request,'Patient/labtest/patient_view_lab_report.html',{'lab_test_details':lab_test_details})
 
 #Chatbot Views
 @login_required
@@ -335,7 +344,7 @@ def patient_book_appointment_view(request,patientID):
             appointment=appointmentForm.save(commit=False)
             appointment.status='initiated'
             appointment.save()
-    return HttpResponse("Appointment request initiated")
+    return render(request, 'Patient/Appointment/book-appointment.html')
 
 
 # Payment and Transaction views

@@ -124,8 +124,8 @@
                         <a class="nav-link" href="{% url 'patient_prescription' user.username %}">Prescription</a> 
                     </li>
                     <li class="nav-item">
-                        <!-- <a class="nav-link" href="patient_labtest/{{user.username}}">Lab Tests</a> -->
                         <a class="nav-link" href="{% url 'patient_labtest' user.username %}">Lab Tests</a> 
+                          <!-- <a class="nav-link" href="patient_labtest/{{user.username}}">Lab Tests</a> -->
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'patient_details' user.username %}">patient_details</a> 
@@ -140,8 +140,8 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#"> Insurance </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/accounts/logout" style="color: black;font-size: 25px;text-decoration: none;padding: 10px;"> Log Out</a>
+                    <li class="nav-item navbar-nav navbar-right" >
+                        <a class="nav-link" href="/accounts/logout" > Log Out</a>
                     </li>
                 </ul>
             </div>
