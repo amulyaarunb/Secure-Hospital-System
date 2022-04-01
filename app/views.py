@@ -401,7 +401,6 @@ def doctor_view_appointment_view(request):
 		'created_on': i.created_on
         }
         l.append(mydict)
-
     return render(request,'Doctor/doctor_view_appointment_view.html', {'appointments':l})
 
 @login_required
