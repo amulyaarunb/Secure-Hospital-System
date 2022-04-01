@@ -302,9 +302,9 @@ def request_test(request):
 
 @login_required
 @check_view_permissions("patient")
-def view_lab_report(request,diagnosisID):
-    lab_test_details=models.Test.objects.get(diagnosisID=diagnosisID)
-    return render(request, 'Patient/labtest/patient_view_lab_report.html',{"user": request.user})
+def view_lab_report(request,patientID):
+    lab_test_details=models.Test.objects.all().filter(patientID=patientID)
+    return render(request,'Patient/labtest/patient_view_lab_report.html',{'lab_test_details':lab_test_details})
 
 #Chatbot Views
 @login_required
