@@ -30,7 +30,8 @@ urlpatterns = [
     path('hospital_update_patients/',views.hospital_update_patients,name= 'hospital_update_patients'),
     path('hospital_appointment_approve/<str:ID>',views.hospital_appointment_approve,name='hospital_appointment_approve'),
     path('hospital_appointment_reject/<str:ID>',views.hospital_appointment_reject,name='hospital_appointment_reject'),
-
+    path('hospital_search_patients_filter/',views.hospital_search_patients_filter,name= 'hospital_search_patients_filter'),
+    
     # Patient urls
     path("patient", views.patient, name='patient'),
     path('bot', views.get_bot_response),

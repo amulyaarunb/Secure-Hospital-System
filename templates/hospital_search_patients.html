@@ -30,10 +30,13 @@
     <br>
 
     <div>
-        <div>Patient ID: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text"></div> <br>
-        <div>Patient Name: <input type="text"></div> <br>
+
+        <form action="{% url 'hospital_search_patients_filter' search %}" method="post">
+            <div style="font-size: 20px;">Enter text: <input type="text" name="search"></div> <br>
+            <input type="Submit" value="Search" style="background-color: gray;">
+        </form>
         <br>
-        <input type="button" value="search" style="padding: 14px 14px;transition: 0.3s;font-size: 17px;">
+
     </div>
     <br>
     <div>
