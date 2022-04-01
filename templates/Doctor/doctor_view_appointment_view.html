@@ -37,15 +37,15 @@
     <br>
     <table>
         <tr>
-            <th>Name</th>
+            <th>Appointment ID</th>
             <th>Patient ID</th>
             <th>Date</th>
           </tr>
           {% for i in appointments %}
           <tr>
-            <th> {{ appointments.name }}</th>
-            <th> {{ appointments.patientID }}</th>
-            <th> {{ appointments.date }}</th>
+            <th> {{ i.appointmentID }}</th>
+            <th> {{ i.patientID }}</th>
+            <th> {{ i.date }}</th>
           </tr> 
           {% endfor %}
     </table>
