@@ -28,7 +28,7 @@ def index(request):
         return render(request, "home.html")
     if request.user.groups.filter(name='insurance_staff').exists():
         # return patient stuff
-        return render(request, "insurance_staff.html")
+        return render(request, "home.html")
     if request.user.groups.filter(name='admin').exists():
         return redirect('/administrator')
 
@@ -51,14 +51,14 @@ def admin(request):
 @login_required
 @check_view_permissions("lab_staff")
 def viewDiagnosis(request,pk):
-    obj = Diagnosis.objects.get(DiagnosisID=pk)
+    obj = Diagnosis.objects.filter(id=pk)
     return HttpResponse(obj)
 
 @login_required
 @check_view_permissions("lab_staff")  
 def updateRecord(request,pk,record):
     if request.method =='PUT':
-        obj = Test.objects.filter(testID=pk)
+        obj = Test.objects.filter(id=pk)
         obj.status = 'completed'
         obj.results = record
         obj.save()
@@ -67,7 +67,7 @@ def updateRecord(request,pk,record):
 @login_required
 @check_view_permissions("lab_staff")
 def denyTestRequest(request,pk):
-    obj = Test.objects.get(testID=pk)
+    obj = Test.objects.filter(id=pk)
     obj.status = 'denied'
     obj.save()
     return HttpResponse("Successfully Denied Request")
@@ -75,7 +75,7 @@ def denyTestRequest(request,pk):
 @login_required
 @check_view_permissions("lab_staff")   
 def approveTest(request,pk):
-    obj = Test.objects.get(testID=pk)
+    obj = Test.objects.filter(id=pk)
     obj.status = 'approved'
     obj.save()
     return HttpResponse("Successfully Approved Request")
@@ -83,7 +83,7 @@ def approveTest(request,pk):
 @login_required
 @check_view_permissions("lab_staff") 
 def deleteTestReport(request,pk):
-    obj = Test.objects.get(testID=pk)
+    obj = Test.objects.filter(id=pk)
     obj.results = ""
     obj.save()
     return HttpResponse("Succesfully Deleted Report")
@@ -95,64 +95,36 @@ def deleteTestReport(request,pk):
 @login_required
 @check_view_permissions("insurance_staff")
 def denyClaim(request,pk):
-    obj = Insurance.objects.get(request_id=pk)
+    obj = Insurance.objects.filter(id=pk)
     obj.status = 'denied'
-    return render("Successfully Denied Request")
+    return("Successfully Denied Request")
     
 @login_required
 @check_view_permissions("insurance_staff")
 def approveClaim(request,pk):
-    obj = Insurance.objects.get(request_id=pk)
+    obj = Insurance.objects.filter(id=pk)
     obj.status = 'approved'
-    return redirect('/insurance_staff')
+    return("Successfully Approved Request")
     
 @login_required
 @check_view_permissions("insurance_staff")
 def authorizeFund(request,pk):
-    obj = Insurance.objects.get(request_id=pk)
-    obj1 = Payment.objects.get(paymentID=obj.paymentID.paymentID)
+    obj = Insurance.objects.filter(id=pk)
+    obj1 = Payment.objects.filter(id=obj.paymentID)
     obj1.status = 'completed'
-    return redirect('/insurance_staff')
+    return("Funds authorized and approved")
     
 @login_required
 @check_view_permissions("insurance_staff")
 def viewClaim(request):
-    obj = Insurance.objects.all().filter(status='initiated')
-    arr = []
-    for i in obj:
-        obj1 = Patient.objects.get(id=i.patientID.patientID)
-        obj2 = Payment.objects.get(id=i.paymentID.paymentID)
-        dict = {
-            'patientName':obj1.name,
-            'insuranceID':obj1.insuranceID,
-            'amount':obj2.amount
-        }
-        arr.append(dict)
-
-    return render(request,'insurance_staff.html',{'claims':arr})
-
-@login_required
-@check_view_permissions("insurance_staff")
-def claimDisb(request):
-    obj = Insurance.objects.all().filter(status='approved')
-    arr = []
-    for i in obj:
-        obj1 = Patient.objects.get(id=i.patientID.patientID)
-        obj2 = Payment.objects.get(id=i.paymentID.paymentID)
-        dict = {
-            'patientName':obj1.name,
-            'insuranceID':obj1.insuranceID,
-            'amount':obj2.amount
-        }
-        arr.append(dict)
-
-    return render(request,'insurance_staff_review.html',{'claims':arr})
+    obj = Insurance.objects.filter(status='initiated')
+    return obj
     
 @login_required
 @check_view_permissions("insurance_staff")
 def validate(request,pk):
-    obj = Payment.objects.filter(paymentID=pk)
-    return render('/insurance_staff',{'validate':obj})
+    obj = Payment.objects.filter(id=pk)
+    return obj
 '''Insurance Staff View ends here'''
 
 '''------------------Hospital Staff View------------------- ''' 
@@ -194,12 +166,11 @@ def hospital_appointment(request):
 @check_view_permissions("hospital_staff")
 def hospital_appointment_approve(request,ID):
     appointment=Appointment.objects.get(appointmentID=ID)
-    patient = Patient.objects.get(patientID = appointment.patientID.patientID)
     appointment.status='approved'
     appointment.save()
+    patient = Patient.objects.get(patientID = appointment.patientID.patientID)
     if(patient.name == ''):
-        request.session['_patient_id'] = patient.patientID
-        return HttpResponseRedirect('/hospital_update_patients')
+        return redirect('/hospital_update_patients')
     return redirect('/hospital_staff_appointments')
 
 @login_required
@@ -213,15 +184,11 @@ def hospital_appointment_reject(request,ID):
 @login_required
 @check_view_permissions("hospital_staff")
 def hospital_update_patients(request):
-        #print(request.session)
-        pID = request.session.get('_patient_id')
-        print(pID)
         if request.method == 'POST':
             # create a form instance and populate it with data from the request:
             form = forms.PatientUpdateForm(request.POST)
             if form.is_valid():
-                obj = Patient.objects.get(patientID = pID) 
-                #obj = Patient()
+                obj = Patient() #gets new object
                 obj.name = form.cleaned_data['PatientName']
                 obj.age = form.cleaned_data['Age']
                 obj.gender = form.cleaned_data['Gender']
@@ -277,7 +244,7 @@ def patient(request):
 @check_view_permissions("patient")
 def patient_diagnosis_details(request, patientID):
     patient_diagnosis_details = models.Diagnosis.objects.all().filter(patientID=patientID)
-    print(patient_diagnosis_details)
+    #print(patient_diagnosis_details)
     return render(request,'Patient/diagnosis.html',{'patient_diagnosis_details':patient_diagnosis_details})
 
 #patient details views
@@ -339,6 +306,14 @@ def view_lab_report(request,patientID):
     lab_test_details=models.Test.objects.all().filter(patientID=patientID)
     return render(request,'Patient/labtest/patient_view_lab_report.html',{'lab_test_details':lab_test_details})
 
+@login_required
+@check_view_permissions("patient")
+def view_one_lab_report(request,testID):
+    lab_test_details=models.Test.objects.all().filter(testID=testID)
+    return render(request,'Patient/labtest/patient_view_lab_report.html',{'lab_test_details':lab_test_details})
+
+
+
 #Chatbot Views
 @login_required
 @check_view_permissions("patient")
@@ -354,6 +329,13 @@ def get_bot_response(request):
 @check_view_permissions("patient")
 def patient_appointment_view(request):
      return render(request, 'Patient/Appointment/appointment.html')
+
+@login_required
+@check_view_permissions("patient")
+def patient_previous_appointment_view(request,patientID):
+    patient_prev_appointments = models.Appointment.objects.all().filter(patientID=patientID)
+    #print(patient_diagnosis_details)
+    return render(request, 'Patient/Appointment/view-appointment.html',{'patient_prev_appointments':patient_prev_appointments})
 
 @login_required
 @check_view_permissions("patient")
@@ -402,11 +384,9 @@ def doctor(request):
 @login_required
 @check_view_permissions("doctor")
 def doctor_view_appointment_view(request):
-    appointments=models.Appointment.objects.all().filter(doctorID=request.user.username)
+    appointments=models.Appointment.objects.all().filter(doctorID=request.user.id)
     l=[]
     for i in appointments:
-        patient = Patient.objects.get(patientID = i.patientID.patientID)
-        doctor = Doctor.objects.get(doctorID = i.doctorID.doctorID)
         mydict = {
         'appointmentID': i.appointmentID,
         'date': i.date,
@@ -414,15 +394,13 @@ def doctor_view_appointment_view(request):
         'type': i.type,
         'patientID': i.patientID,
         'doctorID': i.doctorID,
-        'patientName':patient.name,
-        'doctorName':doctor.name,
         'status': i.status,
 		'diagnosisID': i.diagnosisID,
 		'testID': i.testID,
 		'paymentID':i.paymentID,
 		'created_on': i.created_on
         }
-        l.append(mydict)
+        l[i]=mydict
     return render(request,'Doctor/doctor_view_appointment_view.html', {'appointments':l})
 
 @login_required
