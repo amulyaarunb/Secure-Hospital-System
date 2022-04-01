@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Hospital Staff Page</title>
+    <title>Hospital Staff Update Patients</title>
     <style>
         body {
             font-family: Arial;
@@ -18,9 +18,6 @@
 <body style="background-color:whitesmoke">
 
     <div style="margin-left: -8px; margin-right: -8px;margin-top: -8px;background-color:gray">
-    </div>
-
-    <div style="margin-left: -8px; margin-right: -8px;margin-top: -8px;background-color:gray">
         <ul style="color:black;font-size: 30px;list-style-type: none;margin: 0;padding: 5px;">
             Secure Hospital System
             <a href="{% url 'hospital_staff_appointments' %} " style="color: black;font-size: 25px;text-decoration: none;padding: 10px;"> Appointments</a>
@@ -30,20 +27,13 @@
         </ul>
     </div>
 
-    <div id="Appointments ">
-        {% for app in appointments %}
-        <li>
-            <p>Patient Name: {{ app.patientName }}</p>
-            <p>Type: {{ app.type}}</p>
-            <p>Date: {{ app.date}}</p>
-            <p>Time: {{ app.time}}</p>
-            <p>Doctor: {{ app.doctorName }}</p>
-            <p>Status: {{ app.status }}</p>
-            <a href="{% url 'hospital_appointment_approve' app.appointmentID %}" style="color: black;font-size: 10px;text-decoration: none;padding: 10px;border-style: solid;background-color: gray;">Approve Funds</a>
-        </li>
-        {% endfor %}
+    <br>
 
-    </div>
+    <br>
+    <form action="/hospital_staff_amount/" method="post">
+        {% csrf_token %} {{ form }}
+        <input type="Submit" value="Submit">
+    </form>
 
 </body>
 

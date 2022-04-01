@@ -15,10 +15,10 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
 
     #insurance staff
-    path('insurance_staff/',views.viewClaim,name='viewClaim'),
+    path('insurance_staff/',views.viewClaim,name='insurance_staff'),
 #     path('insurance_staff_review/',views.claimDisb,name='claimDisb'),
-    path('approveClaim/<str:pk>',views.approveClaim,name='approveClaim'),
-    path('denyClaim/<str:pk>',views.denyClaim,name='denyClaim'),
+    #path('approveClaim/<str:pk>',views.approveClaim,name='approveClaim'),
+    #path('denyClaim/<str:pk>',views.denyClaim,name='denyClaim'),
     path('authorizeFund/',views.authorizeFund,name= 'authorizeFund'),
 
     #hospital staff
@@ -51,11 +51,6 @@ urlpatterns = [
     path("patient_payments/<str:patientID>", views.patient_payments_details, name="patient_payments"),
     path("patient_make_payment/<str:patientID>",views.make_payment, name="patient_make_payment"),
          
-  
-# doctor urls
-    path('doctor/', views.doctor, name='doctor'),
-    path('doctor_view_appointment_view/', views.doctor_view_appointment_view, name='doctor_appointment'),
-
     # Doctor URLs
     path('doctor/', views.doctor, name='doctor'),
     path('doctor_view_appointment_view/',
@@ -68,5 +63,7 @@ urlpatterns = [
          name='doctor_appointmentID_search_view'),
     path('doctor_search/', views.doctor_search_view,
          name='doctor_search'),
+    path('doctor_createpatientdiagnosis_view/', views.doctor_createpatientdiagnosis_view, 
+         name='doctor_patient_diagnosis'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
