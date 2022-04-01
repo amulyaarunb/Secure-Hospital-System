@@ -39,7 +39,7 @@
             <p>Time: {{ app.time}}</p>
             <p>Doctor: {{ app.doctorName }}</p>
             <p>Status: {{ app.status }}</p>
-            <a href="{% url 'hospital_complete_appointment' app.appointmentID %}" style="color: black;font-size: 10px;text-decoration: none;padding: 10px;border-style: solid;background-color: gray;">Create Payment</a>
+            <a href="{% url 'hospital_appointment_approve' app.appointmentID %}" style="color: black;font-size: 10px;text-decoration: none;padding: 10px;border-style: solid;background-color: gray;">Approve Funds</a>
         </li>
         {% endfor %}
 
