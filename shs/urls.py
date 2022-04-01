@@ -24,7 +24,9 @@ urlpatterns = [
     #hospital staff
     path('hospital_staff_appointments/', views.hospital_appointment,
          name='hospital_staff_appointments'),
-    path('hospital_staff_create_payment/', views.hospital_transaction, name='hospital_staff_create_payment'),
+    path('hospital_staff_create_payment/', views.hospital_approved_appointment, name='hospital_staff_create_payment'),
+    path('hospital_complete_appointment/<str:ID>', views.hospital_complete_appointment , name = 'hospital_complete_appointment'),
+    path('hospital_transaction/', views.hospital_transaction, name = 'hospital_transaction'),
     path('hospital_search_patients/', views.hospital_search,
          name='hospital_search_patients'),
     path('hospital_update_patients/',views.hospital_update_patients,name= 'hospital_update_patients'),
