@@ -97,6 +97,7 @@ def deleteTestReport(request,pk):
 def denyClaim(request,pk):
     obj = Insurance.objects.get(request_id=pk)
     obj.status = 'denied'
+    obj.save()
     return redirect('/insurance_staff')
     
 @login_required
@@ -104,14 +105,16 @@ def denyClaim(request,pk):
 def approveClaim(request,pk):
     obj = Insurance.objects.get(request_id=pk)
     obj.status = 'approved'
-    return redirect('insurance_staff')
+    obj.save()
+    return redirect('/insurance_staff')
     
 @login_required
 @check_view_permissions("insurance_staff")
 def authorizeFund(request,pk):
     obj = Insurance.objects.get(request_id=pk)
-    obj1 = Payment.objects.get(paymentID=obj.paymentID)
+    obj1 = Payment.objects.get(paymentID=obj.paymentID.paymentID)
     obj1.status = 'completed'
+    obj1.save()
     return redirect('/insurance_staff_review')
 
 @login_required
@@ -120,16 +123,18 @@ def claimDisb(request):
     obj = Insurance.objects.all().filter(status='approved')
     arr = []
     for i in obj:
-        obj1 = Patient.objects.get(id=i.patientID.patientID)
-        obj2 = Payment.objects.get(id=i.paymentID.paymentID)
-        dict = {
-            'patientName':obj1.name,
-            'insuranceID':obj1.insuranceID,
-            'amount':obj2.amount
-        }
-        arr.append(dict)
+        obj1 = Patient.objects.get(patientID=i.patientID.patientID)
+        obj2 = Payment.objects.get(paymentID=i.paymentID.paymentID)
+        if(obj2.status!='completed'):
+            dict = {
+                'patientName':obj1.name,
+                'insuranceID':obj1.insuranceID,
+                'amount':obj2.amount,
+                'requestID' :i.request_id
+            }
+        if(obj2.status!='completed'): arr.append(dict)
 
-    return render(request,'insurance_staff.html',{'Disbursal Pending':arr})
+    return render(request,'insurance_staff_review.html',{'disbursal':arr})
 
 
 @login_required
@@ -143,7 +148,8 @@ def viewClaim(request):
         dict = {
             'patientName':obj1.name,
             'insuranceID':obj1.insuranceID,
-            'amount':obj2.amount
+            'amount':obj2.amount,
+            'requestID' :i.request_id
         }
         arr.append(dict)
 
