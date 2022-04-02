@@ -527,7 +527,7 @@ def doctor_view_patientlist(request):
     l=[]
     for p in appointments:
         i=models.Patient.objects.get(patientID=p.patientID.patientID)
-        # doctor = Doctor.objects.get(doctorID = i.doctorID.doctorID)
+        d = Diagnosis.objects.get(patientID=p.patientID.patientID)
         mydict = {
         'name': i.name,
         'age': i.age,
@@ -535,7 +535,10 @@ def doctor_view_patientlist(request):
         'patientID': i.patientID,
         'doctorID': p.doctorID,
         'height': i.height,
-		'weight': i.weight
+		'weight': i.weight,
+        'diagnosis': d.diagnosis,
+        'test_recommendation': d.test_recommendation,
+        'prescription': d.prescription
         }
         l.append(mydict)
     return render(request, 'Doctor/doctor_view_patientlist.html',{'patients':l})
@@ -637,3 +640,8 @@ def doctor_recommend_labtest_view(request):
 def doctor_patient_diagnosis_view(request):
     return render(request, 'Doctor/doctor_patient_diagnosis.html', {'diagnosis': l}) 
 
+# @login_required
+# @check_view_permissions("doctor")
+# def patient_diagnosis_details(request, patientID):
+#     patient_diagnosis_details = models.Diagnosis.objects.all().filter(patientID=patientID)
+#     return render(request,'Doctor/doctor_patient_diagnosis.html',{'patient_diagnosis_details':patient_diagnosis_details})
