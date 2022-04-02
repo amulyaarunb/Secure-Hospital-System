@@ -35,3 +35,8 @@ class PatientUpdateForm(forms.Form):
 
 class CreatePaymentForm(forms.Form):
     Amount = forms.CharField(label = 'Amount', max_length = 50)
+
+class EditDiagnosisForm(forms.ModelForm):
+    class Meta:
+        model=models.Diagnosis
+        fields=['diagnosis']
