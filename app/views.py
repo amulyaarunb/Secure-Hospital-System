@@ -2,15 +2,21 @@ import re
 from django.contrib.auth.models import Group
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse_lazy
 from django_registration.backends.one_step.views import RegistrationView
+from django_registration.forms import RegistrationForm
 from django.contrib.auth.models import Group
-from django.http import HttpResponse,HttpResponseRedirect
-from . models import Diagnosis,Test,Insurance,Payment,Appointment,Patient,Doctor
+from django.http import HttpResponse, HttpResponseRedirect
+from . models import Diagnosis, Test, Insurance, Payment, Appointment, Patient, Doctor
 from app.decorators import check_view_permissions
 from . import forms, models
-from .BotMain import chatgui # Botmain is chatbot directory
+from .BotMain import chatgui  # Botmain is chatbot directory
+from django_otp.decorators import otp_required
+from django.contrib.auth import logout
+from django.views.generic.edit import FormView
 
-@login_required
+
+@login_required(redirect_field_name="two_factor")
 def index(request):
     print(request.user.groups)
     if request.user.groups.filter(name='patient').exists():
@@ -30,14 +36,18 @@ def index(request):
         # return patient stuff
         return redirect('/insurance_staff')
     if request.user.groups.filter(name='admin').exists():
-        return redirect('/administrator')
+        return redirect('/admin')
 
 
-class CustomRegistrationView(RegistrationView):
+class Register(RegistrationView):
+    form_class = RegistrationForm
+    success_url = None
+    template_name = "django_registration/registration_form.html"
+
     def register(self, form):
-        user =  super().register(form)
+        new_user = form.save()
         patient_group = Group.objects.get(name='patient')
-        patient_group.user_set.add(user)
+        patient_group.user_set.add(new_user)
 
 
 @login_required
@@ -166,11 +176,11 @@ def viewClaim(request):
 def hospital_appointment_view(request):
     return render(request,'hospital_staff_appointments.html')
 
-#To show appointments to hospital staff for approval
+# To show appointments to hospital staff for approval
 @login_required
 @check_view_permissions("hospital_staff")
 def hospital_appointment(request):
-    #those whose approval are needed
+    # those whose approval are needed
     appointments=Appointment.objects.all().filter(status='initiated')
     appt=[]
     for i in appointments:
@@ -218,7 +228,7 @@ def hospital_appointment_reject(request,ID):
 @login_required
 @check_view_permissions("hospital_staff")
 def hospital_update_patients(request):
-        #print(request.session)
+        # print(request.session)
         pID = request.session.get('_patient_id')
         print(pID)
         if request.method == 'POST':
@@ -226,7 +236,7 @@ def hospital_update_patients(request):
             form = forms.PatientUpdateForm(request.POST)
             if form.is_valid():
                 obj = Patient.objects.get(patientID = pID) 
-                #obj = Patient()
+                # obj = Patient()
                 obj.name = form.cleaned_data['PatientName']
                 obj.age = form.cleaned_data['Age']
                 obj.gender = form.cleaned_data['Gender']
@@ -244,7 +254,7 @@ def hospital_update_patients(request):
 @login_required
 @check_view_permissions("hospital_staff")
 def hospital_approved_appointment(request):
-    #those whose approval are needed
+    # those whose approval are needed
     appointments=Appointment.objects.all().filter(status='approved')
     appt=[]
     for i in appointments:
@@ -287,9 +297,9 @@ def hospital_transaction(request):
                 pID = apptID.patientID
                 obj = Payment()
                 obj.amount = form.cleaned_data['Amount']
-                #obj.appointmentID = apptID
-                #obj.patientID =pID
-                #obj.status= 'initiated'
+                # obj.appointmentID = apptID
+                # obj.patientID =pID
+                # obj.status= 'initiated'
                 obj.save()
                 return HttpResponseRedirect('/hospital_staff_create_payment/')
 
@@ -334,10 +344,10 @@ def patient(request):
 @check_view_permissions("patient")
 def patient_diagnosis_details(request, patientID):
     patient_diagnosis_details = models.Diagnosis.objects.all().filter(patientID=patientID)
-    #print(patient_diagnosis_details)
+    # print(patient_diagnosis_details)
     return render(request,'Patient/diagnosis.html',{'patient_diagnosis_details':patient_diagnosis_details})
 
-#patient details views
+# patient details views
 @login_required
 @check_view_permissions("patient")
 def patient_details(request, patientID):
@@ -346,13 +356,13 @@ def patient_details(request, patientID):
 
 def update_patient_record(request,patientID):
     patient=Patient.objects.get(patientID=patientID)
-    #print(patient)
+    # print(patient)
     # patientForm=forms.PatientForm(request.POST,request.FILES)
     patientForm=forms.PatientForm(request.POST)
     
     if request.method=='POST':
-        #print("Hi from POST")
-        #print(patientForm.data['age'])
+        # print("Hi from POST")
+        # print(patientForm.data['age'])
         patient.name=patientForm.data['name']
         patient.age=patientForm.data['age']
         patient.gender=patientForm.data['gender']
@@ -362,7 +372,7 @@ def update_patient_record(request,patientID):
         patient.save()
         
         # patientForm=forms.PatientForm(request.POST,request.FILES,instance=patient)
-        #print(patientForm.errors)
+        # print(patientForm.errors)
         # patientForm['patientID'] 
         if  patientForm.is_valid():
             print("patientForm is valid")
@@ -409,7 +419,7 @@ def view_one_lab_report(request,testID):
 
 
 
-#Chatbot Views
+# Chatbot Views
 @login_required
 @check_view_permissions("patient")
 def get_bot_response(request):
@@ -429,7 +439,7 @@ def patient_appointment_view(request):
 @check_view_permissions("patient")
 def patient_previous_appointment_view(request,patientID):
     patient_prev_appointments = models.Appointment.objects.all().filter(patientID=patientID)
-    #print(patient_diagnosis_details)
+    # print(patient_diagnosis_details)
     return render(request, 'Patient/Appointment/view-appointment.html',{'patient_prev_appointments':patient_prev_appointments})
 
 @login_required
@@ -512,7 +522,7 @@ def doctor_book_appointment(request,patinetID):
     patient_details=models.Patient.objects.all().get(patientID=patientID)
     return render(request, "Doctor/doctor_book_appointment.html", {"profile": patient_details})
     
-#patient records button views start here
+# patient records button views start here
 @login_required
 @check_view_permissions("doctor")
 def doctor_view_patientlist(request):
@@ -539,7 +549,7 @@ def doctor_view_patientlist(request):
 def doctor_appointmentID_search_view(request):
     # query stores the input given in search bar
     query = request.GET['query']
-    #patients=models.Patient.objects.all().filter(doctorId=request.user.id).filter(Q(patientID__icontains=query)|Q(name__icontains=query))
+    # patients=models.Patient.objects.all().filter(doctorId=request.user.id).filter(Q(patientID__icontains=query)|Q(name__icontains=query))
     appointments=models.Appointment.objects.all().filter(doctorId=request.user.id).filter(Q(patientID__icontains=query)|Q(appointmentID__icontains=query)|Q(date__icontains=query))
     return render(request,'Doctor/doctor_view_appointment_view.html',{'appointments':appointments})
 
@@ -571,7 +581,7 @@ def doctor_createpatientdiagnosis_view(request):
 @check_view_permissions("doctor")
 def doctor_create_prescription_view(request,ID):
     prescription=models.Diagnosis.objects.all().get(appointmentID=ID)
-    #diag=models.Diagnosis.objects.all().get(diagnosisID=diagnosis.diagnosisID)
+    # diag=models.Diagnosis.objects.all().get(diagnosisID=diagnosis.diagnosisID)
     if request.method=='POST':
         form=createprescriptionForm(request.POST)
         if form.is_valid():

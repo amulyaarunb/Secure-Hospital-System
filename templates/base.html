@@ -44,7 +44,7 @@
           </ul>
       {% else %}
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/accounts/login">Login</a></li>
+                <li><a href="/account/login">Login</a></li>
                 <li><a href="/accounts/register">Register</a></li>
             </ul>
       {% endif %}
@@ -53,7 +53,8 @@
   </div><!-- /.container-fluid -->
 </nav>
 <div class="content shadow">
-    {% block content %}{% endblock %}
+    {% block content %}
+    {% endblock %}
 </div>
 <div class="footer">
     {% block footer %}

@@ -13,3 +13,6 @@ nltk
 django-widget-tweaks
 django-cors-headers
 tensorflow
+django_otp
+django-two-factor-auth
+phonenumbers
