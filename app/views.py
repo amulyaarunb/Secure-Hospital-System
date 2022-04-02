@@ -504,8 +504,8 @@ def patient_book_appointment_view(request,patientID):
             appointment=appointmentForm.save(commit=False)
             appointment.status='initiated'
             appointment.save()
-        return redirect('appointment',patientID)
-    return render(request, 'Patient/Appointment/book-appointment.html')
+        return redirect('patient-view-appointment',patientID)
+    return render(request, 'Patient/Appointment/book-appointment.html',{"user": request.user})
 
 
 # Payment and Transaction views
