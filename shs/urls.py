@@ -17,12 +17,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     #insurance staff
-    path('insurance_staff/',views.viewClaim,name='insurance_staff'),
-#     path('insurance_staff_review/',views.claimDisb,name='claimDisb'),
-    #path('approveClaim/<str:pk>',views.approveClaim,name='approveClaim'),
-    #path('denyClaim/<str:pk>',views.denyClaim,name='denyClaim'),
-    path('authorizeFund/',views.authorizeFund,name= 'authorizeFund'),
-
+     path('insurance_staff/',views.viewClaim,name='insurance_staff'),
+     path('insurance_staff_auth/<str:pk>',views.authorizeFund,name='insurance_staff_auth'),
+     path('insurance_staff_approve/<str:pk>',views.approveClaim,name='insurance_staff_approve'),
+     path('insurance_staff_reject/<str:pk>',views.denyClaim,name='insurance_staff_reject'),
+     path('insurance_staff_review/',views.claimDisb,name= 'insurance_staff_review'),
     # hospital staff
     path('hospital_staff_appointments/', views.hospital_appointment,
          name='hospital_staff_appointments'),
