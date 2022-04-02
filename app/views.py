@@ -632,4 +632,8 @@ def doctor_recommend_labtest_view(request):
     #         form=recommendlabtestForm()
     return render(request, 'Doctor/doctor_recommendlabtest.html') 
 		
+@login_required
+@check_view_permissions("doctor")
+def doctor_patient_diagnosis_view(request):
+    return render(request, 'Doctor/doctor_patient_diagnosis.html', {'diagnosis': l}) 
 
