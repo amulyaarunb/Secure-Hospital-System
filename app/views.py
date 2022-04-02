@@ -158,18 +158,17 @@ def viewClaim(request):
     
 '''Insurance Staff View ends here'''
 
-
 '''------------------Hospital Staff View------------------- ''' 
 @login_required
 @check_view_permissions("hospital_staff")
 def hospital_appointment_view(request):
     return render(request,'hospital_staff_appointments.html')
 
-# To show appointments to hospital staff for approval
+#To show appointments to hospital staff for approval
 @login_required
 @check_view_permissions("hospital_staff")
 def hospital_appointment(request):
-    # those whose approval are needed
+    #those whose approval are needed
     appointments=Appointment.objects.all().filter(status='initiated')
     appt=[]
     for i in appointments:
@@ -217,7 +216,7 @@ def hospital_appointment_reject(request,ID):
 @login_required
 @check_view_permissions("hospital_staff")
 def hospital_update_patients(request):
-        # print(request.session)
+        #print(request.session)
         pID = request.session.get('_patient_id')
         print(pID)
         if request.method == 'POST':
@@ -225,7 +224,7 @@ def hospital_update_patients(request):
             form = forms.PatientUpdateForm(request.POST)
             if form.is_valid():
                 obj = Patient.objects.get(patientID = pID) 
-                # obj = Patient()
+                #obj = Patient()
                 obj.name = form.cleaned_data['PatientName']
                 obj.age = form.cleaned_data['Age']
                 obj.gender = form.cleaned_data['Gender']
@@ -243,7 +242,7 @@ def hospital_update_patients(request):
 @login_required
 @check_view_permissions("hospital_staff")
 def hospital_approved_appointment(request):
-    # those whose approval are needed
+    #those whose approval are needed
     appointments=Appointment.objects.all().filter(status='approved')
     appt=[]
     for i in appointments:
@@ -302,9 +301,14 @@ def hospital_transaction(request):
 @check_view_permissions("hospital_staff")
 def hospital_search(request):
     # whatever user write in search box we get in query
-    query = '12345'
-    print(request)
+    query = request.GET.get('search',False)
     patients=Patient.objects.all().filter(Q(patientID__icontains=query)|Q(name__icontains=query))
+    return render(request,'hospital_search_patients.html',{'patients':patients})
+
+@login_required
+@check_view_permissions("hospital_staff")
+def hospital_view_patients(request):
+    patients=Patient.objects.all()
     return render(request,'hospital_search_patients.html',{'patients':patients})
 
 @login_required
