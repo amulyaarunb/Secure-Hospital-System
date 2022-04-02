@@ -43,11 +43,10 @@
             <p>Appointment Date: {{ app.date }}</p>
             <p>Appointment Time: {{ app.time }}</p>
             <p>Appointment Type: {{ app.type }}</p>
-            <p>Appointment Doctor ID: {{ app.doctorID }}</p>
+            <p>Doctor Name: {{ app.doctorName }}</p>
             <p>Appointment Status: {{ app.status }}</p>
-            <p>Appointment Diagnosis ID: {{ app.diagnosisID }}</p>
-            <p>Appointment Test ID: {{ app.testID }}</p>
-            <p>Appointment Payment ID: {{ app.paymentID }}</p>
+            <p>Diagnosis : {{ app.diagnosis }}</p>
+            <p>Prescription: {{ app.prescription }}</p>
             <p>Appointment Created On: {{ app.created_on }}</p>
         </li>
         {% endfor %}
@@ -58,18 +57,7 @@
             <p>Test Time: {{ test.time }}</p>
             <p>Test Type: {{ test.type }}</p>
             <p>Test Status: {{ test.status }}</p>
-            <p>Test Result: {{ test.result }}</p>
-            <p>Test Payment ID: {{ test.paymentID }}</p>
-        </li>
-        {% endfor %}
-        <br><br> {% for d in diagnosis_details %}
-        <li>
-            <p>Diagnosis ID: {{ d.diagnosisID }}</p>
-            <p>Doctor for Diagnosis: {{ d.doctorID }}</p>
-            <p>Diagnosis: {{ d.diagnosis }}</p>
-            <p>Diagnosis for appointment: {{ d.appointmentID }}</p>
-            <p>Test recommendation for diagnosis: {{ d.test_recommendation }}</p>
-            <p>Diagnosis Prescription: {{ d.prescription }}</p>
+            <p>Test Result: {{test.result}}</p>
         </li>
         {% endfor %}
     </div>
