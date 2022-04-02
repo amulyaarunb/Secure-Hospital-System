@@ -42,8 +42,6 @@ classes = sorted(list(set(classes)))
 
 print (len(documents), "documents")
 
-print (len(classes), "classes", classes)
-
 print (len(words), "unique lemmatized words", words)
 
 
