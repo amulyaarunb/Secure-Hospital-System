@@ -2,47 +2,74 @@
 
 {% block content %}
 
-<style>
-    th {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
+<head>
+  <style media="screen">
+    a:link {
+      text-decoration: none;
     }
-     
-</style>
 
-<h1>Patients diagnosis</h1>
-<table>
-    <tr>
-        <th>Patient ID</th>
-        <th>Doctor ID</th>
-        <th>Appointment ID</th>
-        <th>Diagnosis</th>
-        <th>Test Recommendation</th>
-        <th>Prescription</th>
-        <th>Update</th>
-        <th>Modify</th>
-      </tr>
-      {% for i in appointments %}
-      <tr>
-        <th> {{ i.patientID }}</th>
-        <th> {{ i.doctorID }}</th>        
-        <th> {{ i.appointmentID }}</th>
-        <th> {{ i.diagnosis }}</th>
-        <th> {{ i.test_recommendation }}</th>
-        <th> {{ i.prescription }}</th>
-        <th> 
-            <div class="btn-group">
-                <a href="#"> <button type="button" class="btn btn-secondary">Update</button> </a>
-            </div>
-        </th>
-        <th>
-            <div class="btn-group"></div>
-                <a href="#"> <button type="button" class="btn btn-secondary">Modify</button> </a>
-            </div>
-        </th>
-      </tr> 
-      {% endfor %}
-</table>
+    .note {
+      text-align: center;
+      height: 80px;
+      background: Black;
+      color: White;
+      font-weight: bold;
+      line-height: 80px;
+    }
 
-{% endblock content %}
+    .form-content {
+      padding: 5%;
+      border: 1px solid #ced4da;
+      margin-bottom: 2%;
+    }
+
+    .form-control {
+      border-radius: 1.5rem;
+    }
+
+    .btnSubmit {
+      border: none;
+      border-radius: 1.5rem;
+      padding: 1%;
+      width: 20%;
+      cursor: pointer;
+      background: black;
+      color: #fff;
+    }
+
+    .menu {
+      top: 50px;
+    }
+  </style>
+
+  <!-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
+
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+</head>
+<br><br>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="container register-form">
+      <div class="form">
+        <div class="note">
+          <p>Update Patient Details</p>
+        </div>
+        <div class="form-content">
+          <div class="row">
+            <!-- <div class="col-md-8"> -->
+              <div class="form-group">
+                {% render_field EditDiagnosisForm.diagnosis class="form-control" placeholder="Diagnosis" %}
+              </div>
+              <button type="submit" class="btnSubmit">Update</button>
+          </div>
+        </div>
+      </div>
+    </div>
+</form>
+
+{% endblock content%}

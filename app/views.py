@@ -655,3 +655,24 @@ def doctor_patient_diagnosis_view(request):
 # def patient_diagnosis_details(request, patientID):
 #     patient_diagnosis_details = models.Diagnosis.objects.all().filter(patientID=patientID)
 #     return render(request,'Doctor/doctor_patient_diagnosis.html',{'patient_diagnosis_details':patient_diagnosis_details})
+
+@login_required
+@check_view_permissions("doctor")
+def doctor_createpatientdiagnosis_view(request):
+    p=models.Appointment.objects.all().filter(doctorID=request.user.username)
+    d=models.Diagnosis.objects.get(patientID=p.patientID.patientID)
+    EditDiagnosisForm=forms.EditDiagnosisForm(request.POST)
+    
+    if request.method=='POST':
+        d.name=EditDiagnosisForm.data['diagnosis']
+        d.save() 
+        if  EditDiagnosisForm.is_valid():
+            print("EditDiagnosisForm is valid")
+            d=EditDiagnosisForm.save(commit=True)
+            d.save(force_update=True)
+
+        d=Diagnosis.objects.get(patientID=p.patientID.patientID)   
+        return redirect("patient_details", d.patientID)
+
+    mydict={'EditDiagnosisForm':EditDiagnosisForm}
+    return render(request, 'Doctor/doctor_createpatientdiagnosis_view.html', context=mydict)    
