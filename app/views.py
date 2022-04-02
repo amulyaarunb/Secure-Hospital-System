@@ -315,8 +315,8 @@ def hospital_view_patients(request):
 @check_view_permissions("hospital_staff")
 def hospital_patient_details(request,pID):
     patient_details = Patient.objects.get(patientID = pID)
-    appointment_details=Appointment.objects.get(patientID=pID)
-    test_details = Test.objects.get(patientID = pID)
+    appointment_details=Appointment.objects.all().filter(patientID=pID)
+    test_details = Test.objects.all().filter(patientID = pID)
     return render(request,'hospital_view_patient_details.html',{'patient_details':patient_details,'appointment_details':appointment_details,'test_details':test_details})
 
 
