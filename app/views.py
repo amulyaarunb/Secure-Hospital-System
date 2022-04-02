@@ -568,16 +568,16 @@ def doctor_createpatientdiagnosis_view(request):
 
 @login_required
 @check_view_permissions("doctor")
-def doctor_create_prescription_view(request,ID):
-    prescription=models.Diagnosis.objects.all().get(appointmentID=ID)
-    #diag=models.Diagnosis.objects.all().get(diagnosisID=diagnosis.diagnosisID)
-    if request.method=='POST':
-        form=createprescriptionForm(request.POST)
-        if form.is_valid():
-            return HttpResponseRedirect('/record updated/')
-        else:
-            form=createprescriptionForm()
-    return render(request, 'Doctor/doctor_create_prescription.html', {'form': form})
+def doctor_create_prescription_view(request):
+    # prescription=models.Diagnosis.objects.all().get(appointmentID=ID)
+    # #diag=models.Diagnosis.objects.all().get(diagnosisID=diagnosis.diagnosisID)
+    # if request.method=='POST':
+    #     form=createprescriptionForm(request.POST)
+    #     if form.is_valid():
+    #         return HttpResponseRedirect('/record updated/')
+    #     else:
+    #         form=createprescriptionForm()
+    return render(request, 'Doctor/doctor_create_prescription.html')
 
 @login_required
 @check_view_permissions("doctor")
@@ -590,7 +590,39 @@ def doctor_search_view(request):
     else:
         return render(request, 'Doctor/doctor_search.html', {})
 
+@login_required
+@check_view_permissions("doctor")
+def doctor_view_labreport_view(request):
+    appointments=models.Appointment.objects.all().filter(doctorID=request.user.username)
+    l=[]
+    for i in appointments:
+        j=models.Test.objects.get(patientID=i.patientID.patientID)
+        mydict = {
+        'testID': j.testID,
+        'date': j.date,
+        'time': j.time,
+        'type': j.type,
+        'patientID': j.patientID,
+        'status': j.status,
+        'result': j.result,
+        'diagnosisID': j.diagnosisID,
+		'paymentID': j.paymentID
+        }
+        l.append(mydict)
+    return render(request,'Doctor/doctor_view_labreport.html',{'labtestreport':l})
 
 
+@login_required
+@check_view_permissions("doctor")
+def doctor_recommend_labtest_view(request):
+    # appt=models.Appointment.objects.all().filter(appointmentID=ID)
+    # t=models.Diagnosis.objects.get(diagnosisID=appt.diagnosisID)
+    # if request.method=='POST':
+    #     form=recommendlabtestForm(request.POST)
+    #     if form.is_valid():
+    #         return HttpResponseRedirect('/record updated/')
+    #     else:
+    #         form=recommendlabtestForm()
+    return render(request, 'Doctor/doctor_recommendlabtest.html') 
 		
 
