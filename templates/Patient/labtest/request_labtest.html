@@ -57,21 +57,26 @@
   <div class="container register-form">
     <div class="form">
       <div class="note">
-        <p>Request</p>
+        <p>Request Lab test</p>
       </div>
       <div class="form-content">
         <div class="row">
           <div class="col-md-6">
-            <div class="form-group">
-              {% render_field patientForm.type class="form-control" placeholder="Type of test" %}
+            {% for a in patient_payments %}
+                <div class="form-group">
+                <label for="patientID">patientID:   {{a.patientID.patientID}}</label>
+                <br>
+                <label for="appointmentID">diagnosisID:   {{a.appointmentID.appointmentID}}</label>
+
             </div>
+            {% endfor %}
             <div class="form-group">
-              {% render_field patientForm.name class="form-control" placeholder="Patient ID" %}
-            </div>
-            <div class="form-group">
-              {% render_field patientForm.age class="form-control" placeholder="Diagnosis ID" %}
-            </div>
-          </div>
+                <label for="Mode of Payment">Choose mode for payment:</label>
+                <select name="method" id="Mode of Payment">
+                <option value="Cash">Cash</option>
+                <option value="Insurance">Insurance</option>
+                </select>
+            </div></div>
         </div>
         <button type="submit" class="btnSubmit">Update</button>
       </div>

@@ -23,7 +23,7 @@ class MakePaymentForm(forms.ModelForm):
     class Meta:
         model=models.Payment
         # fields=['method','type','mode','patientID','testID','appointmentID']
-        fields=['method','patientID','testID','appointmentID' ]
+        fields=['method']
 
 class PatientUpdateForm(forms.Form):
     PatientName = forms.CharField(label = 'Patient Name', max_length=100)
@@ -34,6 +34,4 @@ class PatientUpdateForm(forms.Form):
     InsuranceID = forms.CharField(label = 'Insurance ID', max_length= 10)
 
 class CreatePaymentForm(forms.Form):
-    PatientID = forms.CharField(label = 'Patient ID', max_length=100)
-    AppointmentID = forms.CharField(label = 'Appointment ID', max_length=100)
     Amount = forms.CharField(label = 'Amount', max_length = 50)

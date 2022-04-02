@@ -1,8 +1,6 @@
-import re
 from django.contrib.auth.models import Group
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse_lazy
 from django_registration.backends.one_step.views import RegistrationView
 from django_registration.forms import RegistrationForm
 from django.contrib.auth.models import Group
@@ -12,8 +10,6 @@ from app.decorators import check_view_permissions
 from . import forms, models
 from .BotMain import chatgui  # Botmain is chatbot directory
 from django_otp.decorators import otp_required
-from django.contrib.auth import logout
-from django.views.generic.edit import FormView
 
 
 @login_required(redirect_field_name="two_factor")
@@ -107,7 +103,6 @@ def deleteTestReport(request,pk):
 def denyClaim(request,pk):
     obj = Insurance.objects.get(request_id=pk)
     obj.status = 'denied'
-    obj.save()
     return redirect('/insurance_staff')
     
 @login_required
@@ -115,16 +110,14 @@ def denyClaim(request,pk):
 def approveClaim(request,pk):
     obj = Insurance.objects.get(request_id=pk)
     obj.status = 'approved'
-    obj.save()
-    return redirect('/insurance_staff')
+    return redirect('insurance_staff')
     
 @login_required
 @check_view_permissions("insurance_staff")
 def authorizeFund(request,pk):
     obj = Insurance.objects.get(request_id=pk)
-    obj1 = Payment.objects.get(paymentID=obj.paymentID.paymentID)
+    obj1 = Payment.objects.get(paymentID=obj.paymentID)
     obj1.status = 'completed'
-    obj1.save()
     return redirect('/insurance_staff_review')
 
 @login_required
@@ -133,18 +126,16 @@ def claimDisb(request):
     obj = Insurance.objects.all().filter(status='approved')
     arr = []
     for i in obj:
-        obj1 = Patient.objects.get(patientID=i.patientID.patientID)
-        obj2 = Payment.objects.get(paymentID=i.paymentID.paymentID)
-        if(obj2.status!='completed'):
-            dict = {
-                'patientName':obj1.name,
-                'insuranceID':obj1.insuranceID,
-                'amount':obj2.amount,
-                'requestID' :i.request_id
-            }
-        if(obj2.status!='completed'): arr.append(dict)
+        obj1 = Patient.objects.get(id=i.patientID.patientID)
+        obj2 = Payment.objects.get(id=i.paymentID.paymentID)
+        dict = {
+            'patientName':obj1.name,
+            'insuranceID':obj1.insuranceID,
+            'amount':obj2.amount
+        }
+        arr.append(dict)
 
-    return render(request,'insurance_staff_review.html',{'disbursal':arr})
+    return render(request,'insurance_staff.html',{'Disbursal Pending':arr})
 
 
 @login_required
@@ -158,18 +149,16 @@ def viewClaim(request):
         dict = {
             'patientName':obj1.name,
             'insuranceID':obj1.insuranceID,
-            'amount':obj2.amount,
-            'requestID' :i.request_id
+            'amount':obj2.amount
         }
         arr.append(dict)
 
-    return render(request,'insurance/insurance_staff.html',{'claims':arr})
+    return render(request,'insurance_staff.html',{'claims':arr})
 
     
 '''Insurance Staff View ends here'''
 
 
-'''------------------Hospital Staff View------------------- ''' 
 '''------------------Hospital Staff View------------------- ''' 
 @login_required
 @check_view_permissions("hospital_staff")
@@ -244,7 +233,7 @@ def hospital_update_patients(request):
                 obj.weight = form.cleaned_data['Weight']
                 obj.insuranceID = form.cleaned_data['InsuranceID']
                 obj.save()
-                return HttpResponseRedirect('/hospital_staff_appointment/')
+                return HttpResponseRedirect('/hospital_staff_appointments/')
 
         # if a GET (or any other method) we'll create a blank form
         else:
@@ -278,9 +267,11 @@ def hospital_approved_appointment(request):
 @check_view_permissions("hospital_staff")
 def hospital_complete_appointment(request,ID):
     appointment=Appointment.objects.get(appointmentID=ID)
+    print(appointment.appointmentID)
+    request.session['_appointment_id'] = appointment.appointmentID
     appointment.status='completed'
     appointment.save()
-    request.session['_appointment_id'] = ID
+    
     return HttpResponseRedirect('/hospital_transaction')
 
 @login_required
@@ -293,20 +284,19 @@ def hospital_transaction(request):
             form = forms.CreatePaymentForm(request.POST)
             if form.is_valid():
                 apptID = Appointment.objects.get(appointmentID = apptID)
-                print(apptID)
                 pID = apptID.patientID
                 obj = Payment()
                 obj.amount = form.cleaned_data['Amount']
-                # obj.appointmentID = apptID
-                # obj.patientID =pID
-                # obj.status= 'initiated'
+                obj.appointmentID = apptID
+                obj.patientID =pID
+                obj.status= 'initiated'
                 obj.save()
                 return HttpResponseRedirect('/hospital_staff_create_payment/')
 
         # if a GET (or any other method) we'll create a blank form
-            else:
+    else:
                 form = forms.CreatePaymentForm()
-            return render(request, 'hospital_update_amount.html', {'form': form})
+    return render(request, 'hospital_staff_amount.html', {'form': form})
 
 @login_required
 @check_view_permissions("hospital_staff")
@@ -459,15 +449,27 @@ def patient_book_appointment_view(request,patientID):
 # Payment and Transaction views
 @login_required
 @check_view_permissions("patient")
-def make_payment(request, patientID):
-    patient_payments = models.Payment.objects.all().filter(patientID=patientID)
+def make_payment(request, paymentID):
+    patient_payments = models.Payment.objects.get(paymentID=paymentID)
+    patientID=patient_payments.patientID
+    print(patientID.patientID)
+    payform=forms.MakePaymentForm(request.POST)
     if request.method=='POST':
-        payform=forms.MakePaymentForm(request.POST)
+        #print(payform.data)
+        patient_payments.method=payform.data['method']
+        #print(payform.data['method'])
+        if patient_payments.method=='Insurance':
+            patient_payments.status='initiated'
+        else:
+            patient_payments.status='completed'
+
+        patient_payments.save()
         if  payform.is_valid():
             pay=payform.save(commit=False)
             pay.status='initiated'
             pay.save()
-        return redirect("patient_payments", patient_payments.patientID)
+        #print(patient_payments.amount)
+        return redirect("patient_payments", patientID.patientID)
 
     # mydict={'MakePaymentForm': payform}
     return render(request,'Patient/payments_and_transactions/make_payment.html', {"patient_payments":patient_payments})
@@ -531,7 +533,7 @@ def doctor_view_patientlist(request):
     l=[]
     for p in appointments:
         i=models.Patient.objects.get(patientID=p.patientID.patientID)
-        # doctor = Doctor.objects.get(doctorID = i.doctorID.doctorID)
+        d = Diagnosis.objects.get(patientID=p.patientID.patientID)
         mydict = {
         'name': i.name,
         'age': i.age,
@@ -539,7 +541,10 @@ def doctor_view_patientlist(request):
         'patientID': i.patientID,
         'doctorID': p.doctorID,
         'height': i.height,
-		'weight': i.weight
+		'weight': i.weight,
+        'diagnosis': d.diagnosis,
+        'test_recommendation': d.test_recommendation,
+        'prescription': d.prescription
         }
         l.append(mydict)
     return render(request, 'Doctor/doctor_view_patientlist.html',{'patients':l})
@@ -579,16 +584,16 @@ def doctor_createpatientdiagnosis_view(request):
 
 @login_required
 @check_view_permissions("doctor")
-def doctor_create_prescription_view(request,ID):
-    prescription=models.Diagnosis.objects.all().get(appointmentID=ID)
-    # diag=models.Diagnosis.objects.all().get(diagnosisID=diagnosis.diagnosisID)
-    if request.method=='POST':
-        form=createprescriptionForm(request.POST)
-        if form.is_valid():
-            return HttpResponseRedirect('/record updated/')
-        else:
-            form=createprescriptionForm()
-    return render(request, 'Doctor/doctor_create_prescription.html', {'form': form})
+def doctor_create_prescription_view(request):
+    # prescription=models.Diagnosis.objects.all().get(appointmentID=ID)
+    # #diag=models.Diagnosis.objects.all().get(diagnosisID=diagnosis.diagnosisID)
+    # if request.method=='POST':
+    #     form=createprescriptionForm(request.POST)
+    #     if form.is_valid():
+    #         return HttpResponseRedirect('/record updated/')
+    #     else:
+    #         form=createprescriptionForm()
+    return render(request, 'Doctor/doctor_create_prescription.html')
 
 @login_required
 @check_view_permissions("doctor")
@@ -600,7 +605,6 @@ def doctor_search_view(request):
         return render(request, 'Doctor/doctor_search.html', {'searched':searched, 'patients':patients})
     else:
         return render(request, 'Doctor/doctor_search.html', {})
-
 
 @login_required
 @check_view_permissions("doctor")
@@ -622,5 +626,28 @@ def doctor_view_labreport_view(request):
         }
         l.append(mydict)
     return render(request,'Doctor/doctor_view_labreport.html',{'labtestreport':l})
-		
 
+
+@login_required
+@check_view_permissions("doctor")
+def doctor_recommend_labtest_view(request):
+    # appt=models.Appointment.objects.all().filter(appointmentID=ID)
+    # t=models.Diagnosis.objects.get(diagnosisID=appt.diagnosisID)
+    # if request.method=='POST':
+    #     form=recommendlabtestForm(request.POST)
+    #     if form.is_valid():
+    #         return HttpResponseRedirect('/record updated/')
+    #     else:
+    #         form=recommendlabtestForm()
+    return render(request, 'Doctor/doctor_recommendlabtest.html') 
+		
+@login_required
+@check_view_permissions("doctor")
+def doctor_patient_diagnosis_view(request):
+    return render(request, 'Doctor/doctor_patient_diagnosis.html', {'diagnosis': l}) 
+
+# @login_required
+# @check_view_permissions("doctor")
+# def patient_diagnosis_details(request, patientID):
+#     patient_diagnosis_details = models.Diagnosis.objects.all().filter(patientID=patientID)
+#     return render(request,'Doctor/doctor_patient_diagnosis.html',{'patient_diagnosis_details':patient_diagnosis_details})

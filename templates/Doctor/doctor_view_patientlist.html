@@ -25,13 +25,13 @@
 
 <body>
    
-<div class="btn-group-vertical btn-lg col-sm-3">
-    <a href="/doctor_createpatientdiagnosis_view"> <button type="button" class="btn btn-primary">Diagnosis</button> </a>
+<!-- <div class="btn-group-vertical btn-lg col-sm-3">
+    <a href="/doctor_patient_diagnosis"> <button type="button" class="btn btn-primary">Diagnosis</button> </a>
     <br>
     <a href="/doctor_view_labreport_view"><button type="button" class="btn btn-primary">Lab tests</button> </a>
     <br>
-    <a href="/doctor_create_prescription_view"><button type="button" class="btn btn-primary">Prescriptions</button></a>
-  </div>
+    <a href="/doctor_create_prescription"><button type="button" class="btn btn-primary">Prescriptions</button></a>
+  </div> -->
 
   <table>
     <tr>
@@ -41,6 +41,9 @@
         <th>Gender</th>
         <th>Height</th>
         <th>Weight</th>
+        <th>Diagnosis</th>
+        <th>Lab Test Recommendation</th>
+        <th>Prescription</th>
       </tr>
       {% for i in patients %}
       <tr>
@@ -50,9 +53,14 @@
         <th> {{ i.gender }}</th>
         <th> {{ i.height }}</th>
         <th> {{ i.weight }}</th>
+        <th> {{ i.diagnosis }}  <a href="/doctor_createpatientdiagnosis_view"> <button>Edit</span></button></a>  <a href="/doctor_recommend_labtest"> <button>Delete</span></button></a></th>
+        <th> {{ i.test_recommendation }}  <a href="/doctor_recommend_labtest"> <button>Edit</span></button></a></th>
+        <th> {{ i.prescription }} <a href="/doctor_create_prescription"> <button>Edit</span></button></a> </th>
+
       </tr> 
       {% endfor %}
 </table>
 
 </body>
 {% endblock content%}
+

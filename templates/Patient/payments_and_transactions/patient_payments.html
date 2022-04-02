@@ -53,7 +53,7 @@
                     <td> {{a.patientID.patientID}}</td>
                     <td>{{a.testID.testID}}</td>
                     <td>{{a.appointmentID.appointmentID}}</td>
-                    <td > <a href="{% url 'patient_make_payment' user.username %}"><i class="fas fa-wallet"></i> </a> </td>
+                    <td > <a href="{% url 'patient_make_payment' a.paymentID %}"><i class="fas fa-wallet"></i> </a> </td>
                     
                 </tr>
                 {% endfor %}

@@ -66,12 +66,12 @@
               {% render_field MakePaymentForm.type class="form-control" placeholder="Method" %}
             </div> -->
             <div class="form-group">
-                <script> console.log(patient_payments.patientID)</script>
-              <label for="">{{patient_payments.patientID}}</label>
+              <label for="">{{patient_payments.patientID.patientID}}</label>
+              <!-- <label for="">{{patient_payments..patientID}}</label> -->
             </div>
             <div class="form-group">
                 <label for="Mode of Payment">Choose mode for payment:</label>
-                <select name="Mode of Payment" id="Mode of Payment">
+                <select name="method" id="method">
                 <option value="Cash">Cash</option>
                 <option value="Insurance">Insurance</option>
                 </select>
