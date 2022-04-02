@@ -486,14 +486,20 @@ def patient_previous_appointment_view(request,patientID):
 @login_required
 @check_view_permissions("patient")
 def patient_book_appointment_view(request,patientID):
-    appointmentForm=forms.PatientAppointmentForm()
-    patient=models.Patient.objects.get(patientID=patientID) 
+    appointmentForm=forms.PatientAppointmentForm() 
     if request.method=='POST':
-        appointmentForm=forms.PatientAppointmentForm(request.POST)
+        Appointment.date=appointmentForm.data['date']
+        Appointment.time=appointmentForm.data['time']
+        Appointment.type=appointmentForm.data['type']
+        Appointment.doctorID=appointmentForm.data['doctorID']
+        Appointment.patientID=patientID
+        Appointment.status='requested'
+        Appointment.save()
         if appointmentForm.is_valid():
             appointment=appointmentForm.save(commit=False)
             appointment.status='initiated'
             appointment.save()
+        return redirect('appointment',patientID)
     return render(request, 'Patient/Appointment/book-appointment.html')
 
 
