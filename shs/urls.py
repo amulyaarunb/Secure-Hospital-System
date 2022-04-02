@@ -40,31 +40,23 @@ urlpatterns = [
     # Patient urls
     path("patient", views.patient, name='patient'),
     path('bot', views.get_bot_response),
-    path('patient_details/<str:patientID>',
-         views.patient_details, name='patient_details'),
-    path('patient_details/update_patient_details/<str:patientID>',
-         views.update_patient_record, name='update_patient_details'),
-    path("patient_appointment", views.patient_appointment_view,
-         name="patient_appointment"),
-    path('patient_book_appointment/<str:patientID>',
-         views.patient_book_appointment_view, name='patient_book_appointment'),
-    #     path('patient-view-appointment', views.patient_view_appointment_view, name='patient-view-appointment'),
-    path('patient_diagnosis/<str:patientID>',
-         views.patient_diagnosis_details, name='patient_diagnosis'),
-    path('patient_prescription/<str:patientID>',
-         views.patient_diagnosis_details, name='patient_prescription'),
 
-    path("patient_labtest/<str:patientID>",
-         views.patient_labtest_view, name="patient_labtest"),
-    path("patient_labtest/request_labtest/<str:patientID>",
-         views.request_test, name="request_labtest"),
-    path("patient_labtest/patient_view_lab_report/<str:patientID>",
-         views.view_lab_report, name="patient_view_lab_report"),
+    path('patient_details/<str:patientID>',views.patient_details, name='patient_details'),
+    path('patient_details/update_patient_details/<str:patientID>',views.update_patient_record, name='update_patient_details'),
 
-    path("patient_payments/<str:patientID>",
-         views.patient_payments_details, name="patient_payments"),
-    path("patient_make_payment/<str:paymentID>",
-         views.make_payment, name="patient_make_payment"),
+    path("patient_appointment/<str:patientID>", views.patient_appointment_view,name="patient_appointment"),
+    path('patient_appointment/patient_book_appointment/<str:patientID>',views.patient_book_appointment_view, name='patient_book_appointment'),
+    path('patient_appointment/patient-view-appointment/<str:patientID>', views.patient_previous_appointment_view, name='patient-view-appointment'),
+   
+    path('patient_diagnosis/<str:patientID>',views.patient_diagnosis_details, name='patient_diagnosis'),
+    path('patient_prescription/<str:patientID>',views.patient_diagnosis_details, name='patient_prescription'),
+
+    path("patient_labtest/<str:patientID>",views.patient_labtest_view, name="patient_labtest"),
+    path("patient_labtest/request_labtest/<str:patientID>",views.request_test, name="request_labtest"),
+    path("patient_labtest/patient_view_lab_report/<str:patientID>",views.view_lab_report, name="patient_view_lab_report"),
+
+    path("patient_payments/<str:patientID>",views.patient_payments_details, name="patient_payments"),
+    path("patient_make_payment/<str:paymentID>",views.make_payment, name="patient_make_payment"),
 
 
     # doctor urls

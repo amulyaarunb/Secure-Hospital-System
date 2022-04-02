@@ -1,3 +1,4 @@
+from typing_extensions import Self
 from django.contrib.auth.models import Group
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
@@ -389,15 +390,27 @@ def patient_labtest_view(request,patientID):
 
 @login_required
 @check_view_permissions("patient")
-def request_test(request):
+def request_test(request,patientID):
+    testform=forms.RequestLabTestForm(request.POST)
+    print(testform.data)
+    patient=models.Patient.objects.get(patientID=patientID) 
     if request.method=='POST':
-        testform=forms.RequestLabTestForm(request.POST)
+        Test.date=testform.data['date']
+        Test.time=testform.data['time']
+        Test.type=testform.data['type']
+        Test.diagnosisID=2
+        # test.diagnosisID=testform.data['diagnosisID']
+        Test.patientID=patientID
+        Test.status='requested'
+        Test.save()
+        # Test.save(self)        
         if  testform.is_valid():
             test=testform.save(commit=False)
             test.status='requested'
             test.save()
+        return redirect('patient_labtest',patientID)
     mydict={"testform":testform}
-    return render(request,'Patient/labtest/request_labtest.html', context=mydict)
+    return render(request,'Patient/labtest/request_labtest.html', {"patient":patient})
 
 @login_required
 @check_view_permissions("patient")
@@ -426,7 +439,7 @@ def get_bot_response(request):
 # Appointment Views
 @login_required
 @check_view_permissions("patient")
-def patient_appointment_view(request):
+def patient_appointment_view(request, patientID):
      return render(request, 'Patient/Appointment/appointment.html')
 
 @login_required
@@ -434,7 +447,7 @@ def patient_appointment_view(request):
 def patient_previous_appointment_view(request,patientID):
     patient_prev_appointments = models.Appointment.objects.all().filter(patientID=patientID)
     # print(patient_diagnosis_details)
-    return render(request, 'Patient/Appointment/view-appointment.html',{'patient_prev_appointments':patient_prev_appointments})
+    return render(request, 'Patient/Appointment/view-appoitnment.html',{'patient_prev_appointments':patient_prev_appointments})
 
 @login_required
 @check_view_permissions("patient")
