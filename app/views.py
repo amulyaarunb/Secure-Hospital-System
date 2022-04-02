@@ -428,13 +428,21 @@ def patient_labtest_view(request,patientID):
 
 @login_required
 @check_view_permissions("patient")
-def request_test(request):
+def request_test(request,patientID):
+    testform=forms.RequestLabTestForm(request.POST)
     if request.method=='POST':
-        testform=forms.RequestLabTestForm(request.POST)
+        test.date=testform.data['date']
+        test.time=testform.data['time']
+        test.type=testform.data['type']
+        test.diagnosisID=testform.data['diagnosisID']
+        test.patientID=patientID
+        test.status='requested'
+        test.save()        
         if  testform.is_valid():
             test=testform.save(commit=False)
             test.status='requested'
             test.save()
+        return redirect('labtest',patientID)
     mydict={"testform":testform}
     return render(request,'Patient/labtest/request_labtest.html', context=mydict)
 
