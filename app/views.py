@@ -315,11 +315,50 @@ def hospital_view_patients(request):
 @check_view_permissions("hospital_staff")
 def hospital_patient_details(request,pID):
     patient_details = Patient.objects.get(patientID = pID)
-    appointment_details=Appointment.objects.all().filter(patientID=pID)
+    appointments=Appointment.objects.all().filter(patientID=pID)
+    appt=[]
+    for i in appointments:
+        doctor = Doctor.objects.get(doctorID = i.doctorID.doctorID)
+        if i.diagnosisID is None:
+            mydict = {
+            'appointmentID': i.appointmentID,
+            'date': i.date,
+            'time': i.time,
+            'type': i.type,
+            'doctorName':doctor.name,
+            'status': i.status,
+            'diagnosis': '',
+            'prescription':'',
+            'created_on':i.created_on
+            }
+        else:
+            diagnosis = Diagnosis.objects.get(diagnosisID = i.diagnosisID.diagnosisID)
+            mydict = {
+            'appointmentID': i.appointmentID,
+            'date': i.date,
+            'time': i.time,
+            'type': i.type,
+            'doctorName':doctor.name,
+            'status': i.status,
+            'diagnosis': diagnosis.diagnosis,
+            'prescription':diagnosis.prescription,
+            'created_on':i.created_on
+            }
+        appt.append(mydict)
     test_details = Test.objects.all().filter(patientID = pID)
-    return render(request,'hospital_view_patient_details.html',{'patient_details':patient_details,'appointment_details':appointment_details,'test_details':test_details})
-
-
+    test =[]
+    for i in test_details:
+        doctor = Doctor.objects.get(doctorID = i.doctorID.doctorID)
+        mydict = {
+        'testID':i.testID,
+        'date': i.date,
+        'time': i.time,
+        'type': i.type,
+        'status':i.status,
+        'result': i.result,
+        }
+        test.append(mydict)
+    return render(request,'hospital_view_patient_details.html',{'patient_details':patient_details,'appointment_details':appt,'test_details':test})
 
 '''---------------Hospital end-------------'''
 
