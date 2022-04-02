@@ -1,5 +1,5 @@
-{% extends 'Doctor\doctor_navbar.html' %}
-
+{% extends 'Doctor/doctor_navbar.html' %}
+{% load widget_tweaks %}
 {% block content %}
 
 <head>
@@ -57,7 +57,7 @@
     <div class="container register-form">
       <div class="form">
         <div class="note">
-          <p>Update Patient Details</p>
+          <p>Diagnosis</p>
         </div>
         <div class="form-content">
           <div class="row">
@@ -65,7 +65,7 @@
               <div class="form-group">
                 {% render_field EditDiagnosisForm.diagnosis class="form-control" placeholder="Diagnosis" %}
               </div>
-              <button type="submit" class="btnSubmit">Update</button>
+              <button type="submit" class="btnSubmit">Edit</button>
           </div>
         </div>
       </div>

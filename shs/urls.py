@@ -77,14 +77,15 @@ urlpatterns = [
          name='doctor_search'),
     path('doctor_patient_diagnosis/', views.doctor_patient_diagnosis_view, 
          name='doctor_patient_diagnosis_view'),
-    path('doctor_createpatientdiagnosis_view/', views.doctor_createpatientdiagnosis_view, 
+    path('doctor_createpatientdiagnosis_view/<str:ID>', views.doctor_createpatientdiagnosis_view, 
          name='doctor_patient_diagnosis'),
     path('doctor_view_labreport_view/',
          views.doctor_view_labreport_view, name='doctor_view_labreport_view'),
-    path('doctor_recommend_labtest/',
+    path('doctor_recommend_labtest/<str:ID>',
          views.doctor_recommend_labtest_view, name='doctor_recommend_labtest_view'),
-    path('doctor_create_prescription/', views.doctor_create_prescription_view, 
+    path('doctor_create_prescription/<str:ID>', views.doctor_create_prescription_view, 
           name='doctor_create_prescription'),
+
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

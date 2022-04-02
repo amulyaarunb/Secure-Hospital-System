@@ -41,3 +41,14 @@ class EditDiagnosisForm(forms.ModelForm):
     class Meta:
         model=models.Diagnosis
         fields=['diagnosis']
+
+class RecommendLabTest(forms.ModelForm):
+    class Meta:
+        model=models.Diagnosis
+        fields=['test_recommendation']
+
+class CreatePrescription(forms.ModelForm):
+    class Meta:
+        model=models.Diagnosis
+        fields=['prescription']
+

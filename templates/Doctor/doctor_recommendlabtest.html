@@ -1,16 +1,75 @@
-{% extends 'Doctor\doctor_navbar.html' %}
-
+{% extends 'Doctor/doctor_navbar.html' %}
+{% load widget_tweaks %}
 {% block content %}
 
 <head>
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
 
-    <h1>Recommend lab tests for this patient</h1>
-    <br>
-    <form action="" method="get">
-        <label for="recommend_labtest">Lab tests required: </label>
-        <textarea id="recommend_labtest" name="recommend_labtest" value="{{ labtest }}" rows="4" cols="50"></textarea>
-        <input type="submit" value="Submit">
-    </form>
+    .note {
+      text-align: center;
+      height: 80px;
+      background: Black;
+      color: White;
+      font-weight: bold;
+      line-height: 80px;
+    }
 
+    .form-content {
+      padding: 5%;
+      border: 1px solid #ced4da;
+      margin-bottom: 2%;
+    }
+
+    .form-control {
+      border-radius: 1.5rem;
+    }
+
+    .btnSubmit {
+      border: none;
+      border-radius: 1.5rem;
+      padding: 1%;
+      width: 20%;
+      cursor: pointer;
+      background: black;
+      color: #fff;
+    }
+
+    .menu {
+      top: 50px;
+    }
+  </style>
+
+  <!-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
+
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 </head>
-{% endblock content %}
+<br><br>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="container register-form">
+      <div class="form">
+        <div class="note">
+          <p>Lab Tests</p>
+        </div>
+        <div class="form-content">
+          <div class="row">
+            <!-- <div class="col-md-8"> -->
+              <div class="form-group">
+                {% render_field RecommendLabTest.test_recommendation class="form-control" placeholder="test_recommendation" %}
+              </div>
+              <button type="submit" class="btnSubmit">Enter</button>
+          </div>
+        </div>
+      </div>
+    </div>
+</form>
+
+{% endblock content%}

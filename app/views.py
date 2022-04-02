@@ -646,16 +646,23 @@ def doctor_createpatientdiagnosis_view(request):
 
 @login_required
 @check_view_permissions("doctor")
-def doctor_create_prescription_view(request):
-    # prescription=models.Diagnosis.objects.all().get(appointmentID=ID)
-    # #diag=models.Diagnosis.objects.all().get(diagnosisID=diagnosis.diagnosisID)
-    # if request.method=='POST':
-    #     form=createprescriptionForm(request.POST)
-    #     if form.is_valid():
-    #         return HttpResponseRedirect('/record updated/')
-    #     else:
-    #         form=createprescriptionForm()
-    return render(request, 'Doctor/doctor_create_prescription.html')
+def doctor_create_prescription_view(request, ID):
+    d=models.Diagnosis.objects.get(patientID=ID)
+    CreatePrescription=forms.CreatePrescription(request.POST)
+    
+    if request.method=='POST':
+        d.prescription=CreatePrescription.data['prescription']
+        d.save() 
+        if  CreatePrescription.is_valid():
+            print("CreatePrescription is valid")
+            d=CreatePrescription.save(commit=True)
+            d.save(force_update=True)
+
+        d=Diagnosis.objects.get(patientID=patientID)   
+        return redirect("prescription", d.patientID)
+
+    mydict={'CreatePrescription':CreatePrescription}
+    return render(request, 'Doctor/doctor_create_prescription.html', context=mydict)     
 
 @login_required
 @check_view_permissions("doctor")
@@ -692,17 +699,24 @@ def doctor_view_labreport_view(request):
 
 @login_required
 @check_view_permissions("doctor")
-def doctor_recommend_labtest_view(request):
-    # appt=models.Appointment.objects.all().filter(appointmentID=ID)
-    # t=models.Diagnosis.objects.get(diagnosisID=appt.diagnosisID)
-    # if request.method=='POST':
-    #     form=recommendlabtestForm(request.POST)
-    #     if form.is_valid():
-    #         return HttpResponseRedirect('/record updated/')
-    #     else:
-    #         form=recommendlabtestForm()
-    return render(request, 'Doctor/doctor_recommendlabtest.html') 
-		
+def doctor_recommend_labtest_view(request, ID):
+    d=models.Diagnosis.objects.get(patientID=ID)
+    RecommendLabTest=forms.RecommendLabTest(request.POST)
+    
+    if request.method=='POST':
+        d.test_recommendation=RecommendLabTest.data['test_recommendation']
+        d.save() 
+        if  RecommendLabTest.is_valid():
+            print("RecommendLabTest is valid")
+            d=RecommendLabTest.save(commit=True)
+            d.save(force_update=True)
+
+        d=Diagnosis.objects.get(patientID=patientID)   
+        return redirect("test_recommendation", d.patientID)
+
+    mydict={'RecommendLabTest':RecommendLabTest}
+    return render(request, 'Doctor/doctor_recommendlabtest.html', context=mydict)     
+
 @login_required
 @check_view_permissions("doctor")
 def doctor_patient_diagnosis_view(request):
@@ -714,23 +728,20 @@ def doctor_patient_diagnosis_view(request):
 #     patient_diagnosis_details = models.Diagnosis.objects.all().filter(patientID=patientID)
 #     return render(request,'Doctor/doctor_patient_diagnosis.html',{'patient_diagnosis_details':patient_diagnosis_details})
 
-@login_required
-@check_view_permissions("doctor")
-def doctor_createpatientdiagnosis_view(request):
-    p=models.Appointment.objects.all().filter(doctorID=request.user.username)
-    d=models.Diagnosis.objects.get(patientID=p.patientID.patientID)
+def doctor_createpatientdiagnosis_view(request, ID):
+    d=models.Diagnosis.objects.get(patientID=ID)
     EditDiagnosisForm=forms.EditDiagnosisForm(request.POST)
     
     if request.method=='POST':
-        d.name=EditDiagnosisForm.data['diagnosis']
+        d.diagnosis=EditDiagnosisForm.data['diagnosis']
         d.save() 
         if  EditDiagnosisForm.is_valid():
             print("EditDiagnosisForm is valid")
             d=EditDiagnosisForm.save(commit=True)
             d.save(force_update=True)
 
-        d=Diagnosis.objects.get(patientID=p.patientID.patientID)   
-        return redirect("patient_details", d.patientID)
+        d=Diagnosis.objects.get(patientID=patientID)   
+        return redirect("diagnosis", d.patientID)
 
     mydict={'EditDiagnosisForm':EditDiagnosisForm}
-    return render(request, 'Doctor/doctor_createpatientdiagnosis_view.html', context=mydict)    
+    return render(request, 'Doctor/doctor_createpatientdiagnosis_view.html', context=mydict)     
