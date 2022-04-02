@@ -234,6 +234,8 @@ def hospital_update_patients(request):
             form = forms.PatientUpdateForm()
         return render(request, 'hospital_update_patients.html', {'form': form})
 
+@login_required
+@check_view_permissions("hospital_staff")
 def hospital_approved_appointment(request):
     #those whose approval are needed
     appointments=Appointment.objects.all().filter(status='approved')
@@ -253,20 +255,24 @@ def hospital_approved_appointment(request):
         'status': i.status
         }
         appt.append(mydict)
-    return render(request,'',{'appointments':appt})
+    return render(request,'hospital_staff_create_payment.html',{'appointments':appt})
 
+@login_required
+@check_view_permissions("hospital_staff")
 def hospital_complete_appointment(request,ID):
     appointment=Appointment.objects.get(appointmentID=ID)
-    patient = Patient.objects.get(patientID = appointment.patientID.patientID)
+    print(appointment.appointmentID)
+    request.session['_appointment_id'] = appointment.appointmentID
     appointment.status='completed'
     appointment.save()
-    request.session['_appointment_id'] = ID
+    
     return HttpResponseRedirect('/hospital_transaction')
 
 @login_required
 @check_view_permissions("hospital_staff")
-def hospital_transaction(request,ID):
+def hospital_transaction(request):
     apptID = request.session.get('_appointment_id')
+    print(apptID)
     if request.method == 'POST':
             # create a form instance and populate it with data from the request:
             form = forms.CreatePaymentForm(request.POST)
@@ -277,13 +283,14 @@ def hospital_transaction(request,ID):
                 obj.amount = form.cleaned_data['Amount']
                 obj.appointmentID = apptID
                 obj.patientID =pID
+                obj.status= 'initiated'
                 obj.save()
-                return HttpResponseRedirect('/hospital_approved_appointments/')
+                return HttpResponseRedirect('/hospital_staff_create_payment/')
 
         # if a GET (or any other method) we'll create a blank form
-            else:
+    else:
                 form = forms.CreatePaymentForm()
-            return render(request, '', {'form': form})
+    return render(request, 'hospital_staff_amount.html', {'form': form})
 
 @login_required
 @check_view_permissions("hospital_staff")

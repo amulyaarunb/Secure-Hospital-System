@@ -34,6 +34,4 @@ class PatientUpdateForm(forms.Form):
     InsuranceID = forms.CharField(label = 'Insurance ID', max_length= 10)
 
 class CreatePaymentForm(forms.Form):
-    PatientID = forms.CharField(label = 'Patient ID', max_length=100)
-    AppointmentID = forms.CharField(label = 'Appointment ID', max_length=100)
     Amount = forms.CharField(label = 'Amount', max_length = 50)
