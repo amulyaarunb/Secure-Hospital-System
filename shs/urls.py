@@ -63,7 +63,7 @@ urlpatterns = [
 
     path("patient_payments/<str:patientID>",
          views.patient_payments_details, name="patient_payments"),
-    path("patient_make_payment/<str:patientID>",
+    path("patient_make_payment/<str:paymentID>",
          views.make_payment, name="patient_make_payment"),
 
 

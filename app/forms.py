@@ -17,7 +17,7 @@ class PatientAppointmentForm(forms.ModelForm):
 class RequestLabTestForm(forms.ModelForm):
     class Meta:
         model=models.Test
-        fields=['type','patientID','diagnosisID']
+        fields=['type','date','time','diagnosisID']
 
 class MakePaymentForm(forms.ModelForm):
     class Meta:
@@ -35,3 +35,8 @@ class PatientUpdateForm(forms.Form):
 
 class CreatePaymentForm(forms.Form):
     Amount = forms.CharField(label = 'Amount', max_length = 50)
+
+class EditDiagnosisForm(forms.ModelForm):
+    class Meta:
+        model=models.Diagnosis
+        fields=['diagnosis']
