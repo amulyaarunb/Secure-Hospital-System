@@ -515,6 +515,15 @@ def patient_diagnosis_details(request, patientID):
     # print(patient_diagnosis_details)
     return render(request,'Patient/diagnosis.html',{'patient_diagnosis_details':patient_diagnosis_details})
 
+# @app.route("/prescription")
+@login_required
+@otp_required(login_url="account/two_factor/setup/")
+@check_view_permissions("patient")
+def patient_prescription_details(request, patientID):
+    patient_prescription_details = models.Diagnosis.objects.all().filter(patientID=patientID)
+    return render(request,'Patient/prescription.html',{'patient_prescription_details':patient_prescription_details})
+
+
 # patient details views
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
