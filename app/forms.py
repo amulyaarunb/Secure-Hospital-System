@@ -51,4 +51,8 @@ class CreatePrescription(forms.ModelForm):
     class Meta:
         model=models.Diagnosis
         fields=['prescription']
-
+#lab staff report
+class EditReportForm(forms.ModelForm):
+    class Meta:
+        model=models.Test
+        fields=['result']
