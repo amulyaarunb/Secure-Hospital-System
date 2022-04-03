@@ -527,7 +527,6 @@ def patient_book_appointment_view(request,patientID):
 # Payment and Transaction views
 @login_required
 @check_view_permissions("patient")
-@otp_required
 def make_payment(request, paymentID):
     patient_payments = models.Payment.objects.get(paymentID=paymentID)
     patientID=patient_payments.patientID
