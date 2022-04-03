@@ -766,7 +766,8 @@ def doctor_view_patientlist(request):
                 'weight': p.weight,
                 'diagnosis': 'null',
                 'test_recommendation': 'null',
-                'prescription': 'null'
+                'prescription': 'null',
+                'testID' : i.testID
                 }
         else:
                 print('I am in else')
@@ -787,7 +788,8 @@ def doctor_view_patientlist(request):
                     'weight': p.weight,
                     'diagnosis': a.diagnosis,
                     'test_recommendation': a.test_recommendation,
-                    'prescription': a.prescription
+                    'prescription': a.prescription,
+                    'testID' : i.testID
                 }
         l.append(mydict)
     return render(request, 'Doctor/doctor_view_patientlist.html',{'patients':l})
@@ -844,25 +846,11 @@ def doctor_search_view(request):
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("doctor")
-def doctor_view_labreport_view(request):
-    appointments=models.Appointment.objects.all().filter(doctorID=request.user.username)
-    l=[]
-    for i in appointments:
-        j=models.Test.objects.all().filter(patientID=i.patientID.patientID)
-        mydict = {
-        'testID': j.testID,
-        'date': j.date,
-        'time': j.time,
-        'type': j.type,
-        'patientID': j.patientID,
-        'status': j.status,
-        'result': j.result,
-        'diagnosisID': j.diagnosisID,
-		'paymentID': j.paymentID
-        }
-        l.append(mydict)
-    return render(request,'Doctor/doctor_view_labreport.html',{'labtestreport':l})
-
+def doctor_view_labreport_view(request, ID):
+    if(ID == "None"):
+        return HttpResponse("Inavalid Request")
+    lab_test_details=models.Test.objects.all().filter(testID=ID)
+    return Render.render('Patient/labtest/patient_view_single_lab_report.html',{'lab_test_details':lab_test_details})
 
 @login_required
 @otp_required(login_url="account/two_factor/setup/")

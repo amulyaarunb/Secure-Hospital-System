@@ -97,6 +97,7 @@ urlpatterns = [
     path('doctor_update_patients/<str:ID>', views.doctor_update_patients, name='doctor_update_patients'),
     path('doctor_delete_diagnosis/<str:ID>', views.doctor_delete_diagnosis, name='doctor_delete_diagnosis'),
     path('doctor_search_appointment', views.doctor_search_appointment, name='doctor_search_appointment'),
+    path('doctor_view_labreport_view/<str:ID>', views.doctor_view_labreport_view, name='doctor_view_labreport_view')
 
 
 
