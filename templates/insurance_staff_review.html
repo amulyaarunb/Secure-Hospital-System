@@ -21,12 +21,13 @@
         <ul style="color:black;font-size: 30px;list-style-type: none;margin: 0;padding: 5px;">
             Secure Hospital System
             <a href="{% url 'insurance_staff' %} " style="color: black;font-size: 25px;text-decoration: none;padding: 10px;"> Home</a>
+            <a href="{% url 'insurance_staff_review' %} " style="color: black;font-size: 25px;text-decoration: none;padding: 10px;">Authorize Funds</a>
             <a href="/accounts/logout" style="color: black;font-size: 25px;text-decoration: none;padding: 10px;"> Log Out</a>
         </ul>
     </div>
 
     <br>
-    
+
     <div id="Appointments ">
         {% for c in disbursal %}
         <li>
