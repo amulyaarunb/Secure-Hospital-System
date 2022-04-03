@@ -311,12 +311,18 @@ def hospital_create_patients(request):
             if form.is_valid():
                 obj = Patient.objects.get(patientID = pID) 
                 #obj = Patient()
-                obj.name = form.cleaned_data['PatientName']
-                obj.age = form.cleaned_data['Age']
-                obj.gender = form.cleaned_data['Gender']
-                obj.height = form.cleaned_data['Height']
-                obj.weight = form.cleaned_data['Weight']
-                obj.insuranceID = form.cleaned_data['InsuranceID']
+                if form.cleaned_data['PatientName'] != '':
+                    obj.name = form.cleaned_data['PatientName']
+                if form.cleaned_data['Age'] != '':
+                    obj.age = form.cleaned_data['Age']
+                if form.cleaned_data['Gender'] != '':
+                    obj.gender = form.cleaned_data['Gender']
+                if form.cleaned_data['Height'] != '':
+                    obj.height = form.cleaned_data['Height']
+                if form.cleaned_data['Weight'] != '':
+                    obj.weight = form.cleaned_data['Weight']
+                if form.cleaned_data['InsuranceID'] != '':
+                    obj.insuranceID = form.cleaned_data['InsuranceID']
                 obj.save()
                 return redirect('/hospital_staff_appointments')
 
@@ -411,13 +417,18 @@ def hospital_update_patients(request,ID):
             form = forms.PatientUpdateForm(request.POST)
             if form.is_valid():
                 obj = Patient.objects.get(patientID = ID) 
-                #obj = Patient()
-                obj.name = form.cleaned_data['PatientName']
-                obj.age = form.cleaned_data['Age']
-                obj.gender = form.cleaned_data['Gender']
-                obj.height = form.cleaned_data['Height']
-                obj.weight = form.cleaned_data['Weight']
-                obj.insuranceID = form.cleaned_data['InsuranceID']
+                if form.cleaned_data['PatientName'] != '':
+                    obj.name = form.cleaned_data['PatientName']
+                if form.cleaned_data['Age'] != '':
+                    obj.age = form.cleaned_data['Age']
+                if form.cleaned_data['Gender'] != '':
+                    obj.gender = form.cleaned_data['Gender']
+                if form.cleaned_data['Height'] != '':
+                    obj.height = form.cleaned_data['Height']
+                if form.cleaned_data['Weight'] != '':
+                    obj.weight = form.cleaned_data['Weight']
+                if form.cleaned_data['InsuranceID'] != '':
+                    obj.insuranceID = form.cleaned_data['InsuranceID']
                 obj.save()
                 return redirect("hospital_patient_details", ID)
 
@@ -476,7 +487,6 @@ def hospital_patient_details(request,pID):
     return render(request, 'hospital_staff/hospital_view_patient_details.html', {'patient_details': patient_details, 'appointment_details': appt, 'test_details': test})
 
 '''---------------Hospital end-------------'''
-
 
 # ---------------------------------------------------------------------------------
 # ------------------------ PATIENT RELATED VIEWS START ------------------------------
