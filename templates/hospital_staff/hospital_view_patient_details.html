@@ -50,7 +50,7 @@
         <p>Test Type: {{ test.type }}</p>
         <p>Test Status: {{ test.status }}</p>
         <p>Test Result: {{test.result}}</p>
-        <a href="{% url 'hospital_view_lab_report' a.testID %}"><i class="fa fa-file-pdf-o">View Lab Test Report</i> </a>
+        <a href="{% url 'hospital_view_lab_report' test.testID %}"><i class="fa fa-file-pdf-o">View Lab Test Report</i> </a>
     </li>
     {% endfor %}
     </div>

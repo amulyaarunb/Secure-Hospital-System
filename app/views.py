@@ -518,11 +518,10 @@ def hospital_patient_details(request, pID):
 
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
-@check_view_permissions("hospital")
-def hospital_view_lab_report(request, testID):
-    lab_test_details = models.Test.objects.all().filter(testID=testID)
-    return Render.render('hospital_staff/hospital_view_single_lab_report.html', {'lab_test_details': lab_test_details})
-
+@check_view_permissions("hospital_staff")
+def hospital_view_lab_report(request,testID):
+    lab_test_details=models.Test.objects.all().filter(testID=testID)
+    return Render.render('hospital_staff/hospital_view_lab_report.html',{'lab_test_details':lab_test_details})
 
 '''---------------Hospital end-------------'''
 
