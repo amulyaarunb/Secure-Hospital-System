@@ -72,7 +72,7 @@ def lab_test_search(request):
     for i in patients:
         obj = Test.objects.all().filter(patientID=i.patientID)
         for j in obj:
-            if j.status == 'approved':
+            if j.status == 'approved' or j.status =='completed':
                 dict = {
                     'patientID': j.patientID.patientID,
                     'testID': j.testID,
@@ -189,10 +189,13 @@ def diagDetails(request, pk):
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("insurance_staff")
-def denyClaim(request, pk):
+def denyClaim(request,pk):
     obj = Insurance.objects.get(request_id=pk)
+    obj1 = Payment.objects.get(paymentID=obj.paymentID.paymentID)
     obj.status = 'denied'
+    obj1.status = 'insurance denied'
     obj.save()
+    obj1.save()
     return redirect('/insurance_staff')
 
 
@@ -261,134 +264,129 @@ def viewClaim(request):
 
 '''Insurance Staff View ends here'''
 
-''''------------------Hospital Staff View------------------- '''
-# To show appointments to hospital staff for approval
-
-
+''''------------------Hospital Staff View------------------- ''' 
+#To show appointments to hospital staff for approval
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("hospital_staff")
 def hospital_appointment(request):
-    # those whose approval are needed
-    appointments = Appointment.objects.all().filter(status='requested')
-    appt = []
+    #those whose approval are needed
+    appointments=Appointment.objects.all().filter(status='requested')
+    appt=[]
     for i in appointments:
-        patient = Patient.objects.get(patientID=i.patientID.patientID)
-        doctor = Doctor.objects.get(doctorID=i.doctorID.doctorID)
+        patient = Patient.objects.get(patientID = i.patientID.patientID)
+        doctor = Doctor.objects.get(doctorID = i.doctorID.doctorID)
         mydict = {
-            'appointmentID': i.appointmentID,
-            'date': i.date,
-            'time': i.time,
-            'type': i.type,
-            'patientID': i.patientID,
-            'doctorID': i.doctorID,
-            'patientName': patient.name,
-            'doctorName': doctor.name,
-            'status': i.status,
-            'diagnosisID': i.diagnosisID,
-            'testID': i.testID,
-            'paymentID': i.paymentID,
-            'created_on': i.created_on
+        'appointmentID': i.appointmentID,
+        'date': i.date,
+        'time': i.time,
+        'type': i.type,
+        'patientID': i.patientID,
+        'doctorID': i.doctorID,
+        'patientName':patient.name,
+        'doctorName':doctor.name,
+        'status': i.status,
+		'diagnosisID': i.diagnosisID,
+		'testID': i.testID,
+		'paymentID':i.paymentID,
+		'created_on': i.created_on
         }
         appt.append(mydict)
     return render(request, 'hospital_staff/hospital_staff_appointments.html', {'appointments': appt})
-
+    
 
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("hospital_staff")
-def hospital_appointment_approve(request, ID):
-    appointment = Appointment.objects.get(appointmentID=ID)
-    patient = Patient.objects.get(patientID=appointment.patientID.patientID)
-    appointment.status = 'approved'
+def hospital_appointment_approve(request,ID):
+    appointment=Appointment.objects.get(appointmentID=ID)
+    patient = Patient.objects.get(patientID = appointment.patientID.patientID)
+    appointment.status='approved'
     appointment.save()
     if(patient.name == ''):
         request.session['_patient_id'] = patient.patientID
         return HttpResponseRedirect('/hospital_update_patients')
     return redirect('/hospital_staff_appointments')
 
-
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("hospital_staff")
-def hospital_appointment_reject(request, ID):
-    appointment = Appointment.objects.get(appointmentID=ID)
-    appointment.status = 'rejected'
+def hospital_appointment_reject(request,ID):
+    appointment=Appointment.objects.get(appointmentID=ID)
+    appointment.status='rejected'
     appointment.save()
     return redirect('/hospital_staff_appointments')
-
 
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("hospital_staff")
 def hospital_create_patients(request):
-    # print(request.session)
-    pID = request.session.get('_patient_id')
-    print(pID)
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = forms.PatientUpdateForm(request.POST)
-        if form.is_valid():
-            obj = Patient.objects.get(patientID=pID)
-            # obj = Patient()
-            if form.cleaned_data['PatientName'] != '':
-                obj.name = form.cleaned_data['PatientName']
-            if form.cleaned_data['Age'] != '':
-                obj.age = form.cleaned_data['Age']
-            if form.cleaned_data['Gender'] != '':
-                obj.gender = form.cleaned_data['Gender']
-            if form.cleaned_data['Height'] != '':
-                obj.height = form.cleaned_data['Height']
-            if form.cleaned_data['Weight'] != '':
-                obj.weight = form.cleaned_data['Weight']
-            if form.cleaned_data['InsuranceID'] != '':
-                obj.insuranceID = form.cleaned_data['InsuranceID']
-            obj.save()
-            return redirect('/hospital_staff_appointments')
+        #print(request.session)
+        pID = request.session.get('_patient_id')
+        print(pID)
+        if request.method == 'POST':
+            # create a form instance and populate it with data from the request:
+            form = forms.PatientUpdateForm(request.POST)
+            if form.is_valid():
+                obj = Patient.objects.get(patientID = pID) 
+                #obj = Patient()
+                if form.cleaned_data['PatientName'] != '':
+                    obj.name = form.cleaned_data['PatientName']
+                if form.cleaned_data['Age'] != '':
+                    obj.age = form.cleaned_data['Age']
+                if form.cleaned_data['Gender'] != '':
+                    obj.gender = form.cleaned_data['Gender']
+                if form.cleaned_data['Height'] != '':
+                    obj.height = form.cleaned_data['Height']
+                if form.cleaned_data['Weight'] != '':
+                    obj.weight = form.cleaned_data['Weight']
+                if form.cleaned_data['InsuranceID'] != '':
+                    obj.insuranceID = form.cleaned_data['InsuranceID']
+                obj.save()
+                return redirect('/hospital_staff_appointments')
 
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = forms.PatientUpdateForm()
-    return render(request, 'hospital_staff/hospital_create_patients.html', {'form': form})
-
+        # if a GET (or any other method) we'll create a blank form
+        else:
+            form = forms.PatientUpdateForm()
+        return render(request, 'hospital_staff/hospital_create_patients.html', {'form': form})
 
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("hospital_staff")
 def hospital_approved_appointment(request):
-    # those whose approval are needed
-    appointments = Appointment.objects.all().filter(status='approved')
-    appt = []
+    #those whose approval are needed
+    appointments=Appointment.objects.all().filter(status='approved')
+    appt=[]
     for i in appointments:
-        patient = Patient.objects.get(patientID=i.patientID.patientID)
-        doctor = Doctor.objects.get(doctorID=i.doctorID.doctorID)
+        patient = Patient.objects.get(patientID = i.patientID.patientID)
+        doctor = Doctor.objects.get(doctorID = i.doctorID.doctorID)
         mydict = {
-            'appointmentID': i.appointmentID,
-            'date': i.date,
-            'time': i.time,
-            'type': i.type,
-            'patientID': i.patientID,
-            'doctorID': i.doctorID,
-            'patientName': patient.name,
-            'doctorName': doctor.name,
-            'status': i.status
+        'appointmentID': i.appointmentID,
+        'date': i.date,
+        'time': i.time,
+        'type': i.type,
+        'patientID': i.patientID,
+        'doctorID': i.doctorID,
+        'patientName':patient.name,
+        'doctorName':doctor.name,
+        'status': i.status
         }
         appt.append(mydict)
-    return render(request, 'hospital_staff/hospital_staff_create_payment.html', {'appointments': appt})
+    tests = Test.objects.all().filter(status='approved')
+    return render(request, 'hospital_staff/hospital_staff_create_payment.html', {'appointments': appt, 'tests':tests})
 
 
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("hospital_staff")
-def hospital_complete_appointment(request, ID):
-    appointment = Appointment.objects.get(appointmentID=ID)
+def hospital_complete_appointment(request,ID):
+    appointment=Appointment.objects.get(appointmentID=ID)
     print(appointment.appointmentID)
     request.session['_appointment_id'] = appointment.appointmentID
-    appointment.status = 'completed'
+    appointment.status='completed'
     appointment.save()
-
+    
     return HttpResponseRedirect('/hospital_transaction')
-
 
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
@@ -397,124 +395,141 @@ def hospital_transaction(request):
     apptID = request.session.get('_appointment_id')
     print(apptID)
     if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = forms.CreatePaymentForm(request.POST)
-        if form.is_valid():
-            apptID = Appointment.objects.get(appointmentID=apptID)
-            pID = apptID.patientID
-            obj = Payment()
-            obj.amount = form.cleaned_data['Amount']
-            obj.appointmentID = apptID
-            obj.patientID = pID
-            obj.status = 'initiated'
-            obj.save()
-            return HttpResponseRedirect('/hospital_staff_create_payment/')
+            # create a form instance and populate it with data from the request:
+            form = forms.CreatePaymentForm(request.POST)
+            if form.is_valid():
+                apptID = Appointment.objects.get(appointmentID = apptID)
+                pID = apptID.patientID
+                obj = Payment()
+                obj.amount = form.cleaned_data['Amount']
+                obj.appointmentID = apptID
+                obj.patientID =pID
+                obj.status= 'initiated'
+                obj.save()
+                return HttpResponseRedirect('/hospital_staff_create_payment/')
 
         # if a GET (or any other method) we'll create a blank form
     else:
-        form = forms.CreatePaymentForm()
+                form = forms.CreatePaymentForm()
     return render(request, 'hospital_staff/hospital_staff_amount.html', {'form': form})
+@login_required
+@otp_required(login_url="account/two_factor/setup/")
+@check_view_permissions("hospital_staff")
+def hospital_test_transaction(request,testID):
+    print(testID)
+    if request.method == 'POST':
+            # create a form instance and populate it with data from the request:
+            form = forms.CreatePaymentForm(request.POST)
+            if form.is_valid():
+                test = Test.objects.get(testID = testID)
+                pID = test.patientID
+                obj = Payment()
+                obj.amount = form.cleaned_data['Amount']
+                obj.testID = test
+                obj.patientID =pID
+                obj.status= 'initiated'
+                obj.save()
+                test.status = 'completed'
+                test.save()
+                return HttpResponseRedirect('/hospital_staff_create_payment/')
 
-
+        # if a GET (or any other method) we'll create a blank form
+    else:
+                form = forms.CreatePaymentForm()
+    return render(request, 'hospital_staff/hospital_staff_amount.html', {'form': form})
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("hospital_staff")
 def hospital_search(request):
     # whatever user write in search box we get in query
-    query = request.GET.get('search', False)
-    patients = Patient.objects.all().filter(
-        Q(patientID__icontains=query) | Q(name__icontains=query))
+    query = request.GET.get('search',False)
+    patients=Patient.objects.all().filter(Q(patientID__icontains=query)|Q(name__icontains=query))
     return render(request, 'hospital_staff/hospital_search_patients.html', {'patients': patients})
-
 
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("hospital_staff")
 def hospital_view_patients(request):
-    patients = Patient.objects.all()
+    patients=Patient.objects.all()
     return render(request, 'hospital_staff/hospital_search_patients.html', {'patients': patients})
-
 
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("hospital_staff")
-def hospital_update_patients(request, ID):
+def hospital_update_patients(request,ID):
     if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = forms.PatientUpdateForm(request.POST)
-        if form.is_valid():
-            obj = Patient.objects.get(patientID=ID)
-            if form.cleaned_data['PatientName'] != '':
-                obj.name = form.cleaned_data['PatientName']
-            if form.cleaned_data['Age'] != '':
-                obj.age = form.cleaned_data['Age']
-            if form.cleaned_data['Gender'] != '':
-                obj.gender = form.cleaned_data['Gender']
-            if form.cleaned_data['Height'] != '':
-                obj.height = form.cleaned_data['Height']
-            if form.cleaned_data['Weight'] != '':
-                obj.weight = form.cleaned_data['Weight']
-            if form.cleaned_data['InsuranceID'] != '':
-                obj.insuranceID = form.cleaned_data['InsuranceID']
-            obj.save()
-            return redirect("hospital_patient_details", ID)
+            # create a form instance and populate it with data from the request:
+            form = forms.PatientUpdateForm(request.POST)
+            if form.is_valid():
+                obj = Patient.objects.get(patientID = ID) 
+                if form.cleaned_data['PatientName'] != '':
+                    obj.name = form.cleaned_data['PatientName']
+                if form.cleaned_data['Age'] != '':
+                    obj.age = form.cleaned_data['Age']
+                if form.cleaned_data['Gender'] != '':
+                    obj.gender = form.cleaned_data['Gender']
+                if form.cleaned_data['Height'] != '':
+                    obj.height = form.cleaned_data['Height']
+                if form.cleaned_data['Weight'] != '':
+                    obj.weight = form.cleaned_data['Weight']
+                if form.cleaned_data['InsuranceID'] != '':
+                    obj.insuranceID = form.cleaned_data['InsuranceID']
+                obj.save()
+                return redirect("hospital_patient_details", ID)
 
         # if a GET (or any other method) we'll create a blank form
     else:
-        form = forms.PatientUpdateForm()
+            form = forms.PatientUpdateForm()
     return render(request, 'hospital_staff/hospital_update_patients.html', {'form': form})
-
 
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("hospital_staff")
-def hospital_patient_details(request, pID):
-    patient_details = Patient.objects.get(patientID=pID)
-    appointments = Appointment.objects.all().filter(patientID=pID)
-    appt = []
+def hospital_patient_details(request,pID):
+    patient_details = Patient.objects.get(patientID = pID)
+    appointments=Appointment.objects.all().filter(patientID=pID)
+    appt=[]
     for i in appointments:
-        doctor = Doctor.objects.get(doctorID=i.doctorID.doctorID)
+        doctor = Doctor.objects.get(doctorID = i.doctorID.doctorID)
         if i.diagnosisID is None:
             mydict = {
-                'appointmentID': i.appointmentID,
-                'date': i.date,
-                'time': i.time,
-                'type': i.type,
-                'doctorName': doctor.name,
-                'status': i.status,
-                'diagnosis': '',
-                'prescription': '',
-                'created_on': i.created_on
-            }
-        else:
-            diagnosis = Diagnosis.objects.get(
-                diagnosisID=i.diagnosisID.diagnosisID)
-            mydict = {
-                'appointmentID': i.appointmentID,
-                'date': i.date,
-                'time': i.time,
-                'type': i.type,
-                'doctorName': doctor.name,
-                'status': i.status,
-                'diagnosis': diagnosis.diagnosis,
-                'prescription': diagnosis.prescription,
-                'created_on': i.created_on
-            }
-        appt.append(mydict)
-    test_details = Test.objects.all().filter(patientID=pID)
-    test = []
-    for i in test_details:
-        mydict = {
-            'testID': i.testID,
+            'appointmentID': i.appointmentID,
             'date': i.date,
             'time': i.time,
             'type': i.type,
+            'doctorName':doctor.name,
             'status': i.status,
-            'result': i.result,
+            'diagnosis': '',
+            'prescription':'',
+            'created_on':i.created_on
+            }
+        else:
+            diagnosis = Diagnosis.objects.get(diagnosisID = i.diagnosisID.diagnosisID)
+            mydict = {
+            'appointmentID': i.appointmentID,
+            'date': i.date,
+            'time': i.time,
+            'type': i.type,
+            'doctorName':doctor.name,
+            'status': i.status,
+            'diagnosis': diagnosis.diagnosis,
+            'prescription':diagnosis.prescription,
+            'created_on':i.created_on
+            }
+        appt.append(mydict)
+    test_details = Test.objects.all().filter(patientID = pID)
+    test =[]
+    for i in test_details:
+        mydict = {
+        'testID':i.testID,
+        'date': i.date,
+        'time': i.time,
+        'type': i.type,
+        'status':i.status,
+        'result': i.result,
         }
         test.append(mydict)
     return render(request, 'hospital_staff/hospital_view_patient_details.html', {'patient_details': patient_details, 'appointment_details': appt, 'test_details': test})
-
 
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
