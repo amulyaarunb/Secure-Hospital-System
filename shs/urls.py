@@ -43,7 +43,8 @@ urlpatterns = [
          name='hospital_search_patients'),
     path('hospital_patient_details/',views.hospital_patient_details,name = 'hospital_patient_details'),
     path('hospital_search/',views.hospital_search, name='hospital_search'),
-    path('hospital_update_patients/',views.hospital_update_patients,name= 'hospital_update_patients'),
+    path('hospital_create_patients/',views.hospital_create_patients,name= 'hospital_create_patients'),
+    path('hospital_update_patients/<str:ID>',views.hospital_update_patients,name= 'hospital_update_patients'),
     path('hospital_appointment_approve/<str:ID>',views.hospital_appointment_approve,name='hospital_appointment_approve'),
     path('hospital_appointment_reject/<str:ID>',views.hospital_appointment_reject,name='hospital_appointment_reject'),  path('hospital_patient_details/<str:pID>',views.hospital_patient_details,name= 'hospital_patient_details'),
 

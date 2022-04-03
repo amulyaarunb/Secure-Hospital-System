@@ -32,6 +32,7 @@
         <p>Patient Height: {{ patient_details.height }}</p>
         <p>Patient Weight: {{ patient_details.weight }}</p>
         <p>Patient Insurace ID: {{ patient_details.insuranceID }}</p>
+        <a href="{% url 'hospital_update_patients' patient_details.patientID %}"> <button>Edit</span></button></a>
         <br><br> {% for app in appointment_details %}
         <li>
             <p>Appointment ID: {{ app.appointmentID }}</p>
