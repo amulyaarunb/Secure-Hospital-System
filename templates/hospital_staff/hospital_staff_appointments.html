@@ -1,30 +1,15 @@
 {% extends 'base.html' %} {% block title %}Hospital Staff{% endblock %} 
-
 {% block navigation %}
 <li class="active">
-  <a
-    href="{% url 'hospital_staff_appointments' %} "
-  >
-    Appointments</a
-  >
+  <a href="{% url 'hospital_staff_appointments' %} "> Appointments</a>
 </li>
 <li>
-  <a
-    href="{% url 'hospital_staff_create_payment' %} "
-  >
-    Create Payment</a
-  >
+  <a href="{% url 'hospital_staff_create_payment' %} "> Create Payment</a>
 </li>
 <li>
-  <a
-    href="{% url 'hospital_search_patients' %} "
-  >
-    View Patient Records</a
-  >
+  <a href="{% url 'hospital_search_patients' %} "> View Patient Records</a>
 </li>
-{% endblock %}
-
-{% block content%}
+{% endblock %} {% block content%}
 <div id="Appointments">
   {% for app in appointments %}
   <li>
@@ -64,5 +49,4 @@
 
 {% if not appointments %}
 <h1>There are no more appointments to review</h1>
-{% endif%}
-{% endblock %}
+{% endif%} {% endblock %}
