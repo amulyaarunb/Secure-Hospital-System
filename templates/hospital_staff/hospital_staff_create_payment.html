@@ -38,6 +38,6 @@
     {% endfor %}
 </div>
 
-{% if (not (appointments) and not (tests)) %}
+{% if not appointments and not tests %}
 <h1>There are no pending appointments and tests</h1>
 {% endif%} {% endblock %}
