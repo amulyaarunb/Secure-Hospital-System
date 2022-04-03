@@ -47,7 +47,8 @@ urlpatterns = [
     path('hospital_update_patients/<str:ID>',views.hospital_update_patients,name= 'hospital_update_patients'),
     path('hospital_appointment_approve/<str:ID>',views.hospital_appointment_approve,name='hospital_appointment_approve'),
     path('hospital_appointment_reject/<str:ID>',views.hospital_appointment_reject,name='hospital_appointment_reject'),  path('hospital_patient_details/<str:pID>',views.hospital_patient_details,name= 'hospital_patient_details'),
-
+    path("hospital_view_single_lab_report/<str:testID>",views.hospital_view_one_lab_report, name="hospital_view_one_lab_report"),
+    
     # Patient urls
     path("patient", views.patient, name='patient'),
     path('bot', views.get_bot_response),
