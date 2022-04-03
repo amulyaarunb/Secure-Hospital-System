@@ -17,12 +17,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     #insurance staff
-    path('insurance_staff/',views.viewClaim,name='insurance_staff'),
-#     path('insurance_staff_review/',views.claimDisb,name='claimDisb'),
-    #path('approveClaim/<str:pk>',views.approveClaim,name='approveClaim'),
-    #path('denyClaim/<str:pk>',views.denyClaim,name='denyClaim'),
-    path('authorizeFund/',views.authorizeFund,name= 'authorizeFund'),
-
+     path('insurance_staff/',views.viewClaim,name='insurance_staff'),
+     path('insurance_staff_auth/<str:pk>',views.authorizeFund,name='insurance_staff_auth'),
+     path('insurance_staff_approve/<str:pk>',views.approveClaim,name='insurance_staff_approve'),
+     path('insurance_staff_reject/<str:pk>',views.denyClaim,name='insurance_staff_reject'),
+     path('insurance_staff_review/',views.claimDisb,name= 'insurance_staff_review'),
     # hospital staff
     path('hospital_staff_appointments/', views.hospital_appointment,
          name='hospital_staff_appointments'),
@@ -77,14 +76,15 @@ urlpatterns = [
          name='doctor_search'),
     path('doctor_patient_diagnosis/', views.doctor_patient_diagnosis_view, 
          name='doctor_patient_diagnosis_view'),
-    path('doctor_createpatientdiagnosis_view/', views.doctor_createpatientdiagnosis_view, 
+    path('doctor_createpatientdiagnosis_view/<str:ID>', views.doctor_createpatientdiagnosis_view, 
          name='doctor_patient_diagnosis'),
     path('doctor_view_labreport_view/',
          views.doctor_view_labreport_view, name='doctor_view_labreport_view'),
-    path('doctor_recommend_labtest/',
+    path('doctor_recommend_labtest/<str:ID>',
          views.doctor_recommend_labtest_view, name='doctor_recommend_labtest_view'),
-    path('doctor_create_prescription/', views.doctor_create_prescription_view, 
+    path('doctor_create_prescription/<str:ID>', views.doctor_create_prescription_view, 
           name='doctor_create_prescription'),
+
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

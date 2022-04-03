@@ -193,29 +193,14 @@
                 if (data.startsWith("Navigate"))
                 {
                     var user = "{{user.username}}"
-                    console.log("{{user.username}}")
                     var temp = data.substring(12)
                     var temp2 = data.substring(35)
                     var finalurl = temp + "/" + user
-                    if (data.includes("appointment"))
-                    {
-                        var botHtml = '<p>Go to:<a href="'+temp+'">'+temp2+'</a></p>'
-                        document.getElementById('textoutput').innerHTML = botHtml
-                        $("#textoutput").innerHtml = botHtml;
-                    }
-                    else if (data.includes("request_labtest"))
-                    {
-                        var botHtml = '<p>Go to:<a href="'+temp+'">'+temp2+'</a></p>'
-                        document.getElementById('textoutput').innerHTML = botHtml
-                        $("#textoutput").innerHtml = botHtml;
-
-                    }
-                    else
-                    {
-                        var botHtml = '<p>Go to:<a href="'+finalurl+'">'+temp2+'</a></p>'
-                        document.getElementById('textoutput').innerHTML = botHtml
-                        $("#textoutput").innerHtml = botHtml;
-                    }
+                    
+                
+                    var botHtml = '<p>Go to:<a href="'+finalurl+'">'+temp2+'</a></p>'
+                    document.getElementById('textoutput').innerHTML = botHtml
+                    $("#textoutput").innerHtml = botHtml;
                 }
                 else
                 {

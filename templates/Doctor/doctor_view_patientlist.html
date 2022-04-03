@@ -1,4 +1,4 @@
-{% extends 'Doctor\doctor_navbar.html' %}
+{% extends 'Doctor/doctor_navbar.html' %}
 
 
 <head>
@@ -54,14 +54,14 @@
         <th> {{ i.gender }}</th>
         <th> {{ i.height }}</th>
         <th> {{ i.weight }}</th>
-        <th> {{ i.diagnosis }}  <a href="/doctor_createpatientdiagnosis_view"> <button>Edit</span></button></a>  <a href="/doctor_recommend_labtest"> <button>Delete</span></button></a></th>
-        <th> {{ i.test_recommendation }}  <a href="/doctor_recommend_labtest"> <button>Edit</span></button></a></th>
-        <th> {{ i.prescription }} <a href="/doctor_create_prescription"> <button>Edit</span></button></a> </th>
+        <th> {{ i.diagnosis }}  <a href="{% url 'doctor_patient_diagnosis' i.patientID %}"> <button>Edit</span></button></a>  <a href="/doctor_recommend_labtest"> <button>Delete</span></button></a></th>
+        <th> {{ i.test_recommendation }}  <a href="{% url 'doctor_recommend_labtest_view' i.patientID %}"> <button>Edit</span></button></a></th>
+        <th> {{ i.prescription }} <a href="{% url 'doctor_create_prescription' i.patientID %}"> <button>Edit</span></button></a> </th>
 
       </tr> 
       {% endfor %}
 </table>
-</center>>
+</center>
 </body>
 {% endblock content%}
 
