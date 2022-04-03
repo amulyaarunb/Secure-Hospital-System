@@ -437,17 +437,21 @@ def patient_labtest_view(request,patientID):
 @check_view_permissions("patient")
 def request_test(request,patientID):
     testform=forms.RequestLabTestForm(request.POST)
-    print(testform.data)
-    patient=models.Patient.objects.get(patientID=patientID) 
+    #print(testform.data)
+    appt=models.Appointment.objects.get(patientID=patientID)
+
+
+    test=Test()
     if request.method=='POST':
-        Test.date=testform.data['date']
-        Test.time=testform.data['time']
-        Test.type=testform.data['type']
-        Test.diagnosisID=2
+        test.date=testform.data['date']
+        test.time=testform.data['time']
+        test.type=testform.data['type']
+        test.diagnosisID=appt.diagnosisID
         # test.diagnosisID=testform.data['diagnosisID']
-        Test.patientID=patientID
-        Test.status='requested'
-        Test.save()
+        test.diagnosisID=appt.diagnosisID
+        test.patientID=appt.patientID
+        test.status='requested'
+        test.save()
         # Test.save(self)        
         if  testform.is_valid():
             test=testform.save(commit=False)
