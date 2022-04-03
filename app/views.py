@@ -1,17 +1,18 @@
-from typing_extensions import Self
-from django.contrib.auth.models import Group
-from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
+from django.db.models import Q
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import redirect, render
+from django_otp.decorators import otp_required
 from django_registration.backends.one_step.views import RegistrationView
 from django_registration.forms import RegistrationForm
-from django.contrib.auth.models import Group
-from django.http import HttpResponse, HttpResponseRedirect
-from . models import Diagnosis, Test, Insurance, Payment, Appointment, Patient, Doctor
+
 from app.decorators import check_view_permissions
+
 from . import forms, models
 from .BotMain import chatgui  # Botmain is chatbot directory
-from django_otp.decorators import otp_required
-from django.db.models import Q
+from .models import (Appointment, Diagnosis, Doctor, Insurance, Patient,
+                     Payment, Test)
 
 
 @otp_required(login_url="account/two_factor/setup/")
