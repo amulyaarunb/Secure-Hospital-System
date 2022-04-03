@@ -492,10 +492,11 @@ def patient_previous_appointment_view(request,patientID):
 @check_view_permissions("patient")
 def patient_book_appointment_view(request,patientID):
     appointmentForm=forms.PatientAppointmentForm() 
+    print(appointmentForm.data)
     if request.method=='POST':
         Appointment.date=appointmentForm.data['date']
         Appointment.time=appointmentForm.data['time']
-        Appointment.type=appointmentForm.data['type']
+        # Appointment.type=appointmentForm.data['type']
         Appointment.doctorID=appointmentForm.data['doctorID']
         Appointment.patientID=patientID
         Appointment.status='requested'
