@@ -308,3 +308,12 @@ h6 {
 .color_font_white {
   color: white;
 }
+
+th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+.h1_doctor{
+  text-align: center;}

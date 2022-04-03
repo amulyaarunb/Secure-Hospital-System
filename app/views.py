@@ -919,7 +919,7 @@ def doctor_search_view(request):
 @check_view_permissions("doctor")
 def doctor_view_labreport_view(request, ID):
     if(ID == "None"):
-        return HttpResponse("Inavalid Request")
+        return HttpResponse("No test report to show")
     lab_test_details=models.Test.objects.all().filter(testID=ID)
     return Render.render('Patient/labtest/patient_view_single_lab_report.html',{'lab_test_details':lab_test_details})
 
@@ -1004,7 +1004,6 @@ def doctor_update_patients(request, ID):
         patient.gender=patientForm.data['gender']
         patient.height=patientForm.data['height']
         patient.weight=patientForm.data['weight']
-        patient.insuranceID=patientForm.data['insuranceID']
         patient.save()
         if  patientForm.is_valid():
             print("patientForm is valid")
