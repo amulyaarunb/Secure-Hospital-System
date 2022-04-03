@@ -491,7 +491,7 @@ def hospital_patient_details(request,pID):
 @check_view_permissions("hospital_staff")
 def hospital_view_lab_report(request,testID):
     lab_test_details=models.Test.objects.all().filter(testID=testID)
-    return Render.render('hospital_staff/hospital_view_single_lab_report.html',{'lab_test_details':lab_test_details})
+    return Render.render('hospital_staff/hospital_view_lab_report.html',{'lab_test_details':lab_test_details})
 
 '''---------------Hospital end-------------'''
 
