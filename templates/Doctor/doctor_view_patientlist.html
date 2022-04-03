@@ -42,7 +42,7 @@
         <th>Gender</th>
         <th>Height</th>
         <th>Weight</th>
-        <th>Insurance ID</th>
+        <!-- <th>Insurance ID</th> -->
         <th>Diagnosis</th>
         <th>Lab Test Recommendation</th>
         <th>Prescription</th>
@@ -56,7 +56,7 @@
         <th> {{ i.gender }}</th>
         <th> {{ i.height }}</th>
         <th> {{ i.weight }}</th>
-        <th> {{ i.insuranceID }}</th>
+        <!-- <th> {{ i.insuranceID }}</th> -->
         <th> {{ i.diagnosis }}  <a href="{% url 'doctor_patient_diagnosis' i.patientID %}"> <button>Edit</span></button></a>  <a href="{% url 'doctor_delete_diagnosis' i.patientID %}"> <button>Delete</span></button></a></th>
         <th> {{ i.test_recommendation }}  <a href="{% url 'doctor_recommend_labtest_view' i.patientID %}"> <button>Edit</span></button></a></th>
         <th> {{ i.prescription }} <a href="{% url 'doctor_create_prescription' i.patientID %}"> <button>Edit</span></button></a> </th>
