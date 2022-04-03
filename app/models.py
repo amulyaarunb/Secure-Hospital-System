@@ -69,7 +69,7 @@ class Test(models.Model):
     date = models.DateField()
     time = models.TimeField()
     type = models.CharField(max_length=255)
-    patientID = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    patientID = models.ForeignKey(Patient, blank=True, null=True, on_delete=models.CASCADE)
     status = models.CharField(max_length=255, blank=True, null=True)
     result = models.CharField(max_length=255, blank=True, null=True)
     diagnosisID = models.ForeignKey(Diagnosis,blank=True, null = True, on_delete=models.CASCADE)

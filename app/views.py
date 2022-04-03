@@ -438,19 +438,19 @@ def patient_labtest_view(request,patientID):
 @check_view_permissions("patient")
 def request_test(request,patientID):
     testform=forms.RequestLabTestForm(request.POST)
-    #print(testform.data)
-    appt=models.Appointment.objects.get(patientID=patientID)
-
+    print(testform.data)
+    #appt=models.Appointment.objects.get(patientID=patientID)
+    # diag=models.Diagnosis.objects.get(diagnosisID=testform.data['diagnosisID'])
 
     test=Test()
     if request.method=='POST':
         test.date=testform.data['date']
         test.time=testform.data['time']
         test.type=testform.data['type']
-        test.diagnosisID=appt.diagnosisID
-        # test.diagnosisID=testform.data['diagnosisID']
-        test.diagnosisID=appt.diagnosisID
-        test.patientID=appt.patientID
+        #test.diagnosisID=appt.diagnosisID
+        test.diagnosisID=models.Diagnosis.objects.get(diagnosisID=testform.data['diagnosisID'])
+        #test.diagnosisID=appt.diagnosisID
+        test.patientID=models.Patient.objects.get(patientID=patientID)
         test.status='requested'
         test.save()
         # Test.save(self)        
@@ -458,9 +458,9 @@ def request_test(request,patientID):
             test=testform.save(commit=False)
             test.status='requested'
             test.save()
-        return redirect('patient_labtest',patientID)
+        return redirect('patient_view_lab_report',patientID)
     mydict={"testform":testform}
-    return render(request,'Patient/labtest/request_labtest.html', {"patient":patient})
+    return render(request,'Patient/labtest/request_labtest.html', {"patient":patient ,"testform":testform})
 
 @login_required
 @check_view_permissions("patient")
