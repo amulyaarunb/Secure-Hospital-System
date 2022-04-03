@@ -280,3 +280,19 @@ h6 {
 .f-right {
   float: right;
 }
+
+a:link {
+  text-decoration: none;
+}
+
+h6 {
+  text-align: center;
+}
+
+.row {
+  margin: 100px;
+}
+
+.black-table-row {
+  color: #000000;
+}

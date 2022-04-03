@@ -1,32 +1,6 @@
 {% extends 'Patient/patient.html' %}
 {% block content %}
-   
-<!-- <!DOCTYPE html> -->
-<!-- <html lang="en"> -->
-<head>
-
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-
-    <style media="screen">
-        a:link {
-            text-decoration: none;
-        }
-
-        h6 {
-            text-align: center;
-        }
-
-        .row {
-            margin: 100px;
-        }
-    </style>
-</head>
-
 <!-- <body> -->
-    <br><br>
-    <div class="container">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h6 class="panel-title">Your Diagnosis</h6>
@@ -44,8 +18,7 @@
                     </tr>
                 </thead>
                 {% for a in patient_diagnosis_details %}
-                <tr>
-                    
+                <tr class="black-table-row">
                     <td> {{a.diagnosisID}}</td>
                     <td>{{a.doctorID.doctorID}}</td>
                     <td>{{a.patientID.patientID}}</td>
@@ -59,7 +32,4 @@
                
             </table>
         </div>
-    </div>
-<!-- </body> -->
-<!-- </html> -->
 {% endblock content %}
