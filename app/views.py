@@ -58,6 +58,46 @@ def admin(request):
     
 
 ''' Lab Staff View Starts Here'''
+@login_required
+@check_view_permissions("lab_staff")
+def lab_test_search(request):
+    # whatever user write in search box we get in query
+    query = request.GET.get('search',False)
+    patients=Patient.objects.all().filter(Q(patientID__icontains=query)|Q(name__icontains=query))
+    arr = []
+    for i in patients:
+        obj = Test.objects.all().filter(patientID=i.patientID)
+        for j in obj:
+            if j.status=='approved':
+                dict = {
+                    'patientID' : j.patientID.patientID,
+                    'testID' : j.testID,
+                    'date' : j.date,
+                    'type' : j.type,
+                    'result': j.result 
+                }
+                arr.append(dict)
+    return render(request,'lab_tests.html',{'patients':arr})
+
+@login_required
+@check_view_permissions("lab_staff")
+def updateTests(request,pk):
+    d=Test.objects.get(testID=pk)
+    EditReportForm=forms.EditReportForm(request.POST)
+    
+    if request.method=='POST':
+        d.result=EditReportForm.data['result']
+        d.save() 
+        if  EditReportForm.is_valid():
+            print("Form is valid")
+            d.save()
+
+        d=Test.objects.get(testID=pk)   
+        return redirect('/lab_tests')
+
+    mydict={'EditReportForm':EditReportForm}
+    return render(request, 'lab_tests_approved.html', context=mydict)  
+
 
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
@@ -78,16 +118,6 @@ def viewDiagnosis(request):
         arr.append(dict)
     return render(request, "lab_staff/lab_staff.html",{'requests' : arr})
 
-@login_required
-@otp_required(login_url="account/two_factor/setup/")
-@check_view_permissions("lab_staff")  
-def updateRecord(request,pk,record):
-    if request.method =='PUT':
-        obj = Test.objects.get(testID=pk)
-        obj.status = 'completed'
-        obj.results = record
-        obj.save()
-    return HttpResponse("Succesfully Created/Updated Test")
 
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
@@ -110,11 +140,9 @@ def approveTest(request,pk):
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("lab_staff") 
-def deleteTestReport(request,pk):
-    obj = Test.objects.get(testID=pk)
-    obj.results = ""
-    obj.save()
-    return HttpResponse("Succesfully Deleted Report")
+def deleteTest(request,pk):
+    Test.objects.filter(testID=pk).update(result='')
+    return redirect('/lab_tests')
 
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
@@ -139,8 +167,7 @@ def diagDetails(request,pk):
             'recommendations' : i.test_recommendation,
             'doctorName' : obj1.name
         }
-    arr.append(dict)
-    print(arr)
+        arr.append(dict)
     return render(request, 'lab_staff/lab_diag_details.html',{'diag':arr})
     
     

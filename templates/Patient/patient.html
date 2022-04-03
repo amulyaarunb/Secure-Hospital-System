@@ -22,14 +22,14 @@
 {% endblock content %}
 {% block chatbot %}
 
-<button class="open-button" onclick="openForm()">Chat</button>
+<button class="open-button" onclick="openForm()" style="background-color:rgb(75, 167, 224);">Chat</button>
 
 <div class="chat-popup" id="myForm">
   <form action="/patient" class="form-container">
     <h1>Chat</h1>
     
     <label for="msg"><b>Message</b></label>
-    <div id="userInput">
+    <div id="userInput" style="background-color:rgb(11, 13, 14);">
       <textarea
       id="textInput"
       placeholder="Type your message"
