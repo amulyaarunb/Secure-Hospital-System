@@ -43,8 +43,11 @@
             <a href="{% url 'hospital_appointment_reject' app.appointmentID %}" style="color: black;font-size: 10px;text-decoration: none;padding: 10px;border-style: solid;background-color: gray;">Reject</a>
         </li>
         {% endfor %}
-
     </div>
+
+    {% if appointments %}
+    <h1>There are no more appointments to review</h1>
+    {% endif%}
 
 </body>
 

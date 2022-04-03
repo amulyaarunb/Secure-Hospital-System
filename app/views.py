@@ -533,11 +533,19 @@ def make_payment(request, paymentID):
         patient_payments.method=payform.data['method']
         #print(payform.data['method'])
         if patient_payments.method=='Insurance':
-            patient_payments.status='initiated'
+            patient_payments.status='pending'
+            patient_payments.save()
+            insurance=Insurance()
+            insurance.paymentID=patient_payments
+            insurance.patientID=patient_payments.patientID
+            insurance.status='inititated'
+            insurance.save()
+            
         else:
             patient_payments.status='completed'
+            patient_payments.save()
 
-        patient_payments.save()
+        
         if  payform.is_valid():
             pay=payform.save(commit=False)
             pay.status='initiated'
