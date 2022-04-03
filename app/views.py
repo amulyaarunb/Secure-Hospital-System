@@ -760,7 +760,7 @@ def doctor_create_prescription_view(request, ID):
             # d=CreatePrescription.save(commit=True)
             d.save()
 
-        d=Diagnosis.objects.get(patientID=patientID)   
+        d=Diagnosis.objects.get(patientID=ID)   
         return redirect('doctor_view_patientlist')
 
     mydict={'CreatePrescription':CreatePrescription}
@@ -791,7 +791,7 @@ def doctor_view_labreport_view(request):
     appointments=models.Appointment.objects.all().filter(doctorID=request.user.username)
     l=[]
     for i in appointments:
-        j=models.Test.objects.get(patientID=i.patientID.patientID)
+        j=models.Test.objects.all().filter(patientID=i.patientID.patientID)
         mydict = {
         'testID': j.testID,
         'date': j.date,
