@@ -13,25 +13,20 @@ from .BotMain import chatgui  # Botmain is chatbot directory
 from django_otp.decorators import otp_required
 from django.db.models import Q
 
+
+@otp_required(login_url="account/two_factor/setup/")
 @login_required(redirect_field_name="two_factor")
 def index(request):
     print(request.user.groups)
     if request.user.groups.filter(name='patient').exists():
-        # return patient stuff
         return redirect('/patient')
     if request.user.groups.filter(name='doctor').exists():
-            # return patient stuff
         return redirect('/doctor')
-        # return render(request, "home.html")
     if request.user.groups.filter(name='hospital_staff').exists():
-            # return patient stuff
         return redirect('/hospital_staff_appointments')
-        # return render(request, "/hospital_staff_home.html")
     if request.user.groups.filter(name='lab_staff').exists():
-            # return patient stuff
         return redirect('/lab_staff')
     if request.user.groups.filter(name='insurance_staff').exists():
-        # return patient stuff
         return redirect('/insurance_staff')
     if request.user.groups.filter(name='admin').exists():
         return redirect('/admin')
@@ -52,6 +47,7 @@ class Register(RegistrationView):
 
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("admin")
 def admin(request):
     return render(request=request, template_name="administrator/index.html", context={'hello': "hello"})
@@ -60,6 +56,8 @@ def admin(request):
 ''' Lab Staff View Starts Here'''
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("lab_staff")
 def viewDiagnosis(request):
     obj = Test.objects.all().filter(status='requested')
@@ -77,6 +75,7 @@ def viewDiagnosis(request):
     return render(request, "lab_staff.html",{'requests' : arr})
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("lab_staff")  
 def updateRecord(request,pk,record):
     if request.method =='PUT':
@@ -87,6 +86,7 @@ def updateRecord(request,pk,record):
     return HttpResponse("Succesfully Created/Updated Test")
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("lab_staff")
 def denyTest(request,pk):
     obj = Test.objects.get(testID=pk)
@@ -95,6 +95,7 @@ def denyTest(request,pk):
     return redirect('/lab_staff')
     
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("lab_staff")   
 def approveTest(request,pk):
     obj = Test.objects.get(testID=pk)
@@ -103,6 +104,7 @@ def approveTest(request,pk):
     return redirect('/lab_staff')
     
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("lab_staff") 
 def deleteTestReport(request,pk):
     obj = Test.objects.get(testID=pk)
@@ -111,6 +113,7 @@ def deleteTestReport(request,pk):
     return HttpResponse("Succesfully Deleted Report")
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("lab_staff")
 def lab_search(request):
     # whatever user write in search box we get in query
@@ -119,6 +122,7 @@ def lab_search(request):
     return render(request,'lab_staff_search.html',{'patients':patients})
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("lab_staff")
 def diagDetails(request,pk):
     obj = Diagnosis.objects.all().filter(patientID=pk)
@@ -140,6 +144,7 @@ def diagDetails(request,pk):
 
 '''Insurance Staff View starts here'''
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("insurance_staff")
 def denyClaim(request,pk):
     obj = Insurance.objects.get(request_id=pk)
@@ -148,6 +153,7 @@ def denyClaim(request,pk):
     return redirect('/insurance_staff')
     
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("insurance_staff")
 def approveClaim(request,pk):
     obj = Insurance.objects.get(request_id=pk)
@@ -156,6 +162,7 @@ def approveClaim(request,pk):
     return redirect('/insurance_staff')
     
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("insurance_staff")
 def authorizeFund(request,pk):
     obj = Insurance.objects.get(request_id=pk)
@@ -165,6 +172,7 @@ def authorizeFund(request,pk):
     return redirect('/insurance_staff_review')
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("insurance_staff")
 def claimDisb(request):
     obj = Insurance.objects.all().filter(status='approved')
@@ -185,6 +193,7 @@ def claimDisb(request):
 
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("insurance_staff")
 def viewClaim(request):
     obj = Insurance.objects.all().filter(status='initiated')
@@ -206,13 +215,9 @@ def viewClaim(request):
 '''Insurance Staff View ends here'''
 
 '''------------------Hospital Staff View------------------- ''' 
-@login_required
-@check_view_permissions("hospital_staff")
-def hospital_appointment_view(request):
-    return render(request,'hospital_staff_appointments.html')
-
 #To show appointments to hospital staff for approval
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("hospital_staff")
 def hospital_appointment(request):
     #those whose approval are needed
@@ -237,10 +242,11 @@ def hospital_appointment(request):
 		'created_on': i.created_on
         }
         appt.append(mydict)
-    return render(request,'hospital_staff_appointments.html',{'appointments':appt})
+    return render(request, 'hospital_staff/hospital_staff_appointments.html', {'appointments': appt})
     
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("hospital_staff")
 def hospital_appointment_approve(request,ID):
     appointment=Appointment.objects.get(appointmentID=ID)
@@ -253,6 +259,7 @@ def hospital_appointment_approve(request,ID):
     return redirect('/hospital_staff_appointments')
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("hospital_staff")
 def hospital_appointment_reject(request,ID):
     appointment=Appointment.objects.get(appointmentID=ID)
@@ -261,6 +268,7 @@ def hospital_appointment_reject(request,ID):
     return redirect('/hospital_staff_appointments')
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("hospital_staff")
 def hospital_update_patients(request):
         #print(request.session)
@@ -279,14 +287,15 @@ def hospital_update_patients(request):
                 obj.weight = form.cleaned_data['Weight']
                 obj.insuranceID = form.cleaned_data['InsuranceID']
                 obj.save()
-                return HttpResponseRedirect('/hospital_staff_appointments/')
+                return redirect('/hospital_staff_appointments')
 
         # if a GET (or any other method) we'll create a blank form
         else:
             form = forms.PatientUpdateForm()
-        return render(request, 'hospital_update_patients.html', {'form': form})
+        return render(request, 'hospital_staff/hospital_update_patients.html', {'form': form})
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("hospital_staff")
 def hospital_approved_appointment(request):
     #those whose approval are needed
@@ -307,9 +316,10 @@ def hospital_approved_appointment(request):
         'status': i.status
         }
         appt.append(mydict)
-    return render(request,'hospital_staff_create_payment.html',{'appointments':appt})
+    return render(request, 'hospital_staff/hospital_staff_create_payment.html', {'appointments': appt})
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("hospital_staff")
 def hospital_complete_appointment(request,ID):
     appointment=Appointment.objects.get(appointmentID=ID)
@@ -321,6 +331,7 @@ def hospital_complete_appointment(request,ID):
     return HttpResponseRedirect('/hospital_transaction')
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("hospital_staff")
 def hospital_transaction(request):
     apptID = request.session.get('_appointment_id')
@@ -342,23 +353,26 @@ def hospital_transaction(request):
         # if a GET (or any other method) we'll create a blank form
     else:
                 form = forms.CreatePaymentForm()
-    return render(request, 'hospital_staff_amount.html', {'form': form})
+    return render(request, 'hospital_staff/hospital_staff_amount.html', {'form': form})
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("hospital_staff")
 def hospital_search(request):
     # whatever user write in search box we get in query
     query = request.GET.get('search',False)
     patients=Patient.objects.all().filter(Q(patientID__icontains=query)|Q(name__icontains=query))
-    return render(request,'hospital_search_patients.html',{'patients':patients})
+    return render(request, 'hospital_staff/hospital_search_patients.html', {'patients': patients})
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("hospital_staff")
 def hospital_view_patients(request):
     patients=Patient.objects.all()
-    return render(request,'hospital_search_patients.html',{'patients':patients})
+    return render(request, 'hospital_staff/hospital_search_patients.html', {'patients': patients})
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("hospital_staff")
 def hospital_patient_details(request,pID):
     patient_details = Patient.objects.get(patientID = pID)
@@ -405,7 +419,7 @@ def hospital_patient_details(request,pID):
         'result': i.result,
         }
         test.append(mydict)
-    return render(request,'hospital_view_patient_details.html',{'patient_details':patient_details,'appointment_details':appt,'test_details':test})
+    return render(request, 'hospital_staff/hospital_view_patient_details.html', {'patient_details': patient_details, 'appointment_details': appt, 'test_details': test})
 
 '''---------------Hospital end-------------'''
 
@@ -415,12 +429,14 @@ def hospital_patient_details(request,pID):
 
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("patient")
 def patient(request):
     return render(request, 'Patient/patient.html', {"user": request.user})
 
 # @app.route("/diagnosis")
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("patient")
 def patient_diagnosis_details(request, patientID):
     patient_diagnosis_details = models.Diagnosis.objects.all().filter(patientID=patientID)
@@ -429,6 +445,7 @@ def patient_diagnosis_details(request, patientID):
 
 # patient details views
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("patient")
 def patient_details(request, patientID):
      patient = models.Patient.objects.filter(patientID=patientID)
@@ -467,11 +484,13 @@ def update_patient_record(request,patientID):
 
 # Lab views
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("patient")
 def patient_labtest_view(request,patientID):
      return render(request, 'Patient/labtest/labtest.html',{"user": request.user})
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("patient")
 def request_test(request,patientID):
     testform=forms.RequestLabTestForm(request.POST)
@@ -498,12 +517,14 @@ def request_test(request,patientID):
     return render(request,'Patient/labtest/request_labtest.html', {"patient":patient ,"testform":testform})
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("patient")
 def view_lab_report(request,patientID):
     lab_test_details=models.Test.objects.all().filter(patientID=patientID)
     return render(request,'Patient/labtest/patient_view_lab_report.html',{'lab_test_details':lab_test_details})
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("patient")
 def view_one_lab_report(request,testID):
     lab_test_details=models.Test.objects.all().filter(testID=testID)
@@ -513,6 +534,7 @@ def view_one_lab_report(request,testID):
 
 # Chatbot Views
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("patient")
 def get_bot_response(request):
     d = request.GET
@@ -523,11 +545,13 @@ def get_bot_response(request):
 
 # Appointment Views
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("patient")
 def patient_appointment_view(request, patientID):
      return render(request, 'Patient/Appointment/appointment.html')
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("patient")
 def patient_previous_appointment_view(request,patientID):
     patient_prev_appointments = models.Appointment.objects.all().filter(patientID=patientID)
@@ -535,6 +559,7 @@ def patient_previous_appointment_view(request,patientID):
     return render(request, 'Patient/Appointment/view-appoitnment.html',{'patient_prev_appointments':patient_prev_appointments})
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("patient")
 def patient_book_appointment_view(request,patientID):
     appointmentForm=forms.PatientAppointmentForm(request.POST) 
@@ -556,6 +581,7 @@ def patient_book_appointment_view(request,patientID):
 
 # Payment and Transaction views
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("patient")
 def make_payment(request, paymentID):
     patient_payments = models.Payment.objects.get(paymentID=paymentID)
@@ -589,6 +615,7 @@ def make_payment(request, paymentID):
     return render(request,'Patient/payments_and_transactions/make_payment.html', {"patient_payments":patient_payments})
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("patient")
 def patient_payments_details(request,patientID):
     patient_payments = models.Payment.objects.all().filter(patientID=patientID)
@@ -603,11 +630,13 @@ def patient_payments_details(request,patientID):
 
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("doctor")
 def doctor(request):
     return render(request,'Doctor/doctorhome.html', {"user": request.user})
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("doctor")
 def doctor_view_appointment_view(request):
     appointments=models.Appointment.objects.all().filter(doctorID=request.user.username)
@@ -635,6 +664,7 @@ def doctor_view_appointment_view(request):
 
 # patient records button views start here
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("doctor")
 def doctor_view_patientlist(request):
     appointments=models.Appointment.objects.all().filter(doctorID=request.user.username)
@@ -682,6 +712,7 @@ def doctor_view_patientlist(request):
     return render(request, 'Doctor/doctor_view_patientlist.html',{'patients':l})
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("doctor")
 def doctor_appointmentID_search_view(request):
     # query stores the input given in search bar
@@ -691,6 +722,7 @@ def doctor_appointmentID_search_view(request):
     return render(request,'Doctor/doctor_view_appointment_view.html',{'appointments':appointments})
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("doctor")
 def doctor_createpatientdiagnosis_view(request):
     diagnosis=models.Diagnosis.objects.all().get(doctorID=request.user.username)
@@ -715,6 +747,7 @@ def doctor_createpatientdiagnosis_view(request):
     return render(request, 'Doctor/doctor_createpatientdiagnosis_view.html', {'form': form, 'diagnosis': l})
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("doctor")
 def doctor_create_prescription_view(request, ID):
     d=models.Diagnosis.objects.get(patientID=ID)
@@ -735,6 +768,7 @@ def doctor_create_prescription_view(request, ID):
     return render(request, 'Doctor/doctor_create_prescription.html', context=mydict)     
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("doctor")
 def doctor_search_view(request):
     if request.method == "POST":
@@ -752,6 +786,7 @@ def doctor_search_view(request):
     # return render(request,'Doctor/doctor_search.html',{'a':a})
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("doctor")
 def doctor_view_labreport_view(request):
     appointments=models.Appointment.objects.all().filter(doctorID=request.user.username)
@@ -774,6 +809,7 @@ def doctor_view_labreport_view(request):
 
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("doctor")
 def doctor_recommend_labtest_view(request, ID):
     d=models.Diagnosis.objects.get(patientID=ID)
@@ -794,11 +830,13 @@ def doctor_recommend_labtest_view(request, ID):
     return render(request, 'Doctor/doctor_recommendlabtest.html', context=mydict)     
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("doctor")
 def doctor_patient_diagnosis_view(request):
     return render(request, 'Doctor/doctor_patient_diagnosis.html', {'diagnosis': l}) 
 
 # @login_required
+@otp_required(login_url="account/two_factor/setup/")
 # @check_view_permissions("doctor")
 # def patient_diagnosis_details(request, patientID):
 #     patient_diagnosis_details = models.Diagnosis.objects.all().filter(patientID=patientID)
@@ -824,6 +862,7 @@ def doctor_createpatientdiagnosis_view(request, ID):
 
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("doctor")
 def doctor_update_patients(request, ID):
     patient=Patient.objects.get(patientID=ID)
@@ -852,12 +891,14 @@ def doctor_update_patients(request, ID):
     return render(request,'Doctor/doctor_update_patient.html', context=mydict)
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("doctor")
 def doctor_delete_diagnosis(request, ID):
     models.Diagnosis.objects.filter(patientID=ID).update(diagnosis='Null')
     return redirect('doctor_view_patientlist')
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("doctor")
 def doctor_search_appointment(request, ID):
     # patient_details = Patient.objects.get(patientID = pID)
@@ -886,6 +927,7 @@ def doctor_search_appointment(request, ID):
 
 
 @login_required
+@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("doctor")
 def doctor_book_appointment(request):
     appointmentForm=forms.DoctorAppointmentForm() 

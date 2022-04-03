@@ -29,6 +29,7 @@ urlpatterns = [
      path('lab_staff_reject/<str:pk>',views.denyTest,name='lab_staff_reject'),
      path('lab_staff_search/', views.lab_search,name='lab_staff_search'),
      path('lab_search_details/<str:pk>',views.diagDetails,name = 'lab_search_details'),
+     
     # hospital staff
     path('hospital_staff_appointments/', views.hospital_appointment,
          name='hospital_staff_appointments'),
