@@ -12,6 +12,7 @@ from . import forms, models
 from .BotMain import chatgui  # Botmain is chatbot directory
 from django_otp.decorators import otp_required
 from django.db.models import Q
+from .render import Render
 
 
 @otp_required(login_url="account/two_factor/setup/")
@@ -527,9 +528,17 @@ def view_lab_report(request,patientID):
 @check_view_permissions("patient")
 def view_one_lab_report(request,testID):
     lab_test_details=models.Test.objects.all().filter(testID=testID)
-    return render(request,'Patient/labtest/patient_view_lab_report.html',{'lab_test_details':lab_test_details})
+    return Render.render('Patient/labtest/patient_view_single_lab_report.html',{'lab_test_details':lab_test_details})
 
-
+# def getpdfreport(self, request):
+#         sales = Sales.objects.all()
+#         today = timezone.now()
+#         params = {
+#             'today': today,
+#             'sales': sales,
+#             'request': request
+#         }
+#         return Render.render('pdf.html', params)
 
 # Chatbot Views
 @login_required

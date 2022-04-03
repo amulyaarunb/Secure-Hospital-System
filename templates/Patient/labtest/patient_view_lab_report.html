@@ -46,7 +46,6 @@
                 </thead>
                 {% for a in lab_test_details %}
                 <tr>
-                    
                     <td> {{a.testID}}</td>
                     <td>{{a.date}}</td>
                     <td>{{a.time}}</td>
@@ -54,9 +53,7 @@
                     <td>{{a.status}}</td>
                     <td>{{a.diagnosisID.diagnosisID}}</td>
                     <td>{{a.paymentID.paymentID}}</td>
-                    <td> <i class="fa fa-file-pdf-o"></i></td>
-
-                    
+                    <td> <a href="{% url 'patient_view_single_lab_report' a.testID %}"><i class="fa fa-file-pdf-o"></i> </a></td>
                 </tr>
                 {% endfor %}
                
