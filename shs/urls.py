@@ -32,6 +32,7 @@ urlpatterns = [
      path('lab_update_record/<str:pk>',views.updateTests,name = 'lab_update_record'),
      path('lab_delete_record/<str:pk>',views.deleteTest,name = 'lab_delete_record'),
      path('lab_search_details/<str:pk>',views.diagDetails,name = 'lab_search_details'),
+     
     # hospital staff
     path('hospital_staff_appointments/', views.hospital_appointment,
          name='hospital_staff_appointments'),

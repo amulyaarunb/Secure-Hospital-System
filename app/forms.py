@@ -56,3 +56,9 @@ class EditReportForm(forms.ModelForm):
     class Meta:
         model=models.Test
         fields=['result']
+
+class DoctorAppointmentForm(forms.ModelForm):
+    class Meta:
+        model=models.Appointment
+        fields=['date','time']
+
