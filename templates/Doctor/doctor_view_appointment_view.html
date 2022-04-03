@@ -1,4 +1,5 @@
 {% extends 'Doctor/doctor_navbar.html' %}
+{% load widget_tweaks %}
 {% block content %}
 
 <head>
@@ -33,7 +34,7 @@
 <center>
     <!-- viewing doctor's Appointments -->
     <h1>Appointments</h1>
-        <a href="/doctor_book_appointment"> <button style="font-size:18px;color:red"><span style="color: grey">Add Appointment</span> <i class="fa fa-plus" ></i></button></a>
+        <!-- <a href="/doctor_book_appointment"> <button style="font-size:18px;color:red"><span style="color: grey">Add Appointment</span> <i class="fa fa-plus" ></i></button></a> -->
     <br>
     <br>
     <table>
@@ -51,6 +52,7 @@
             <th>Test ID</th>
             <th>Payment ID</th>
             <th>Created On</th>
+            <th>Book Appointment</th>
 
           </tr>
           {% for i in appointments %}
@@ -68,7 +70,7 @@
             <th> {{ i.testID }}</th>
             <th> {{ i.paymentID }}</th>
             <th> {{ i.created_on }}</th>
-
+            <th> <a href="{% url 'doctor_book_appointment' i.patientID.patientID %}"> <button style="font-size:18px;color:red"><i class="fa fa-plus" ></i></button></a> </th>
           </tr> 
           {% endfor %}
     </table>
