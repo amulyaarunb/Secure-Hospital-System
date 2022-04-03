@@ -55,6 +55,46 @@ def admin(request):
     
 
 ''' Lab Staff View Starts Here'''
+@login_required
+@check_view_permissions("lab_staff")
+def lab_test_search(request):
+    # whatever user write in search box we get in query
+    query = request.GET.get('search',False)
+    patients=Patient.objects.all().filter(Q(patientID__icontains=query)|Q(name__icontains=query))
+    arr = []
+    for i in patients:
+        obj = Test.objects.all().filter(patientID=i.patientID)
+        for j in obj:
+            if j.status=='approved':
+                dict = {
+                    'patientID' : j.patientID.patientID,
+                    'testID' : j.testID,
+                    'date' : j.date,
+                    'type' : j.type,
+                    'result': j.result 
+                }
+                arr.append(dict)
+    return render(request,'lab_tests.html',{'patients':arr})
+
+@login_required
+@check_view_permissions("lab_staff")
+def updateTests(request,pk):
+    d=Test.objects.get(testID=pk)
+    EditReportForm=forms.EditReportForm(request.POST)
+    
+    if request.method=='POST':
+        d.result=EditReportForm.data['result']
+        d.save() 
+        if  EditReportForm.is_valid():
+            print("Form is valid")
+            d.save()
+
+        d=Test.objects.get(testID=pk)   
+        return redirect('/lab_tests')
+
+    mydict={'EditReportForm':EditReportForm}
+    return render(request, 'lab_tests_approved.html', context=mydict)  
+
 
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
@@ -75,16 +115,6 @@ def viewDiagnosis(request):
         arr.append(dict)
     return render(request, "lab_staff/lab_staff.html",{'requests' : arr})
 
-@login_required
-@otp_required(login_url="account/two_factor/setup/")
-@check_view_permissions("lab_staff")  
-def updateRecord(request,pk,record):
-    if request.method =='PUT':
-        obj = Test.objects.get(testID=pk)
-        obj.status = 'completed'
-        obj.results = record
-        obj.save()
-    return HttpResponse("Succesfully Created/Updated Test")
 
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
@@ -107,11 +137,9 @@ def approveTest(request,pk):
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("lab_staff") 
-def deleteTestReport(request,pk):
-    obj = Test.objects.get(testID=pk)
-    obj.results = ""
-    obj.save()
-    return HttpResponse("Succesfully Deleted Report")
+def deleteTest(request,pk):
+    Test.objects.filter(testID=pk).update(result='')
+    return redirect('/lab_tests')
 
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
@@ -136,8 +164,7 @@ def diagDetails(request,pk):
             'recommendations' : i.test_recommendation,
             'doctorName' : obj1.name
         }
-    arr.append(dict)
-    print(arr)
+        arr.append(dict)
     return render(request, 'lab_staff/lab_diag_details.html',{'diag':arr})
     
     
@@ -677,7 +704,6 @@ def doctor_view_patientlist(request):
         if i.diagnosisID is None:
                 print('I am in if')
                 mydict = {
-                'appointmentID' : i.appointmentID,
                 'name': p.name,
                 'age': p.age,
                 'gender': p.gender,
@@ -685,9 +711,9 @@ def doctor_view_patientlist(request):
                 'doctorID': i.doctorID,
                 'height': p.height,
                 'weight': p.weight,
-                'diagnosis': 'null',
-                'test_recommendation': 'null',
-                'prescription': 'null'
+                'diagnosis': '-',
+                'test_recommendation': '-',
+                'prescription': '-'
                 }
         else:
                 print('I am in else')
@@ -698,7 +724,6 @@ def doctor_view_patientlist(request):
                     # print(d)
                     # print(d.diagnosis)
                     mydict = {
-                    'appointmentID' : i.appointmentID,
                     'name': p.name,
                     'age': p.age,
                     'gender': p.gender,
@@ -722,6 +747,31 @@ def doctor_appointmentID_search_view(request):
     # patients=models.Patient.objects.all().filter(doctorId=request.user.id).filter(Q(patientID__icontains=query)|Q(name__icontains=query))
     appointments=models.Appointment.objects.all().filter(doctorId=request.user.id).filter(Q(patientID__icontains=query)|Q(appointmentID__icontains=query)|Q(date__icontains=query))
     return render(request,'Doctor/doctor_view_appointment_view.html',{'appointments':appointments})
+
+@login_required
+@otp_required(login_url="account/two_factor/setup/")
+@check_view_permissions("doctor")
+def doctor_createpatientdiagnosis_view(request):
+    diagnosis=models.Diagnosis.objects.all().get(doctorID=request.user.username)
+    l=[]
+    for i in diagnosis:
+        mydict = {
+        'appointmentID': i.appointmentID,
+        'patientID': i.patientID,
+        'doctorID': i.doctorID,
+		'diagnosisID': i.diagnosisID,
+		'diagnosis': i.diagnosis,
+        'test_recommendation': i.test_recommendation,
+        'prescription': i.prescription
+        }
+        l.append(mydict)
+    if request.method=='POST':
+        form=createDiagnosisForm(request.POST)
+        if form.is_valid():
+            return HttpResponseRedirect('/record modified/')
+        else:
+            form=createDiagnosisForm()
+    return render(request, 'Doctor/doctor_createpatientdiagnosis_view.html', {'form': form, 'diagnosis': l})
 
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
@@ -812,40 +862,27 @@ def doctor_recommend_labtest_view(request, ID):
 def doctor_patient_diagnosis_view(request):
     return render(request, 'Doctor/doctor_patient_diagnosis.html', {'diagnosis': l}) 
 
-@login_required
+# @login_required
 @otp_required(login_url="account/two_factor/setup/")
-@check_view_permissions("doctor")
+# @check_view_permissions("doctor")
+# def patient_diagnosis_details(request, patientID):
+#     patient_diagnosis_details = models.Diagnosis.objects.all().filter(patientID=patientID)
+#     return render(request,'Doctor/doctor_patient_diagnosis.html',{'patient_diagnosis_details':patient_diagnosis_details})
+
 def doctor_createpatientdiagnosis_view(request, ID):
-    d=models.Diagnosis.objects.filter(appointmentID=ID)
-    # print('asdfghj', d)
-    a=Appointment.objects.get(appointmentID=ID)
-    p=Patient.objects.get(patientID=a.patientID.patientID)
+    d=models.Diagnosis.objects.get(patientID=ID)
     EditDiagnosisForm=forms.EditDiagnosisForm(request.POST)
     
-    if request.method=='POST': 
+    if request.method=='POST':
+        d.diagnosis=EditDiagnosisForm.data['diagnosis']
+        d.save() 
         if  EditDiagnosisForm.is_valid():
             print("EditDiagnosisForm is valid")
-            if not d:
-                print('asdfghjk')
-                diag = Diagnosis()
-                diag.diagnosis = EditDiagnosisForm.data['diagnosis']
-                diag.doctorID = models.Doctor.objects.get(doctorID=request.user.username)
-                diag.patientID  = models.Patient.objects.get(patientID=p.patientID)
-                diag.appointmentID= models.Appointment.objects.get(appointmentID=ID)
-                a.diagnosisID = diag
-                diag.save()
-                a.save()
-                return redirect('doctor_view_patientlist')
-            else:
-                # print(di)
-                di=models.Diagnosis.objects.get(appointmentID=ID)
-                print(di)
-                di.diagnosis=EditDiagnosisForm.data['diagnosis']
-                di.save()
-                return redirect('doctor_view_patientlist')
+            d.save()
+            # d.save(force_update=True)
 
-        # d=Diagnosis.objects.get(patientID=ID)   
-        # return redirect('doctor_view_patientlist')
+        d=Diagnosis.objects.get(patientID=ID)   
+        return redirect('doctor_view_patientlist')
 
     mydict={'EditDiagnosisForm':EditDiagnosisForm}
     return render(request, 'Doctor/doctor_createpatientdiagnosis_view.html', context=mydict)     
