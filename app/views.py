@@ -419,9 +419,7 @@ def update_patient_record(request,patientID):
         # print(patientForm.errors)
         # patientForm['patientID'] 
         if  patientForm.is_valid():
-            print("patientForm is valid")
-            patient=patientForm.save(commit=True)
-            patient.save(force_update=True)
+            pass
 
         patient=Patient.objects.get(patientID=patientID)   
         # return redirect("{% url 'patient_details' patient.patientID %}")
@@ -458,9 +456,7 @@ def request_test(request,patientID):
         test.save()
         # Test.save(self)        
         if  testform.is_valid():
-            test=testform.save(commit=False)
-            test.status='requested'
-            test.save()
+            pass
         return redirect('patient_view_lab_report',patientID)
     mydict={"testform":testform}
     return render(request,'Patient/labtest/request_labtest.html', {"patient":patient ,"testform":testform})
@@ -517,9 +513,7 @@ def patient_book_appointment_view(request,patientID):
         Appt.status='requested'
         Appt.save()
         if appointmentForm.is_valid():
-            appointment=appointmentForm.save(commit=False)
-            appointment.status='initiated'
-            appointment.save()
+            pass
         return redirect('patient-view-appointment',patientID)
     return render(request, 'Patient/Appointment/book-appointment.html',{"user": request.user, "appointmentForm":appointmentForm})
 
@@ -543,7 +537,7 @@ def make_payment(request, paymentID):
             insurance=Insurance()
             insurance.paymentID=patient_payments
             insurance.patientID=patient_payments.patientID
-            insurance.status='inititated'
+            insurance.status='initiated'
             insurance.save()
             
         else:
@@ -552,9 +546,7 @@ def make_payment(request, paymentID):
 
         
         if  payform.is_valid():
-            pay=payform.save(commit=False)
-            pay.status='initiated'
-            pay.save()
+            pass
         #print(patient_payments.amount)
         return redirect("patient_payments", patientID.patientID)
 
