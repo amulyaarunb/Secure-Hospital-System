@@ -242,7 +242,7 @@ def viewClaim(request):
     
 '''Insurance Staff View ends here'''
 
-'''------------------Hospital Staff View------------------- ''' 
+''''------------------Hospital Staff View------------------- ''' 
 #To show appointments to hospital staff for approval
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
@@ -298,7 +298,7 @@ def hospital_appointment_reject(request,ID):
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("hospital_staff")
-def hospital_update_patients(request):
+def hospital_create_patients(request):
         #print(request.session)
         pID = request.session.get('_patient_id')
         print(pID)
@@ -320,7 +320,7 @@ def hospital_update_patients(request):
         # if a GET (or any other method) we'll create a blank form
         else:
             form = forms.PatientUpdateForm()
-        return render(request, 'hospital_staff/hospital_update_patients.html', {'form': form})
+        return render(request, 'hospital_staff/hospital_create_patients.html', {'form': form})
 
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
@@ -402,6 +402,30 @@ def hospital_view_patients(request):
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("hospital_staff")
+def hospital_update_patients(request,ID):
+    if request.method == 'POST':
+            # create a form instance and populate it with data from the request:
+            form = forms.PatientUpdateForm(request.POST)
+            if form.is_valid():
+                obj = Patient.objects.get(patientID = ID) 
+                #obj = Patient()
+                obj.name = form.cleaned_data['PatientName']
+                obj.age = form.cleaned_data['Age']
+                obj.gender = form.cleaned_data['Gender']
+                obj.height = form.cleaned_data['Height']
+                obj.weight = form.cleaned_data['Weight']
+                obj.insuranceID = form.cleaned_data['InsuranceID']
+                obj.save()
+                return redirect("hospital_patient_details", ID)
+
+        # if a GET (or any other method) we'll create a blank form
+    else:
+            form = forms.PatientUpdateForm()
+    return render(request, 'hospital_staff/hospital_update_patients.html', {'form': form})
+
+@login_required
+@otp_required(login_url="account/two_factor/setup/")
+@check_view_permissions("hospital_staff")
 def hospital_patient_details(request,pID):
     patient_details = Patient.objects.get(patientID = pID)
     appointments=Appointment.objects.all().filter(patientID=pID)
@@ -449,6 +473,7 @@ def hospital_patient_details(request,pID):
     return render(request, 'hospital_staff/hospital_view_patient_details.html', {'patient_details': patient_details, 'appointment_details': appt, 'test_details': test})
 
 '''---------------Hospital end-------------'''
+
 
 # ---------------------------------------------------------------------------------
 # ------------------------ PATIENT RELATED VIEWS START ------------------------------

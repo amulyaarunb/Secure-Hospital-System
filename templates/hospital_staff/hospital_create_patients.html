@@ -24,8 +24,8 @@
 {% endblock %}
 
 {% block content%}
-    <form  method="post">
-        {% csrf_token %} {{ form.as_p }}
+    <form action="/hospital_create_patients/" method="post">
+        {% csrf_token %} {{ form.as_p}}
         <input type="Submit" value="Submit">
     </form>
 {% endblock content %}
