@@ -662,11 +662,11 @@ def doctor_create_prescription_view(request, ID):
         d.save() 
         if  CreatePrescription.is_valid():
             print("CreatePrescription is valid")
-            d=CreatePrescription.save(commit=True)
-            d.save(force_update=True)
+            # d=CreatePrescription.save(commit=True)
+            d.save()
 
         d=Diagnosis.objects.get(patientID=patientID)   
-        return redirect("prescription", d.patientID)
+        return redirect('doctor_view_patientlist')
 
     mydict={'CreatePrescription':CreatePrescription}
     return render(request, 'Doctor/doctor_create_prescription.html', context=mydict)     
@@ -715,11 +715,11 @@ def doctor_recommend_labtest_view(request, ID):
         d.save() 
         if  RecommendLabTest.is_valid():
             print("RecommendLabTest is valid")
-            d=RecommendLabTest.save(commit=True)
-            d.save(force_update=True)
+            # d=RecommendLabTest.save(commit=True)
+            d.save()
 
-        d=Diagnosis.objects.get(patientID=patientID)   
-        return redirect("test_recommendation", d.patientID)
+        d=Diagnosis.objects.get(patientID=ID)   
+        return redirect('doctor_view_patientlist')
 
     mydict={'RecommendLabTest':RecommendLabTest}
     return render(request, 'Doctor/doctor_recommendlabtest.html', context=mydict)     
@@ -744,11 +744,40 @@ def doctor_createpatientdiagnosis_view(request, ID):
         d.save() 
         if  EditDiagnosisForm.is_valid():
             print("EditDiagnosisForm is valid")
-            d=EditDiagnosisForm.save(commit=True)
-            d.save(force_update=True)
+            d.save()
+            # d.save(force_update=True)
 
-        d=Diagnosis.objects.get(patientID=patientID)   
-        return redirect("diagnosis", d.patientID)
+        d=Diagnosis.objects.get(patientID=ID)   
+        return redirect('doctor_view_patientlist')
 
     mydict={'EditDiagnosisForm':EditDiagnosisForm}
     return render(request, 'Doctor/doctor_createpatientdiagnosis_view.html', context=mydict)     
+
+
+@login_required
+@check_view_permissions("doctor")
+def doctor_update_patients(request, ID):
+    patient=Patient.objects.get(patientID=ID)
+    patientForm=forms.PatientForm(request.POST)
+    
+    if request.method=='POST':
+        # print("Hi from POST")
+        # print(patientForm.data['age'])
+        patient.name=patientForm.data['name']
+        patient.age=patientForm.data['age']
+        patient.gender=patientForm.data['gender']
+        patient.height=patientForm.data['height']
+        patient.weight=patientForm.data['weight']
+        patient.insuranceID=patientForm.data['insuranceID']
+        patient.save()
+        if  patientForm.is_valid():
+            print("patientForm is valid")
+            patient.save()
+            # patient.save(force_update=True)
+
+        patient=Patient.objects.get(patientID=ID)   
+        # return redirect("{% url 'patient_details' patient.patientID %}")
+        return redirect('doctor_view_patientlist')
+
+    mydict={'patientForm':patientForm}
+    return render(request,'Doctor/doctor_update_patient.html', context=mydict)
