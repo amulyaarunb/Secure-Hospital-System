@@ -486,6 +486,13 @@ def hospital_patient_details(request,pID):
         test.append(mydict)
     return render(request, 'hospital_staff/hospital_view_patient_details.html', {'patient_details': patient_details, 'appointment_details': appt, 'test_details': test})
 
+@login_required
+@otp_required(login_url="account/two_factor/setup/")
+@check_view_permissions("patient")
+def hospital_view_one_lab_report(request,testID):
+    lab_test_details=models.Test.objects.all().filter(testID=testID)
+    return Render.render('hospital_staff/hospital_view_single_lab_report.html',{'lab_test_details':lab_test_details})
+
 '''---------------Hospital end-------------'''
 
 # ---------------------------------------------------------------------------------
