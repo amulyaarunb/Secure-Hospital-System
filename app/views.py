@@ -221,7 +221,7 @@ def viewClaim(request):
 @check_view_permissions("hospital_staff")
 def hospital_appointment(request):
     #those whose approval are needed
-    appointments=Appointment.objects.all().filter(status='initiated')
+    appointments=Appointment.objects.all().filter(status='requested')
     appt=[]
     for i in appointments:
         patient = Patient.objects.get(patientID = i.patientID.patientID)
