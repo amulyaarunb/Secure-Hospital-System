@@ -22,6 +22,13 @@ urlpatterns = [
      path('insurance_staff_approve/<str:pk>',views.approveClaim,name='insurance_staff_approve'),
      path('insurance_staff_reject/<str:pk>',views.denyClaim,name='insurance_staff_reject'),
      path('insurance_staff_review/',views.claimDisb,name= 'insurance_staff_review'),
+     
+     #lab staff
+     path('lab_staff/',views.viewDiagnosis,name='lab_staff'),
+     path('lab_staff_approve/<str:pk>',views.approveTest,name='lab_staff_approve'),
+     path('lab_staff_reject/<str:pk>',views.denyTest,name='lab_staff_reject'),
+     path('lab_staff_search/', views.lab_search,name='lab_staff_search'),
+     path('lab_search_details/<str:pk>',views.diagDetails,name = 'lab_search_details'),
     # hospital staff
     path('hospital_staff_appointments/', views.hospital_appointment,
          name='hospital_staff_appointments'),

@@ -11,6 +11,7 @@ from app.decorators import check_view_permissions
 from . import forms, models
 from .BotMain import chatgui  # Botmain is chatbot directory
 from django_otp.decorators import otp_required
+from django.db.models import Q
 
 
 @login_required(redirect_field_name="two_factor")
@@ -28,7 +29,7 @@ def index(request):
         return render(request, "hospital_staff_home.html")
     if request.user.groups.filter(name='lab_staff').exists():
             # return patient stuff
-        return render(request, "home.html")
+        return redirect('/lab_staff')
     if request.user.groups.filter(name='insurance_staff').exists():
         # return patient stuff
         return redirect('/insurance_staff')
@@ -57,9 +58,20 @@ def admin(request):
 
 @login_required
 @check_view_permissions("lab_staff")
-def viewDiagnosis(request,pk):
-    obj = Diagnosis.objects.get(diagnosisID=pk)
-    return HttpResponse(obj)
+def viewDiagnosis(request):
+    obj = Test.objects.all().filter(status='requested')
+    arr = []
+    for i in obj:
+        obj1 = Patient.objects.get(patientID = i.patientID.patientID)
+        obj2 = Diagnosis.objects.get(diagnosisID = i.diagnosisID.diagnosisID)
+        dict = {
+            'PatientName' : obj1.name,
+            'Diagnosis' : obj2.diagnosis,
+            'Recommendations' : obj2.test_recommendation,
+            'testID' : i.testID
+        }
+        arr.append(dict)
+    return render(request, "lab_staff.html",{'requests' : arr})
 
 @login_required
 @check_view_permissions("lab_staff")  
@@ -73,11 +85,11 @@ def updateRecord(request,pk,record):
 
 @login_required
 @check_view_permissions("lab_staff")
-def denyTestRequest(request,pk):
+def denyTest(request,pk):
     obj = Test.objects.get(testID=pk)
     obj.status = 'denied'
     obj.save()
-    return HttpResponse("Successfully Denied Request")
+    return redirect('/lab_staff')
     
 @login_required
 @check_view_permissions("lab_staff")   
@@ -85,7 +97,7 @@ def approveTest(request,pk):
     obj = Test.objects.get(testID=pk)
     obj.status = 'approved'
     obj.save()
-    return HttpResponse("Successfully Approved Request")
+    return redirect('/lab_staff')
     
 @login_required
 @check_view_permissions("lab_staff") 
@@ -94,6 +106,31 @@ def deleteTestReport(request,pk):
     obj.results = ""
     obj.save()
     return HttpResponse("Succesfully Deleted Report")
+
+@login_required
+@check_view_permissions("lab_staff")
+def lab_search(request):
+    # whatever user write in search box we get in query
+    query = request.GET.get('search',False)
+    patients=Patient.objects.all().filter(Q(patientID__icontains=query)|Q(name__icontains=query))
+    return render(request,'lab_staff_search.html',{'patients':patients})
+
+@login_required
+@check_view_permissions("lab_staff")
+def diagDetails(request,pk):
+    obj = Diagnosis.objects.all().filter(patientID=pk)
+    arr = []
+    for i in obj:
+        obj1 = Doctor.objects.get(doctorID=i.doctorID.doctorID)
+        dict = {
+            'diagnosisID': i.diagnosisID,
+            'diagnosis': i.diagnosis,
+            'recommendations' : i.test_recommendation,
+            'doctorName' : obj1.name
+        }
+    arr.append(dict)
+    print(arr)
+    return render(request, 'lab_diag_details.html',{'diag':arr})
     
     
 '''Lab Staff View Ends Here'''
