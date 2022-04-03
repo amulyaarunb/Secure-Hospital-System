@@ -25,7 +25,8 @@ def index(request):
         # return render(request, "home.html")
     if request.user.groups.filter(name='hospital_staff').exists():
             # return patient stuff
-        return render(request, "hospital_staff_home.html")
+        return redirect('/hospital_staff_appointments')
+        # return render(request, "/hospital_staff_home.html")
     if request.user.groups.filter(name='lab_staff').exists():
             # return patient stuff
         return render(request, "home.html")
