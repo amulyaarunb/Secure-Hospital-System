@@ -572,7 +572,6 @@ def patient_payments_details(request,patientID):
 # ---------------------------------------------------------------------------------
 
 
-# -------------------------Doctor View---------------------------------------------
 
 @login_required
 @check_view_permissions("doctor")
@@ -700,6 +699,12 @@ def doctor_search_view(request):
     else:
         return render(request, 'Doctor/doctor_search.html', {})
 
+    #     def hospital_search(request):
+    # # whatever user write in search box we get in query
+    # query = request.GET.get('search',False)
+    # a=Appointment.objects.filter(appointmentID__contains = query)
+    # return render(request,'Doctor/doctor_search.html',{'a':a})
+
 @login_required
 @check_view_permissions("doctor")
 def doctor_view_labreport_view(request):
@@ -799,3 +804,36 @@ def doctor_update_patients(request, ID):
 
     mydict={'patientForm':patientForm}
     return render(request,'Doctor/doctor_update_patient.html', context=mydict)
+
+@login_required
+@check_view_permissions("doctor")
+def doctor_delete_diagnosis(request, ID):
+    models.Diagnosis.objects.filter(patientID=ID).update(diagnosis='Null')
+    return redirect('doctor_view_patientlist')
+
+@login_required
+@check_view_permissions("doctor")
+def doctor_search_appointment(request, ID):
+    # patient_details = Patient.objects.get(patientID = pID)
+    appointments=models.Appointment.objects.all().filter(doctorID=request.user.username)
+    l=[]
+    for i in appointments:
+        patient = Patient.objects.get(patientID = i.patientID.patientID)
+        doctor = Doctor.objects.get(doctorID = i.doctorID.doctorID)
+        mydict = {
+        # 'appointmentID': i.appointmentID,
+        'date': i.date,
+        'time': i.time,
+        'type': i.type,
+        'patientID': i.patientID,
+        'doctorID': i.doctorID,
+        'patientName':patient.name,
+        'doctorName':doctor.name,
+        'status': i.status,
+		'diagnosisID': i.diagnosisID,
+		'testID': i.testID,
+		'paymentID':i.paymentID,
+		'created_on': i.created_on
+        }
+        l.append(mydict)
+    return render(request,'Doctor/doctor_search_appointment.html',{'l':l})
