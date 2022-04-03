@@ -43,10 +43,12 @@ urlpatterns = [
          name='hospital_search_patients'),
     path('hospital_patient_details/',views.hospital_patient_details,name = 'hospital_patient_details'),
     path('hospital_search/',views.hospital_search, name='hospital_search'),
-    path('hospital_update_patients/',views.hospital_update_patients,name= 'hospital_update_patients'),
+    path('hospital_create_patients/',views.hospital_create_patients,name= 'hospital_create_patients'),
+    path('hospital_update_patients/<str:ID>',views.hospital_update_patients,name= 'hospital_update_patients'),
     path('hospital_appointment_approve/<str:ID>',views.hospital_appointment_approve,name='hospital_appointment_approve'),
     path('hospital_appointment_reject/<str:ID>',views.hospital_appointment_reject,name='hospital_appointment_reject'),  path('hospital_patient_details/<str:pID>',views.hospital_patient_details,name= 'hospital_patient_details'),
-
+    path("hospital_view_single_lab_report/<str:testID>",views.hospital_view_one_lab_report, name="hospital_view_one_lab_report"),
+    
     # Patient urls
     path("patient", views.patient, name='patient'),
     path('bot', views.get_bot_response),
@@ -64,12 +66,12 @@ urlpatterns = [
     path("patient_labtest/<str:patientID>",views.patient_labtest_view, name="patient_labtest"),
     path("patient_labtest/request_labtest/<str:patientID>",views.request_test, name="request_labtest"),
     path("patient_labtest/patient_view_lab_report/<str:patientID>",views.view_lab_report, name="patient_view_lab_report"),
-
+    path("patient_view_single_lab_report/<str:testID>",views.view_one_lab_report, name="patient_view_single_lab_report"),
+   
     path("patient_payments/<str:patientID>",views.patient_payments_details, name="patient_payments"),
     path("patient_make_payment/<str:paymentID>",views.make_payment, name="patient_make_payment"),
 
 
-   
       # Doctor URLs
     path('doctor/', views.doctor, name='doctor'),
     path('doctor_view_appointment_view/',

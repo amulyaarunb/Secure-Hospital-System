@@ -16,3 +16,4 @@ tensorflow
 django_otp
 django-two-factor-auth
 phonenumbers
+xhtml2pdf

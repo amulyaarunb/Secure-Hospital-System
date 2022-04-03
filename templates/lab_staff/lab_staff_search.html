@@ -1,54 +1,31 @@
-<!DOCTYPE html>
-<html>
+{% extends 'base.html' %} {% block title %}Hospital Staff{% endblock %} {% block navigation %}
+<li>
+    <a href="{% url 'lab_staff' %} " style="color: black;font-size: 25px;text-decoration: none;padding: 10px;">Home</a>
+</li>
+<li>
+    <a href="{% url 'lab_staff_search' %} " style="color: black;font-size: 25px;text-decoration: none;padding: 10px;">View Patient Diagnosis</a>
+</li>
+<li>
+    <a href="{% url 'lab_tests' %} " style="color: black;font-size: 25px;text-decoration: none;padding: 10px;">Test Records</a>
+</li>
+<br> {% endblock %} {% block content%}
+<div>
 
-<head>
-    <title>Hospital Staff Page</title>
-    <style>
-        body {
-            font-family: Arial;
-        }
-        
-        a:hover:not(.active) {
-            background-color: whitesmoke;
-        }
-    </style>
-
-</head>
-
-<body style="background-color:whitesmoke">
-
-    <div style="margin-left: -8px; margin-right: -8px;margin-top: -8px;background-color:gray">
-        <ul style="color:black;font-size: 30px;list-style-type: none;margin: 0;padding: 5px;">
-            Secure Hospital System
-            <a href="{% url 'lab_staff' %} " style="color: black;font-size: 25px;text-decoration: none;padding: 10px;">Home</a>
-            <a href="{% url 'lab_staff_search' %} " style="color: black;font-size: 25px;text-decoration: none;padding: 10px;">View Patient Diagnosis</a>
-            <a href="{% url 'lab_tests' %} " style="color: black;font-size: 25px;text-decoration: none;padding: 10px;">Test Records</a>
-            <a href="/accounts/logout" style="color: black;font-size: 25px;text-decoration: none;padding: 10px;"> Log Out</a>
-        </ul>
-    </div>
-
+    <form action="/lab_staff_search/" method="GET">
+        <div style="font-size: 20px;">Please provide Patient ID or Patient Name: <input type="search" name="search"></div> <br>
+        <input type="Submit" style="background-color: gray;">
+    </form>
     <br>
 
-    <div>
-
-        <form action="/lab_staff_search/" method="GET">
-            <div style="font-size: 20px;">Please provide Patient ID or Patient Name: <input type="search" name="search"></div> <br>
-            <input type="Submit"  style="background-color: gray;">
-        </form>
-        <br>
-
-    </div>
+</div>
+<br>
+<div>
+    {% for p in patients %}
     <br>
-    <div>
-        {% for p in patients %}
-        <br>
-        <li>
-            <p><a href="{% url 'lab_search_details' p.patientID %}">Patient ID: {{ p.patientID }}</a></p>
-            <p>Patient Name: {{ p.name }}</p>
-        </li>
-        {% endfor %}
-    </div>
-
-</body>
-
-</html>
+    <li>
+        <p><a href="{% url 'lab_search_details' p.patientID %}">Patient ID: {{ p.patientID }}</a></p>
+        <p>Patient Name: {{ p.name }}</p>
+    </li>
+    {% endfor %}
+</div>
+{% endblock %}

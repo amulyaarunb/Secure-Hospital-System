@@ -5,7 +5,7 @@ from . import models
 class PatientForm(forms.ModelForm):
     class Meta:
         model=models.Patient
-        fields=['patientID','name','age','gender','height','weight','insuranceID']
+        fields=['name','age','gender','height','weight','insuranceID']
 
 
 class PatientAppointmentForm(forms.ModelForm):
@@ -27,12 +27,12 @@ class MakePaymentForm(forms.ModelForm):
         fields=['method']
 
 class PatientUpdateForm(forms.Form):
-    PatientName = forms.CharField(label = 'Patient Name', max_length=100)
-    Age = forms.CharField(label = 'Age', max_length=100)
-    Gender = forms.CharField(label = 'Gender', max_length = 50)
-    Height = forms.CharField(label = 'Height')
-    Weight = forms.CharField(label = 'Weight')
-    InsuranceID = forms.CharField(label = 'Insurance ID', max_length= 10)
+    PatientName = forms.CharField(label = 'Patient Name', max_length=100, required = False)
+    Age = forms.CharField(label = 'Age', max_length=100, required = False)
+    Gender = forms.CharField(label = 'Gender', max_length = 50, required = False)
+    Height = forms.CharField(label = 'Height', required = False)
+    Weight = forms.CharField(label = 'Weight', required = False)
+    InsuranceID = forms.CharField(label = 'Insurance ID', max_length= 10, required = False)
 
 class CreatePaymentForm(forms.Form):
     Amount = forms.CharField(label = 'Amount', max_length = 50)

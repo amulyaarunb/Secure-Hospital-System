@@ -36,6 +36,7 @@
     <h2>Patient Records</h2>
   <table>
     <tr>
+        <th>Appointment ID</th>
         <th>Name</th>
         <th>Patient ID</th>
         <th>Age</th>
@@ -50,6 +51,7 @@
       </tr>
       {% for i in patients %}
       <tr>
+        <th>{{ i.appointmentID }}</th>
         <th> {{ i.name }}</th>
         <th> {{ i.patientID }}</th>
         <th> {{ i.age }}</th>
@@ -57,7 +59,7 @@
         <th> {{ i.height }}</th>
         <th> {{ i.weight }}</th>
         <!-- <th> {{ i.insuranceID }}</th> -->
-        <th> {{ i.diagnosis }}  <a href="{% url 'doctor_patient_diagnosis' i.patientID %}"> <button>Edit</span></button></a>  <a href="{% url 'doctor_delete_diagnosis' i.patientID %}"> <button>Delete</span></button></a></th>
+        <th> {{ i.diagnosis }}  <a href="{% url 'doctor_patient_diagnosis' i.appointmentID %}"> <button>Edit</span></button></a>  <a href="{% url 'doctor_delete_diagnosis' i.patientID %}"> <button>Delete</span></button></a></th>
         <th> {{ i.test_recommendation }}  <a href="{% url 'doctor_recommend_labtest_view' i.patientID %}"> <button>Edit</span></button></a></th>
         <th> {{ i.prescription }} <a href="{% url 'doctor_create_prescription' i.patientID %}"> <button>Edit</span></button></a> </th>
         <th> <a href="{% url 'doctor_update_patients' i.patientID %}"> <button>Update</span></button></a> </th>
@@ -68,4 +70,3 @@
 </center>
 </body>
 {% endblock content%}
-

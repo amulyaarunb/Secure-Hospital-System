@@ -11,6 +11,9 @@ from app.decorators import check_view_permissions
 
 from . import forms, models
 from .BotMain import chatgui  # Botmain is chatbot directory
+from django_otp.decorators import otp_required
+from django.db.models import Q
+from .render import Render
 from .models import (Appointment, Diagnosis, Doctor, Insurance, Patient,
                      Payment, Test)
 
@@ -242,7 +245,7 @@ def viewClaim(request):
     
 '''Insurance Staff View ends here'''
 
-'''------------------Hospital Staff View------------------- ''' 
+''''------------------Hospital Staff View------------------- ''' 
 #To show appointments to hospital staff for approval
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
@@ -298,7 +301,7 @@ def hospital_appointment_reject(request,ID):
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("hospital_staff")
-def hospital_update_patients(request):
+def hospital_create_patients(request):
         #print(request.session)
         pID = request.session.get('_patient_id')
         print(pID)
@@ -308,19 +311,25 @@ def hospital_update_patients(request):
             if form.is_valid():
                 obj = Patient.objects.get(patientID = pID) 
                 #obj = Patient()
-                obj.name = form.cleaned_data['PatientName']
-                obj.age = form.cleaned_data['Age']
-                obj.gender = form.cleaned_data['Gender']
-                obj.height = form.cleaned_data['Height']
-                obj.weight = form.cleaned_data['Weight']
-                obj.insuranceID = form.cleaned_data['InsuranceID']
+                if form.cleaned_data['PatientName'] != '':
+                    obj.name = form.cleaned_data['PatientName']
+                if form.cleaned_data['Age'] != '':
+                    obj.age = form.cleaned_data['Age']
+                if form.cleaned_data['Gender'] != '':
+                    obj.gender = form.cleaned_data['Gender']
+                if form.cleaned_data['Height'] != '':
+                    obj.height = form.cleaned_data['Height']
+                if form.cleaned_data['Weight'] != '':
+                    obj.weight = form.cleaned_data['Weight']
+                if form.cleaned_data['InsuranceID'] != '':
+                    obj.insuranceID = form.cleaned_data['InsuranceID']
                 obj.save()
                 return redirect('/hospital_staff_appointments')
 
         # if a GET (or any other method) we'll create a blank form
         else:
             form = forms.PatientUpdateForm()
-        return render(request, 'hospital_staff/hospital_update_patients.html', {'form': form})
+        return render(request, 'hospital_staff/hospital_create_patients.html', {'form': form})
 
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
@@ -402,6 +411,35 @@ def hospital_view_patients(request):
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("hospital_staff")
+def hospital_update_patients(request,ID):
+    if request.method == 'POST':
+            # create a form instance and populate it with data from the request:
+            form = forms.PatientUpdateForm(request.POST)
+            if form.is_valid():
+                obj = Patient.objects.get(patientID = ID) 
+                if form.cleaned_data['PatientName'] != '':
+                    obj.name = form.cleaned_data['PatientName']
+                if form.cleaned_data['Age'] != '':
+                    obj.age = form.cleaned_data['Age']
+                if form.cleaned_data['Gender'] != '':
+                    obj.gender = form.cleaned_data['Gender']
+                if form.cleaned_data['Height'] != '':
+                    obj.height = form.cleaned_data['Height']
+                if form.cleaned_data['Weight'] != '':
+                    obj.weight = form.cleaned_data['Weight']
+                if form.cleaned_data['InsuranceID'] != '':
+                    obj.insuranceID = form.cleaned_data['InsuranceID']
+                obj.save()
+                return redirect("hospital_patient_details", ID)
+
+        # if a GET (or any other method) we'll create a blank form
+    else:
+            form = forms.PatientUpdateForm()
+    return render(request, 'hospital_staff/hospital_update_patients.html', {'form': form})
+
+@login_required
+@otp_required(login_url="account/two_factor/setup/")
+@check_view_permissions("hospital_staff")
 def hospital_patient_details(request,pID):
     patient_details = Patient.objects.get(patientID = pID)
     appointments=Appointment.objects.all().filter(patientID=pID)
@@ -447,6 +485,13 @@ def hospital_patient_details(request,pID):
         }
         test.append(mydict)
     return render(request, 'hospital_staff/hospital_view_patient_details.html', {'patient_details': patient_details, 'appointment_details': appt, 'test_details': test})
+
+@login_required
+@otp_required(login_url="account/two_factor/setup/")
+@check_view_permissions("patient")
+def hospital_view_one_lab_report(request,testID):
+    lab_test_details=models.Test.objects.all().filter(testID=testID)
+    return Render.render('hospital_staff/hospital_view_single_lab_report.html',{'lab_test_details':lab_test_details})
 
 '''---------------Hospital end-------------'''
 
@@ -555,9 +600,7 @@ def view_lab_report(request,patientID):
 @check_view_permissions("patient")
 def view_one_lab_report(request,testID):
     lab_test_details=models.Test.objects.all().filter(testID=testID)
-    return render(request,'Patient/labtest/patient_view_lab_report.html',{'lab_test_details':lab_test_details})
-
-
+    return Render.render('Patient/labtest/patient_view_single_lab_report.html',{'lab_test_details':lab_test_details})
 
 # Chatbot Views
 @login_required
@@ -704,6 +747,7 @@ def doctor_view_patientlist(request):
         if i.diagnosisID is None:
                 print('I am in if')
                 mydict = {
+                'appointmentID' : i.appointmentID,
                 'name': p.name,
                 'age': p.age,
                 'gender': p.gender,
@@ -711,9 +755,9 @@ def doctor_view_patientlist(request):
                 'doctorID': i.doctorID,
                 'height': p.height,
                 'weight': p.weight,
-                'diagnosis': '-',
-                'test_recommendation': '-',
-                'prescription': '-'
+                'diagnosis': 'null',
+                'test_recommendation': 'null',
+                'prescription': 'null'
                 }
         else:
                 print('I am in else')
@@ -724,6 +768,7 @@ def doctor_view_patientlist(request):
                     # print(d)
                     # print(d.diagnosis)
                     mydict = {
+                    'appointmentID' : i.appointmentID,
                     'name': p.name,
                     'age': p.age,
                     'gender': p.gender,
@@ -747,31 +792,6 @@ def doctor_appointmentID_search_view(request):
     # patients=models.Patient.objects.all().filter(doctorId=request.user.id).filter(Q(patientID__icontains=query)|Q(name__icontains=query))
     appointments=models.Appointment.objects.all().filter(doctorId=request.user.id).filter(Q(patientID__icontains=query)|Q(appointmentID__icontains=query)|Q(date__icontains=query))
     return render(request,'Doctor/doctor_view_appointment_view.html',{'appointments':appointments})
-
-@login_required
-@otp_required(login_url="account/two_factor/setup/")
-@check_view_permissions("doctor")
-def doctor_createpatientdiagnosis_view(request):
-    diagnosis=models.Diagnosis.objects.all().get(doctorID=request.user.username)
-    l=[]
-    for i in diagnosis:
-        mydict = {
-        'appointmentID': i.appointmentID,
-        'patientID': i.patientID,
-        'doctorID': i.doctorID,
-		'diagnosisID': i.diagnosisID,
-		'diagnosis': i.diagnosis,
-        'test_recommendation': i.test_recommendation,
-        'prescription': i.prescription
-        }
-        l.append(mydict)
-    if request.method=='POST':
-        form=createDiagnosisForm(request.POST)
-        if form.is_valid():
-            return HttpResponseRedirect('/record modified/')
-        else:
-            form=createDiagnosisForm()
-    return render(request, 'Doctor/doctor_createpatientdiagnosis_view.html', {'form': form, 'diagnosis': l})
 
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
@@ -862,27 +882,40 @@ def doctor_recommend_labtest_view(request, ID):
 def doctor_patient_diagnosis_view(request):
     return render(request, 'Doctor/doctor_patient_diagnosis.html', {'diagnosis': l}) 
 
-# @login_required
+@login_required
 @otp_required(login_url="account/two_factor/setup/")
-# @check_view_permissions("doctor")
-# def patient_diagnosis_details(request, patientID):
-#     patient_diagnosis_details = models.Diagnosis.objects.all().filter(patientID=patientID)
-#     return render(request,'Doctor/doctor_patient_diagnosis.html',{'patient_diagnosis_details':patient_diagnosis_details})
-
+@check_view_permissions("doctor")
 def doctor_createpatientdiagnosis_view(request, ID):
-    d=models.Diagnosis.objects.get(patientID=ID)
+    d=models.Diagnosis.objects.filter(appointmentID=ID)
+    # print('asdfghj', d)
+    a=Appointment.objects.get(appointmentID=ID)
+    p=Patient.objects.get(patientID=a.patientID.patientID)
     EditDiagnosisForm=forms.EditDiagnosisForm(request.POST)
     
-    if request.method=='POST':
-        d.diagnosis=EditDiagnosisForm.data['diagnosis']
-        d.save() 
+    if request.method=='POST': 
         if  EditDiagnosisForm.is_valid():
             print("EditDiagnosisForm is valid")
-            d.save()
-            # d.save(force_update=True)
+            if not d:
+                print('asdfghjk')
+                diag = Diagnosis()
+                diag.diagnosis = EditDiagnosisForm.data['diagnosis']
+                diag.doctorID = models.Doctor.objects.get(doctorID=request.user.username)
+                diag.patientID  = models.Patient.objects.get(patientID=p.patientID)
+                diag.appointmentID= models.Appointment.objects.get(appointmentID=ID)
+                a.diagnosisID = diag
+                diag.save()
+                a.save()
+                return redirect('doctor_view_patientlist')
+            else:
+                # print(di)
+                di=models.Diagnosis.objects.get(appointmentID=ID)
+                print(di)
+                di.diagnosis=EditDiagnosisForm.data['diagnosis']
+                di.save()
+                return redirect('doctor_view_patientlist')
 
-        d=Diagnosis.objects.get(patientID=ID)   
-        return redirect('doctor_view_patientlist')
+        # d=Diagnosis.objects.get(patientID=ID)   
+        # return redirect('doctor_view_patientlist')
 
     mydict={'EditDiagnosisForm':EditDiagnosisForm}
     return render(request, 'Doctor/doctor_createpatientdiagnosis_view.html', context=mydict)     
