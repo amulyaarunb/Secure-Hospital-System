@@ -11,10 +11,10 @@ class Doctor(models.Model):
 class Patient(models.Model):
     patientID = models.CharField(max_length=128, primary_key=True)
     name = models.CharField(max_length=128)
-    age = models.IntegerField()
-    gender = models.CharField(max_length=128)
-    height = models.DecimalField(decimal_places=2, max_digits=6)
-    weight = models.DecimalField(decimal_places=2, max_digits=6)
+    age = models.IntegerField(null=True)
+    gender = models.CharField(max_length=128,null=True)
+    height = models.DecimalField(decimal_places=2, max_digits=6, null=True)
+    weight = models.DecimalField(decimal_places=2, max_digits=6, null=True)
     insuranceID = models.IntegerField(blank=True, null=True)
 
 

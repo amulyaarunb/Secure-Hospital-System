@@ -11,7 +11,7 @@ from app.decorators import check_view_permissions
 from . import forms, models
 from .BotMain import chatgui  # Botmain is chatbot directory
 from django_otp.decorators import otp_required
-
+from django.db.models import Q
 
 @login_required(redirect_field_name="two_factor")
 def index(request):
@@ -46,6 +46,9 @@ class Register(RegistrationView):
         new_user = form.save()
         patient_group = Group.objects.get(name='patient')
         patient_group.user_set.add(new_user)
+        obj = Patient()
+        obj.patientID = new_user.username
+        obj.save()
 
 
 @login_required
