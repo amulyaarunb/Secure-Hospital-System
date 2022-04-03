@@ -409,7 +409,6 @@ def hospital_patient_details(request,pID):
     test_details = Test.objects.all().filter(patientID = pID)
     test =[]
     for i in test_details:
-        doctor = Doctor.objects.get(doctorID = i.doctorID.doctorID)
         mydict = {
         'testID':i.testID,
         'date': i.date,
