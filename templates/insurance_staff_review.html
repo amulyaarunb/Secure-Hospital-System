@@ -35,12 +35,16 @@
             <p>Insurance ID: {{ c.insuranceID}}</p>
             <p>Amount: {{ c.amount}}</p>
             <a href="{% url 'insurance_staff_auth' c.requestID %}" style="color: black;font-size: 10px;text-decoration: none;padding: 10px;border-style: solid;background-color: gray;">Authorize</a>
-
-
         </li>
         {% endfor %}
-
     </div>
+
+    <div>
+        {% if not disbursal %}
+        <h1>There are no more approved claims to authorize</h1>
+        {% endif%}
+    </div>
+
 
 </body>
 

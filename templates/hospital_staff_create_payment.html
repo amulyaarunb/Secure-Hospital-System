@@ -42,8 +42,11 @@
             <a href="{% url 'hospital_complete_appointment' app.appointmentID %}" style="color: black;font-size: 10px;text-decoration: none;padding: 10px;border-style: solid;background-color: gray;">Complete Payment</a>
         </li>
         {% endfor %}
-
     </div>
+
+    {% if not appointments %}
+    <h1>There are no pending appointments</h1>
+    {% endif%}
 
 </body>
 

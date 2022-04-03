@@ -11,10 +11,10 @@ class Doctor(models.Model):
 class Patient(models.Model):
     patientID = models.CharField(max_length=128, primary_key=True)
     name = models.CharField(max_length=128)
-    age = models.IntegerField()
-    gender = models.CharField(max_length=128)
-    height = models.DecimalField(decimal_places=2, max_digits=6)
-    weight = models.DecimalField(decimal_places=2, max_digits=6)
+    age = models.IntegerField(null=True)
+    gender = models.CharField(max_length=128,null=True)
+    height = models.DecimalField(decimal_places=2, max_digits=6, null=True)
+    weight = models.DecimalField(decimal_places=2, max_digits=6, null=True)
     insuranceID = models.IntegerField(blank=True, null=True)
 
 
@@ -23,7 +23,7 @@ class Appointment(models.Model):
     date = models.DateField()
     time = models.TimeField()
     type = models.CharField(max_length=255)
-    patientID = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    patientID = models.ForeignKey(Patient, on_delete=models.CASCADE, blank=True, null=True)
     doctorID = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     status = models.CharField(max_length=255)
     diagnosisID = models.ForeignKey(
@@ -69,7 +69,7 @@ class Test(models.Model):
     date = models.DateField()
     time = models.TimeField()
     type = models.CharField(max_length=255)
-    patientID = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    patientID = models.ForeignKey(Patient, blank=True, null=True, on_delete=models.CASCADE)
     status = models.CharField(max_length=255, blank=True, null=True)
     result = models.CharField(max_length=255, blank=True, null=True)
     diagnosisID = models.ForeignKey(Diagnosis,blank=True, null = True, on_delete=models.CASCADE)

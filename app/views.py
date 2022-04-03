@@ -13,7 +13,6 @@ from .BotMain import chatgui  # Botmain is chatbot directory
 from django_otp.decorators import otp_required
 from django.db.models import Q
 
-
 @login_required(redirect_field_name="two_factor")
 def index(request):
     print(request.user.groups)
@@ -26,7 +25,8 @@ def index(request):
         # return render(request, "home.html")
     if request.user.groups.filter(name='hospital_staff').exists():
             # return patient stuff
-        return render(request, "hospital_staff_home.html")
+        return redirect('/hospital_staff_appointments')
+        # return render(request, "/hospital_staff_home.html")
     if request.user.groups.filter(name='lab_staff').exists():
             # return patient stuff
         return redirect('/lab_staff')
@@ -46,6 +46,9 @@ class Register(RegistrationView):
         new_user = form.save()
         patient_group = Group.objects.get(name='patient')
         patient_group.user_set.add(new_user)
+        obj = Patient()
+        obj.patientID = new_user.username
+        obj.save()
 
 
 @login_required
@@ -452,9 +455,7 @@ def update_patient_record(request,patientID):
         # print(patientForm.errors)
         # patientForm['patientID'] 
         if  patientForm.is_valid():
-            print("patientForm is valid")
-            patient=patientForm.save(commit=True)
-            patient.save(force_update=True)
+            pass
 
         patient=Patient.objects.get(patientID=patientID)   
         # return redirect("{% url 'patient_details' patient.patientID %}")
@@ -474,29 +475,27 @@ def patient_labtest_view(request,patientID):
 @check_view_permissions("patient")
 def request_test(request,patientID):
     testform=forms.RequestLabTestForm(request.POST)
-    #print(testform.data)
-    appt=models.Appointment.objects.get(patientID=patientID)
-
+    print(testform.data)
+    #appt=models.Appointment.objects.get(patientID=patientID)
+    # diag=models.Diagnosis.objects.get(diagnosisID=testform.data['diagnosisID'])
 
     test=Test()
     if request.method=='POST':
         test.date=testform.data['date']
         test.time=testform.data['time']
         test.type=testform.data['type']
-        test.diagnosisID=appt.diagnosisID
-        # test.diagnosisID=testform.data['diagnosisID']
-        test.diagnosisID=appt.diagnosisID
-        test.patientID=appt.patientID
+        #test.diagnosisID=appt.diagnosisID
+        test.diagnosisID=models.Diagnosis.objects.get(diagnosisID=testform.data['diagnosisID'])
+        #test.diagnosisID=appt.diagnosisID
+        test.patientID=models.Patient.objects.get(patientID=patientID)
         test.status='requested'
         test.save()
         # Test.save(self)        
         if  testform.is_valid():
-            test=testform.save(commit=False)
-            test.status='requested'
-            test.save()
-        return redirect('patient_labtest',patientID)
+            pass
+        return redirect('patient_view_lab_report',patientID)
     mydict={"testform":testform}
-    return render(request,'Patient/labtest/request_labtest.html', {"patient":patient})
+    return render(request,'Patient/labtest/request_labtest.html', {"patient":patient ,"testform":testform})
 
 @login_required
 @check_view_permissions("patient")
@@ -538,27 +537,27 @@ def patient_previous_appointment_view(request,patientID):
 @login_required
 @check_view_permissions("patient")
 def patient_book_appointment_view(request,patientID):
-    appointmentForm=forms.PatientAppointmentForm() 
+    appointmentForm=forms.PatientAppointmentForm(request.POST) 
     print(appointmentForm.data)
     if request.method=='POST':
-        Appointment.date=appointmentForm.data['date']
-        Appointment.time=appointmentForm.data['time']
+        Appt=Appointment()
+        Appt.date=appointmentForm.data['date']
+        Appt.time=appointmentForm.data['time']
         # Appointment.type=appointmentForm.data['type']
-        Appointment.doctorID=appointmentForm.data['doctorID']
-        Appointment.patientID=patientID
-        Appointment.status='requested'
-        Appointment.save()
+        Appt.doctorID=models.Doctor.objects.get(doctorID=appointmentForm.data['doctorID'])
+        Appt.patientID=models.Patient.objects.get(patientID=patientID)
+        Appt.status='requested'
+        Appt.save()
         if appointmentForm.is_valid():
-            appointment=appointmentForm.save(commit=False)
-            appointment.status='initiated'
-            appointment.save()
+            pass
         return redirect('patient-view-appointment',patientID)
-    return render(request, 'Patient/Appointment/book-appointment.html',{"user": request.user})
+    return render(request, 'Patient/Appointment/book-appointment.html',{"user": request.user, "appointmentForm":appointmentForm})
 
 
 # Payment and Transaction views
 @login_required
 @check_view_permissions("patient")
+@otp_required
 def make_payment(request, paymentID):
     patient_payments = models.Payment.objects.get(paymentID=paymentID)
     patientID=patient_payments.patientID
@@ -569,15 +568,21 @@ def make_payment(request, paymentID):
         patient_payments.method=payform.data['method']
         #print(payform.data['method'])
         if patient_payments.method=='Insurance':
-            patient_payments.status='initiated'
+            patient_payments.status='pending'
+            patient_payments.save()
+            insurance=Insurance()
+            insurance.paymentID=patient_payments
+            insurance.patientID=patient_payments.patientID
+            insurance.status='initiated'
+            insurance.save()
+            
         else:
             patient_payments.status='completed'
+            patient_payments.save()
 
-        patient_payments.save()
+        
         if  payform.is_valid():
-            pay=payform.save(commit=False)
-            pay.status='initiated'
-            pay.save()
+            pass
         #print(patient_payments.amount)
         return redirect("patient_payments", patientID.patientID)
 
@@ -595,7 +600,6 @@ def patient_payments_details(request,patientID):
 # ---------------------------------------------------------------------------------
 
 
-# -------------------------Doctor View---------------------------------------------
 
 @login_required
 @check_view_permissions("doctor")
@@ -723,6 +727,12 @@ def doctor_search_view(request):
     else:
         return render(request, 'Doctor/doctor_search.html', {})
 
+    #     def hospital_search(request):
+    # # whatever user write in search box we get in query
+    # query = request.GET.get('search',False)
+    # a=Appointment.objects.filter(appointmentID__contains = query)
+    # return render(request,'Doctor/doctor_search.html',{'a':a})
+
 @login_required
 @check_view_permissions("doctor")
 def doctor_view_labreport_view(request):
@@ -822,3 +832,36 @@ def doctor_update_patients(request, ID):
 
     mydict={'patientForm':patientForm}
     return render(request,'Doctor/doctor_update_patient.html', context=mydict)
+
+@login_required
+@check_view_permissions("doctor")
+def doctor_delete_diagnosis(request, ID):
+    models.Diagnosis.objects.filter(patientID=ID).update(diagnosis='Null')
+    return redirect('doctor_view_patientlist')
+
+@login_required
+@check_view_permissions("doctor")
+def doctor_search_appointment(request, ID):
+    # patient_details = Patient.objects.get(patientID = pID)
+    appointments=models.Appointment.objects.all().filter(doctorID=request.user.username)
+    l=[]
+    for i in appointments:
+        patient = Patient.objects.get(patientID = i.patientID.patientID)
+        doctor = Doctor.objects.get(doctorID = i.doctorID.doctorID)
+        mydict = {
+        # 'appointmentID': i.appointmentID,
+        'date': i.date,
+        'time': i.time,
+        'type': i.type,
+        'patientID': i.patientID,
+        'doctorID': i.doctorID,
+        'patientName':patient.name,
+        'doctorName':doctor.name,
+        'status': i.status,
+		'diagnosisID': i.diagnosisID,
+		'testID': i.testID,
+		'paymentID':i.paymentID,
+		'created_on': i.created_on
+        }
+        l.append(mydict)
+    return render(request,'Doctor/doctor_search_appointment.html',{'l':l})

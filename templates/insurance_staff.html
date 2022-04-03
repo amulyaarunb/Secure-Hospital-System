@@ -40,8 +40,11 @@
 
         </li>
         {% endfor %}
-
     </div>
+
+    {% if not claims %}
+    <h1>There are no more claims to review</h1>
+    {% endif%}
 
 </body>
 
