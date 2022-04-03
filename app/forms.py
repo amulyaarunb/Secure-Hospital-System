@@ -52,3 +52,8 @@ class CreatePrescription(forms.ModelForm):
         model=models.Diagnosis
         fields=['prescription']
 
+class DoctorAppointmentForm(forms.ModelForm):
+    class Meta:
+        model=models.Appointment
+        fields=['date','time']
+

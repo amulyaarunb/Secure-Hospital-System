@@ -600,6 +600,8 @@ def patient_payments_details(request,patientID):
 # ---------------------------------------------------------------------------------
 
 
+#----------------------------------------doctor-------------------
+
 
 @login_required
 @check_view_permissions("doctor")
@@ -632,12 +634,6 @@ def doctor_view_appointment_view(request):
         l.append(mydict)
     return render(request,'Doctor/doctor_view_appointment_view.html', {'appointments':l})
 
-@login_required
-@check_view_permissions("doctor")
-def doctor_book_appointment(request,patinetID):
-    patient_details=models.Patient.objects.all().get(patientID=patientID)
-    return render(request, "Doctor/doctor_book_appointment.html", {"profile": patient_details})
-    
 # patient records button views start here
 @login_required
 @check_view_permissions("doctor")
@@ -645,21 +641,44 @@ def doctor_view_patientlist(request):
     appointments=models.Appointment.objects.all().filter(doctorID=request.user.username)
     # patients=models.Patient.objects.all().filter(patientID=appointments.patientID)
     l=[]
-    for p in appointments:
-        i=models.Patient.objects.get(patientID=p.patientID.patientID)
-        d = Diagnosis.objects.get(patientID=p.patientID.patientID)
-        mydict = {
-        'name': i.name,
-        'age': i.age,
-        'gender': i.gender,
-        'patientID': i.patientID,
-        'doctorID': p.doctorID,
-        'height': i.height,
-		'weight': i.weight,
-        'diagnosis': d.diagnosis,
-        'test_recommendation': d.test_recommendation,
-        'prescription': d.prescription
-        }
+    for i in appointments:
+        p=models.Patient.objects.get(patientID=i.patientID.patientID)
+        print(i.diagnosisID)
+       
+        if i.diagnosisID is None:
+                print('I am in if')
+                mydict = {
+                'name': p.name,
+                'age': p.age,
+                'gender': p.gender,
+                'patientID': p.patientID,
+                'doctorID': i.doctorID,
+                'height': p.height,
+                'weight': p.weight,
+                'diagnosis': '-',
+                'test_recommendation': '-',
+                'prescription': '-'
+                }
+        else:
+                print('I am in else')
+                d = Diagnosis.objects.all().filter(patientID=i.patientID.patientID)
+                print(d)
+                for a in d:
+                    print(i.patientID.patientID)
+                    # print(d)
+                    # print(d.diagnosis)
+                    mydict = {
+                    'name': p.name,
+                    'age': p.age,
+                    'gender': p.gender,
+                    'patientID': p.patientID,
+                    'doctorID': i.doctorID,
+                    'height': p.height,
+                    'weight': p.weight,
+                    'diagnosis': a.diagnosis,
+                    'test_recommendation': a.test_recommendation,
+                    'prescription': a.prescription
+                }
         l.append(mydict)
     return render(request, 'Doctor/doctor_view_patientlist.html',{'patients':l})
 
@@ -865,3 +884,23 @@ def doctor_search_appointment(request, ID):
         }
         l.append(mydict)
     return render(request,'Doctor/doctor_search_appointment.html',{'l':l})
+
+
+@login_required
+@check_view_permissions("doctor")
+def doctor_book_appointment(request):
+    appointmentForm=forms.DoctorAppointmentForm() 
+    print(appointmentForm.data)
+    if request.method=='POST':
+        a=Appointment()
+        a.date=appointmentForm.data['date']
+        a.time=appointmentForm.data['time']
+        a.doctorID=request.user.username
+        # a.patientID=appointmentForm.data['patientID']
+        a.status='initiated'
+        a.save()
+        if appointmentForm.is_valid():
+            a.status='approved'
+            a.save()
+        return redirect('doctor_appointment')
+    return render(request, 'Doctor/doctor_book_appointment.html', {'appointmentForm': appointmentForm} )
