@@ -3,11 +3,12 @@
 {% block content %}
     <center>
         {% if searched %}
-            <h2>Here are the details on - {{ searched }}</h2>
+            <h2>Appointment ID - {{ searched }}</h2>
             <br>
-            {% for patients in Patient %}
-                <a href="#">{{ patient }}</a> 
+            {% for i in a %}
+                <a href="#">{{ i }}</a> 
                 <!-- add patients url here {% url 'patientpage' %} -->
+                {% url 'doctor_search_appointment' %}
             {% endfor %}
             <br>
         {% else %}
