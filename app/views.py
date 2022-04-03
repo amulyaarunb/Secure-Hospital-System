@@ -585,16 +585,6 @@ def view_one_lab_report(request,testID):
     lab_test_details=models.Test.objects.all().filter(testID=testID)
     return Render.render('Patient/labtest/patient_view_single_lab_report.html',{'lab_test_details':lab_test_details})
 
-# def getpdfreport(self, request):
-#         sales = Sales.objects.all()
-#         today = timezone.now()
-#         params = {
-#             'today': today,
-#             'sales': sales,
-#             'request': request
-#         }
-#         return Render.render('pdf.html', params)
-
 # Chatbot Views
 @login_required
 @otp_required(login_url="account/two_factor/setup/")

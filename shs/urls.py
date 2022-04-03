@@ -67,12 +67,10 @@ urlpatterns = [
     path("patient_labtest/patient_view_lab_report/<str:patientID>",views.view_lab_report, name="patient_view_lab_report"),
     path("patient_view_single_lab_report/<str:testID>",views.view_one_lab_report, name="patient_view_single_lab_report"),
    
-    
     path("patient_payments/<str:patientID>",views.patient_payments_details, name="patient_payments"),
     path("patient_make_payment/<str:paymentID>",views.make_payment, name="patient_make_payment"),
 
 
-   
       # Doctor URLs
     path('doctor/', views.doctor, name='doctor'),
     path('doctor_view_appointment_view/',

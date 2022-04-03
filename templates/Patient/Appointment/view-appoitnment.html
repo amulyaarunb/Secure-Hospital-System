@@ -8,30 +8,17 @@
         <thead>
             <tr class="black-table-row">
             <th>appointmentID</th>
-            <th>type</th>
             <th>date</th>
             <th>time</th>
-            <th>patientID</th>
             <th>status</th>
-            <th>diagnosisID</th>
-            <th>paymentID</th>
             </tr>
         </thead>
         {% for a in patient_prev_appointments %}
         <tr class="color_font">
             <td> {{a.appointmentID}}</td>
-            <td>{{a.type}}</td>
             <td>{{a.date}}</td>
             <td>{{a.time}}</td>
-            <td> {{a.patientID.patientID}}</td>
             <td>{{a.status}}</td>
-            <td>{{a.diagnosisID}}</td>
-            <td>{{a.paymentID}}</td>
-            <!-- {%if a.status%}
-            <td> <span class="label label-primary">Confirmed</span></td>
-            {% else %}
-            <td> <span class="label label-success">Pending</span></td>
-            {% endif %} -->
         </tr>
         {% endfor %}
         </table>
