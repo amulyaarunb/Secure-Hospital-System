@@ -72,7 +72,7 @@ def viewDiagnosis(request):
             'testID' : i.testID
         }
         arr.append(dict)
-    return render(request, "lab_staff.html",{'requests' : arr})
+    return render(request, "lab_staff/lab_staff.html",{'requests' : arr})
 
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
@@ -119,7 +119,7 @@ def lab_search(request):
     # whatever user write in search box we get in query
     query = request.GET.get('search',False)
     patients=Patient.objects.all().filter(Q(patientID__icontains=query)|Q(name__icontains=query))
-    return render(request,'lab_staff_search.html',{'patients':patients})
+    return render(request,'lab_staff/lab_staff_search.html',{'patients':patients})
 
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
@@ -137,7 +137,7 @@ def diagDetails(request,pk):
         }
     arr.append(dict)
     print(arr)
-    return render(request, 'lab_diag_details.html',{'diag':arr})
+    return render(request, 'lab_staff/lab_diag_details.html',{'diag':arr})
     
     
 '''Lab Staff View Ends Here'''
@@ -189,7 +189,7 @@ def claimDisb(request):
             }
         if(obj2.status!='completed'): arr.append(dict)
 
-    return render(request,'insurance_staff_review.html',{'disbursal':arr})
+    return render(request,'insurance_staff/insurance_staff_review.html',{'disbursal':arr})
 
 
 @login_required
@@ -209,7 +209,7 @@ def viewClaim(request):
         }
         arr.append(dict)
 
-    return render(request,'insurance_staff.html',{'claims':arr})
+    return render(request,'insurance_staff/insurance_staff.html',{'claims':arr})
 
     
 '''Insurance Staff View ends here'''
