@@ -1,18 +1,21 @@
-from typing_extensions import Self
-from django.contrib.auth.models import Group
-from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
+from django.db.models import Q
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import redirect, render
+from django_otp.decorators import otp_required
 from django_registration.backends.one_step.views import RegistrationView
 from django_registration.forms import RegistrationForm
-from django.contrib.auth.models import Group
-from django.http import HttpResponse, HttpResponseRedirect
-from . models import Diagnosis, Test, Insurance, Payment, Appointment, Patient, Doctor
+
 from app.decorators import check_view_permissions
+
 from . import forms, models
 from .BotMain import chatgui  # Botmain is chatbot directory
 from django_otp.decorators import otp_required
 from django.db.models import Q
 from .render import Render
+from .models import (Appointment, Diagnosis, Doctor, Insurance, Patient,
+                     Payment, Test)
 
 
 @otp_required(login_url="account/two_factor/setup/")
@@ -769,7 +772,7 @@ def doctor_create_prescription_view(request, ID):
             # d=CreatePrescription.save(commit=True)
             d.save()
 
-        d=Diagnosis.objects.get(patientID=patientID)   
+        d=Diagnosis.objects.get(patientID=ID)   
         return redirect('doctor_view_patientlist')
 
     mydict={'CreatePrescription':CreatePrescription}
@@ -800,7 +803,7 @@ def doctor_view_labreport_view(request):
     appointments=models.Appointment.objects.all().filter(doctorID=request.user.username)
     l=[]
     for i in appointments:
-        j=models.Test.objects.get(patientID=i.patientID.patientID)
+        j=models.Test.objects.all().filter(patientID=i.patientID.patientID)
         mydict = {
         'testID': j.testID,
         'date': j.date,

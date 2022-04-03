@@ -14,44 +14,47 @@
 <li>
   <a href="{% url 'patient_details' user.username %}">Patient Details</a>
 </li>
-{% endblock navigation %} {% block content %}
+{% endblock navigation %} 
+{% block content %}
+{% endblock content %}
+{% block chatbot %}
 
 <button class="open-button" onclick="openForm()">Chat</button>
 
 <div class="chat-popup" id="myForm">
   <form action="/patient" class="form-container">
     <h1>Chat</h1>
-
+    
     <label for="msg"><b>Message</b></label>
     <div id="userInput">
       <textarea
-        id="textInput"
-        placeholder="Type your message"
-        name="msg"
-        rows="10"
-        cols="50"
-        required
+      id="textInput"
+      placeholder="Type your message"
+      name="msg"
+      rows="10"
+      cols="50"
+      required
       ></textarea>
       <p id="textoutput" name="textoutput"></p>
-
+      
       <button type="submit" onclick="getResponse()" class="btn">Send</button>
       <button
-        type="button"
-        id="buttonInput"
-        class="btn cancel"
-        onclick="closeForm()"
+      type="button"
+      id="buttonInput"
+      class="btn cancel"
+      onclick="closeForm()"
       >
-        Close
-      </button>
-    </div>
-  </form>
+      Close
+    </button>
+  </div>
+</form>
 </div>
 
 <script>
   function openForm() {
     document.getElementById('myForm').style.display = 'block';
   }
-
+  
   function closeForm() {
     document.getElementById('myForm').style.display = 'none';
   }
@@ -63,8 +66,8 @@
     // let userHtml = '<p class="userText"><span>' + userText + '</span></p>';
     // $("#textoutput").append();
     document
-      .getElementById('userInput')
-      .scrollIntoView({ block: 'start', behavior: 'smooth' });
+    .getElementById('userInput')
+    .scrollIntoView({ block: 'start', behavior: 'smooth' });
     $.get('/bot', { msg: userText }).done(function (data) {
       // var botHtml = '<p class="botText"><span>' + data + '</span></p>';
       console.log(data);
@@ -75,9 +78,9 @@
         var temp = data.substring(12);
         var temp2 = data.substring(35);
         var finalurl = temp + '/' + user;
-
+        
         var botHtml =
-          '<p>Go to:<a href="' + finalurl + '">' + temp2 + '</a></p>';
+        '<p>Go to:<a href="' + finalurl + '">' + temp2 + '</a></p>';
         document.getElementById('textoutput').innerHTML = botHtml;
         $('#textoutput').innerHtml = botHtml;
       } else {
@@ -89,8 +92,8 @@
       // $('#txtarea').append(document.createTextNode($(this).val()));
       // $("#textoutput")
       document
-        .getElementById('userInput')
-        .scrollIntoView({ block: 'start', behavior: 'smooth' });
+      .getElementById('userInput')
+      .scrollIntoView({ block: 'start', behavior: 'smooth' });
     });
     $('#textInput').val('');
   }
@@ -104,5 +107,6 @@
     getResponse();
   });
 </script>
+{% endblock chatbot %}
 
-{% endblock content %}
+
