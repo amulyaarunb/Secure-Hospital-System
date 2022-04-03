@@ -46,7 +46,7 @@
             <th>Result</th>
             <th>Diagnosis ID</th>
             <th>Payment ID</th>
-            <th>Recommendation</th>
+            <!-- <th>Recommendation</th> -->
           </tr>
           {% for i in labtestreport %}
           <tr>
@@ -59,7 +59,7 @@
             <th> {{ i.result }}</th>
             <th> {{ i.diagnosisID }}</th>
             <th> {{ i.paymentID }}</th>
-            <th>  <a href="/doctor_recommend_labtest"> <button><span style="color: grey">Recommend Lab Test</span></button></a></th>
+            <!-- <th>  <a href="/doctor_recommend_labtest_view"> <button><span style="color: grey">Recommend Lab Test</span></button></a></th> -->
           </tr> 
           {% endfor %}
     </table>

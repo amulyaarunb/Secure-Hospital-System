@@ -62,7 +62,7 @@ urlpatterns = [
     path('doctor/', views.doctor, name='doctor'),
     path('doctor_view_appointment_view/',
          views.doctor_view_appointment_view, name='doctor_appointment'),
-    # Doctor URLs
+      # Doctor URLs
     path('doctor/', views.doctor, name='doctor'),
     path('doctor_view_appointment_view/',
          views.doctor_view_appointment_view, name='doctor_appointment'),
@@ -84,7 +84,7 @@ urlpatterns = [
          views.doctor_recommend_labtest_view, name='doctor_recommend_labtest_view'),
     path('doctor_create_prescription/<str:ID>', views.doctor_create_prescription_view, 
           name='doctor_create_prescription'),
-
+    path('doctor_update_patients/<str:ID>', views.doctor_update_patients, name='doctor_update_patients'),
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
