@@ -23,7 +23,7 @@ class Appointment(models.Model):
     date = models.DateField()
     time = models.TimeField()
     type = models.CharField(max_length=255)
-    patientID = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    patientID = models.ForeignKey(Patient, on_delete=models.CASCADE, blank=True, null=True)
     doctorID = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     status = models.CharField(max_length=255)
     diagnosisID = models.ForeignKey(
