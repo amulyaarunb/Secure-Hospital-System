@@ -53,6 +53,11 @@
          "patterns": ["view prescriptions","show prescriptions"],
          "responses": ["Navigate to:https://harshavamsi.com/patient_prescription"],
          "context": [""]
+        },
+        {"tag": "payments and transactions",
+                "patterns": ["view payments","show payments","view transactions", "make a payment", "show my transactions"],
+                "responses": ["Navigate to:https://harshavamsi.com/patient_payments"],
+                "context": [""]
         }
    ]
 }
