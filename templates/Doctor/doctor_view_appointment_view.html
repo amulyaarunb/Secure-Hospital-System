@@ -28,7 +28,7 @@
             <th> {{ i.status }}</th>
             <th> {{ i.testID.testID }}</th>
             <th> {{ i.paymentID }}</th>
-            <th> <a href="{% url 'doctor_book_appointment' i.patientID.patientID %}"> <button style="font-size:18px;color:red"><i class="fa fa-plus" ></i></button></a> </th>
+            <th> <a href="{% url 'doctor_book_appointment' i.appointmentID %}"> <button style="font-size:18px;color:red"><i class="fa fa-plus" ></i></button></a> </th>
           </tr> 
           {% endfor %}
     </table>
