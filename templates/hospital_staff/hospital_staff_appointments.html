@@ -8,6 +8,11 @@
 <li>
     <a href="{% url 'hospital_search_patients' %} "> View Patient Records</a>
 </li>
+<li>
+    <a href="{% url 'hospital_generate_bill' %} ">
+        Generate Bill</a
+    >
+</li>
 {% endblock %} {% block content%}
 <div id="Appointments">
     {% for app in appointments %}
@@ -22,8 +27,8 @@
     >
     <a
       href="{% url 'hospital_appointment_reject' app.appointmentID %}">Reject</a>
-    </li>
-    {% endfor %}
+</li>
+{% endfor %}
 </div>
 
 {% if not appointments %}

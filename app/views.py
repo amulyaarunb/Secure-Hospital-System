@@ -534,9 +534,44 @@ def hospital_patient_details(request,pID):
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("hospital_staff")
-def hospital_view_lab_report(request,testID):
-    lab_test_details=models.Test.objects.all().filter(testID=testID)
-    return Render.render('hospital_staff/hospital_view_lab_report.html',{'lab_test_details':lab_test_details})
+def hospital_view_lab_report(request, testID):
+    lab_test_details = models.Test.objects.all().filter(testID=testID)
+    return Render.render('hospital_staff/hospital_view_lab_report.html', {'lab_test_details': lab_test_details})
+
+
+@login_required
+@otp_required(login_url="account/two_factor/setup/")
+@check_view_permissions("hospital_staff")
+def hospital_create_bills(request):
+    payment_details=Payment.objects.all().filter(status='completed')
+    return render(request,'hospital_staff/hospital_generate_bill.html',{'payment_details':payment_details})
+
+@login_required
+@otp_required(login_url="account/two_factor/setup/")
+@check_view_permissions("hospital_staff")
+def hospital_bill(request,ID):
+    payment_details = Payment.objects.get(paymentID = ID)
+    if payment_details.appointmentID is None:
+        test = Test.objects.get(testID = payment_details.testID.testID)
+        patient= Patient.objects.get(patientID = test.patientID.patientID)
+        bill = {
+            'method' : payment_details.method,
+            'amount' : payment_details.amount,
+        'testType' : test.type,
+        'patientName' : patient.name,
+        'paymentID' : payment_details.paymentID}
+        return Render.render('hospital_staff/hospital_bill_test.html',{'bill':bill})
+    if payment_details.testID is None:
+        appointment = Appointment.objects.get(appointmentID = payment_details.appointmentID.appointmentID)
+        patient= Patient.objects.get(patientID = appointment.patientID.patientID)
+        doctor = Doctor.objects.get(doctorID = appointment.doctorID.doctorID )
+        bill = {
+            'method' : payment_details.method,
+            'amount' : payment_details.amount,
+        'doctorName' : doctor.name,
+        'patientName' : patient.name,
+        'paymentID' : payment_details.paymentID}
+        return Render.render('hospital_staff/hospital_bill_appointment.html',{'bill':bill})
 
 '''---------------Hospital end-------------'''
 

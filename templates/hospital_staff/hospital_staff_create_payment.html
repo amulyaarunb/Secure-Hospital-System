@@ -8,6 +8,11 @@
 <li>
     <a href="{% url 'hospital_search_patients' %} ">View Patient Records</a>
 </li>
+<li>
+    <a href="{% url 'hospital_generate_bill' %} ">
+        Generate Bill</a
+    >
+</li>
 {% endblock %} {% block content%}
 <div id="Appointments">
     <h2>Appointments:</h2>
@@ -20,8 +25,8 @@
         <p>Doctor: {{ app.doctorName }}</p>
         <p>Status: {{ app.status }}</p>
         <a href="{% url 'hospital_complete_appointment' app.appointmentID %}">Complete Payment</a>
-    </li>
-    {% endfor %}
+</li>
+{% endfor %}
 </div>
 
 <div id="Tests">
