@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.db.models import Q
+from django.forms import modelformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django_otp.decorators import otp_required
@@ -672,13 +673,13 @@ def patient_labtest_view(request, patientID):
 def request_test(request, patientID):
     if not (request.user.username == patientID):
         raise PermissionDenied
-    testform = forms.RequestLabTestForm(request.POST)
-    print(testform.data)
+    # print(testform.data)
     # appt=models.Appointment.objects.get(patientID=patientID)
     # diag=models.Diagnosis.objects.get(diagnosisID=testform.data['diagnosisID'])
 
     test = Test()
     if request.method == 'POST':
+        testform = forms.RequestLabTestForm(request.POST)
         test.date = testform.data['date']
         test.time = testform.data['time']
         test.type = testform.data['type']
@@ -693,7 +694,8 @@ def request_test(request, patientID):
         if testform.is_valid():
             pass
         return redirect('patient_view_lab_report', patientID)
-    mydict = {"testform": testform}
+    else:
+        testform = forms.RequestLabTestForm(patientID = patientID)
     return render(request, 'Patient/labtest/request_labtest.html', {"patient": patient, "testform": testform})
 
 
@@ -781,10 +783,12 @@ def patient_book_appointment_view(request, patientID):
 def make_payment(request, paymentID):
     patient_payments = models.Payment.objects.get(paymentID=paymentID)
     patientID = patient_payments.patientID
-    if not (request.user.username == patientID):
+    if not (request.user.username == patientID.patientID):
         raise PermissionDenied
     print(patientID.patientID)
     payform = forms.MakePaymentForm(request.POST)
+    if patient_payments.status == 'completed':
+        return redirect('patient_payments', patientID.patientID)
     if request.method == 'POST':
         # print(payform.data)
         patient_payments.method = payform.data['method']

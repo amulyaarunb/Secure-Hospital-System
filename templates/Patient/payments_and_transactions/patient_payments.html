@@ -27,8 +27,11 @@
                 <td> {{a.patientID.patientID}}</td>
                 <td>{{a.testID.testID}}</td>
                 <td>{{a.appointmentID.appointmentID}}</td>
+                {% if a.status == 'pending' %}
                 <td > <a href="{% url 'patient_make_payment' a.paymentID %}"><i class="fas fa-wallet"></i> </a> </td>
-                
+                {% else %}
+                <td > Completed </td>
+                {% endif %}
             </tr>
             {% endfor %} 
         </table>
