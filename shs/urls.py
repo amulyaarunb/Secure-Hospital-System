@@ -60,8 +60,9 @@ urlpatterns = [
     path('hospital_appointment_reject/<str:ID>',views.hospital_appointment_reject,name='hospital_appointment_reject'),  
     path('hospital_patient_details/<str:pID>',views.hospital_patient_details,name= 'hospital_patient_details'),
     path('hospital_view_lab_report/<str:testID>',views.hospital_view_lab_report, name='hospital_view_lab_report'),
-#     path('hospital_test_transaction/<str:testID>',views.hospital_test_transaction, name='hospital_test_transaction'),
-
+    path('hospital_test_transaction/<str:testID>',views.hospital_test_transaction, name='hospital_test_transaction'),
+    path('hospital_generate_bill',views.hospital_create_bills, name ='hospital_generate_bill'),
+    path('hospital_bill/<str:ID>',views.hospital_bill, name = 'hospital_bill'),
     # Patient urls
     path("patient", views.patient, name='patient'),
     path('bot', views.get_bot_response),

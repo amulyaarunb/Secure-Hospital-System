@@ -26,13 +26,11 @@
   {% for p in payment_details %}
   <li>
         <p>Payment ID: {{ p.paymentID }}</p>
-        <p>Payment Method: {{ p.date }}</p>
-        <p>Payment Amount: {{ p.time }}</p>
-        <p>Payment Type: {{ p.type }}</p>
+        <p>Payment Method: {{ p.method }}</p>
+        <p>Payment Amount: {{ p.amount }}</p>
         <p>Payment Status: {{ p.status }}</p>
-        <p>Payment Result: {{ p.result }}</p>
-        <p>Created On: {{ p.result }}</p>
-        <a href="{% url 'hospital_bill' test.paymentID %}"><i class="fa fa-file-pdf-o">Generate Bill</i></a>
+        <p>Created On: {{ p.created_on }}</p>
+        <a href="{% url 'hospital_bill' p.paymentID %}"><i class="fa fa-file-pdf-o">Generate Bill</i></a>
 </li>
 {% endfor %}
 </div>
