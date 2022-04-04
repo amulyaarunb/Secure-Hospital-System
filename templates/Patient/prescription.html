@@ -8,19 +8,19 @@
             <table class="table table-hover" id="dev-table">
                 <thead>
                     <tr>
-                        <th>doctorID</th>
-                        <th>patientID</th>
+                        <th>doctor</th>
+                        {% comment %} <th>patientID</th> {% endcomment %}
                         <th>appointmentID</th>
-                        <th>test_recommendation</th>
+                        {% comment %} <th>test_recommendation</th> {% endcomment %}
                         <th>prescription</th>
                     </tr>
                 </thead>
                 {% for a in patient_prescription_details %}
                 <tr class="black-table-row">
                     <td>{{a.doctorID.doctorID}}</td>
-                    <td>{{a.patientID.patientID}}</td>
+                    {% comment %} <td>{{a.patientID.patientID}}</td> {% endcomment %}
                     <td> {{a.appointmentID.appointmentID}}</td>
-                    <td>{{a.test_recommendation}}</td>
+                    {% comment %} <td>{{a.test_recommendation}}</td> {% endcomment %}
                     <td>{{a.prescription}}</td>
                     
                 </tr>

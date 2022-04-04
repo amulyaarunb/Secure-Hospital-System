@@ -1,4 +1,5 @@
 {% extends 'Patient/patient.html' %}
+{% load appointment %}
 {% block content %}
 
     <br><br>
@@ -12,10 +13,10 @@
                         <th>testID</th>
                         <th>date</th>
                         <th>time</th>
+                        <th>appointmentID</th>
+                        <th>type</th>
                         <!-- <th>patientID</th> -->
                         <th>status</th>
-                        <!-- <th>diagnosisID</th>
-                        <th>paymentID</th> -->
                         <th>view report</th>
                     </tr>
                 </thead>
@@ -24,10 +25,10 @@
                     <td> {{a.testID}}</td>
                     <td>{{a.date}}</td>
                     <td>{{a.time}}</td>
+                    <td>{{Appt|keyvalue:a.diagnosisID.diagnosisID}}</td>
+                    <td>{{a.type}}</td>
                     <!-- <td> {{a.patientID.patientID}}</td> -->
                     <td>{{a.status}}</td>
-                    <!-- <td>{{a.diagnosisID.diagnosisID}}</td>
-                    <td>{{a.paymentID.paymentID}}</td> -->
                     <td> <a href="{% url 'patient_view_single_lab_report' user.username a.testID %}"><i class="fa fa-file-pdf-o"></i> </a></td>
                 </tr>
                 {% endfor %}
