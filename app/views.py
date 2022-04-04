@@ -121,7 +121,8 @@ def viewDiagnosis(request):
             'PatientName': obj1.name,
             'Diagnosis': obj2.diagnosis,
             'Recommendations': obj2.test_recommendation,
-            'testID': i.testID
+            'testID': i.testID,
+            'type' : i.type
         }
         arr.append(dict)
     return render(request, "lab_staff/lab_staff.html", {'requests': arr})
