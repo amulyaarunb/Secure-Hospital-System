@@ -15,8 +15,8 @@
         <p>Patient Name: {{c.patientName}} </p>
         <p>Insurance ID: {{ c.insuranceID}}</p>
         <p>Amount: {{ c.amount}}</p>
-        <a href="{% url 'insurance_staff_approve' c.requestID %}" style="color: black;font-size: 10px;text-decoration: none;padding: 10px;border-style: solid;background-color: gray;">Approve</a>
-        <a href="{% url 'insurance_staff_reject' c.requestID %}" style="color: black;font-size: 10px;text-decoration: none;padding: 10px;border-style: solid;background-color: gray;">Reject</a>
+        <a href="{% url 'insurance_staff_approve' c.requestID %}">Approve</a>
+        <a href="{% url 'insurance_staff_reject' c.requestID %}">Reject</a>
 
     </li>
     {% endfor %}

@@ -12,10 +12,7 @@
                         <th>testID</th>
                         <th>date</th>
                         <th>time</th>
-                        <!-- <th>patientID</th> -->
                         <th>status</th>
-                        <!-- <th>diagnosisID</th>
-                        <th>paymentID</th> -->
                         <th>view report</th>
                     </tr>
                 </thead>
@@ -24,10 +21,7 @@
                     <td> {{a.testID}}</td>
                     <td>{{a.date}}</td>
                     <td>{{a.time}}</td>
-                    <!-- <td> {{a.patientID.patientID}}</td> -->
                     <td>{{a.status}}</td>
-                    <!-- <td>{{a.diagnosisID.diagnosisID}}</td>
-                    <td>{{a.paymentID.paymentID}}</td> -->
                     <td> <a href="{% url 'doctor_view_labreport_view' a.testID %}"><i class="fa fa-file-pdf-o"></i> </a></td>
                 </tr>
                 {% endfor %}
@@ -36,6 +30,5 @@
         </div>
     </div>
 {% endblock content %}
-
 
 docotr view labreport

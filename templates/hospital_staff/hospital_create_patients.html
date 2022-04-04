@@ -1,9 +1,6 @@
-{% extends 'base.html' %} {% block title %}Hospital Staff{% endblock %} 
-{% block navigation %}
+{% extends 'base.html' %} {% block title %}Hospital Staff{% endblock %} {% block navigation %}
 <li>
-  <a
-    href="{% url 'hospital_staff_appointments' %} "
-  >
+    <a href="{% url 'hospital_staff_appointments' %} ">
     Appointments</a
   >
 </li>
@@ -19,6 +16,13 @@
     href="{% url 'hospital_search_patients' %} "
   >
     View Patient Records</a
+  >
+</li>
+<li>
+  <a
+    href="{% url 'hospital_generate_bill' %} "
+  >
+  Generate Bill</a
   >
 </li>
 {% endblock %}
