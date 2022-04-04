@@ -29,17 +29,13 @@ urlpatterns = [
 
     # lab staff
     path('lab_staff/', views.viewDiagnosis, name='lab_staff'),
-    path('lab_staff_approve/<str:pk>',
-         views.approveTest, name='lab_staff_approve'),
+    path('lab_staff_approve/<str:pk>',views.approveTest, name='lab_staff_approve'),
     path('lab_staff_reject/<str:pk>', views.denyTest, name='lab_staff_reject'),
     path('lab_staff_search/', views.lab_search, name='lab_staff_search'),
     path('lab_tests/', views.lab_test_search, name='lab_tests'),
-    path('lab_update_record/<str:pk>',
-         views.updateTests, name='lab_update_record'),
-    path('lab_delete_record/<str:pk>',
-         views.deleteTest, name='lab_delete_record'),
-    path('lab_search_details/<str:pk>',
-         views.diagDetails, name='lab_search_details'),
+    path('lab_update_record/<str:pk>',views.updateTests, name='lab_update_record'),
+    path('lab_delete_record/<str:pk>',views.deleteTest, name='lab_delete_record'),
+    path('lab_search_details/<str:pk>',views.diagDetails, name='lab_search_details'),
 
     # hospital staff
     path('hospital_staff_appointments/', views.hospital_appointment,

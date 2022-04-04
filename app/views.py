@@ -81,7 +81,7 @@ def lab_test_search(request):
                     'result': j.result
                 }
                 arr.append(dict)
-    return render(request, 'lab_tests.html', {'patients': arr})
+    return render(request, 'lab_staff/lab_tests.html', {'patients': arr})
 
 
 @login_required
@@ -101,7 +101,7 @@ def updateTests(request, pk):
         return redirect('/lab_tests')
 
     mydict = {'EditReportForm': EditReportForm}
-    return render(request, 'lab_tests_approved.html', context=mydict)
+    return render(request, 'lab_staff/lab_tests_approved.html', context=mydict)
 
 
 @login_required
@@ -131,7 +131,7 @@ def denyTest(request, pk):
     obj = Test.objects.get(testID=pk)
     obj.status = 'denied'
     obj.save()
-    return redirect('/lab_staff')
+    return redirect('lab_staff/lab_staff.html')
 
 
 @login_required

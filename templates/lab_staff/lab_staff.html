@@ -1,4 +1,6 @@
-{% extends 'base.html' %} {% block title %}Hospital Staff{% endblock %} {% block navigation %}
+{% extends 'base.html' %} 
+
+ {% block navigation %}
 <li>
     <a href="{% url 'lab_staff' %} ">Home</a>
 </li>
@@ -8,7 +10,12 @@
 <li>
     <a href="{% url 'lab_tests' %} ">Test Records</a>
 </li>
-<br> {% endblock %} {% block content%}
+{% endblock navigation %} 
+
+
+
+ {% block content%}
+ <br> 
 <div id="Appointments ">
     {% for c in requests %}
     <li>
@@ -20,4 +27,8 @@
     </li>
     {% endfor %}
 </div>
-{% block content%}
+{% if not requests%}
+<h2>There are no more claims to review.</h2>
+{%endif%}
+{% endblock content%}
+

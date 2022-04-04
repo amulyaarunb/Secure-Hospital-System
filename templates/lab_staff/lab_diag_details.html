@@ -1,4 +1,5 @@
-{% extends 'base.html' %} {% block title %}Hospital Staff{% endblock %} {% block navigation %}
+{% extends 'base.html' %} 
+{% block navigation %}
 <li class="active">
     <a href="{% url 'lab_staff' %} ">Home</a>
 </li>
@@ -8,7 +9,9 @@
 <li>
     <a href="{% url 'lab_tests' %} ">Test Records</a>
 </li>
-{% endblock %} {% block content%}
+{% endblock navigation %} 
+
+{% block content%}
 <br>
 <div id="Appointments ">
     {% for c in diag %}
@@ -20,4 +23,4 @@
     </li>
     {% endfor %}
 </div>
-{% endblock %}
+{% endblock content %}

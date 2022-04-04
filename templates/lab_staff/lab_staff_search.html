@@ -1,14 +1,19 @@
-{% extends 'base.html' %} {% block title %}Hospital Staff{% endblock %} {% block navigation %}
+{% extends 'base.html' %} {% block title %}Hospital Staff{% endblock %} 
+{% block navigation %}
 <li>
     <a href="{% url 'lab_staff' %} ">Home</a>
 </li>
-<li>
+<li class="active">
     <a href="{% url 'lab_staff_search' %} ">View Patient Diagnosis</a>
 </li>
 <li>
     <a href="{% url 'lab_tests' %} ">Test Records</a>
 </li>
-<br> {% endblock %} {% block content%}
+
+{% endblock navigation %}
+
+{% block content%}
+<br> 
 <div>
 
     <form action="/lab_staff_search/" method="GET">
@@ -28,4 +33,4 @@
     </li>
     {% endfor %}
 </div>
-{% endblock %}
+{% endblock content %}
