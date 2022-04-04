@@ -43,7 +43,7 @@ class MakePaymentForm(forms.ModelForm):
 
 class PatientUpdateForm(forms.Form):
     PatientName = forms.CharField(
-        label='Patient Name', max_length=100, required=False)
+        label='Patient Name', max_length=100)
     Age = forms.CharField(label='Age', max_length=100, required=False)
     Gender = forms.CharField(label='Gender', max_length=50, required=False)
     Height = forms.CharField(label='Height', required=False)

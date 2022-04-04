@@ -731,7 +731,14 @@ def view_lab_report(request, patientID):
     if not (request.user.username == patientID):
         raise PermissionDenied
     lab_test_details = models.Test.objects.all().filter(patientID=patientID)
-    return render(request, 'Patient/labtest/patient_view_lab_report.html', {'lab_test_details': lab_test_details})
+    Appt={}
+    for tests in lab_test_details:
+        Diag = models.Diagnosis.objects.all().filter(diagnosisID=tests.diagnosisID.diagnosisID)
+        for d in Diag:
+            Appt[tests.diagnosisID.diagnosisID] = d.appointmentID.appointmentID
+    print(Appt) 
+    
+    return render(request, 'Patient/labtest/patient_view_lab_report.html', {'lab_test_details': lab_test_details, "Appt":Appt})
 
 
 @login_required
@@ -741,6 +748,12 @@ def view_one_lab_report(request, patientID, testID):
     if not (request.user.username == patientID):
         raise PermissionDenied
     lab_test_details = models.Test.objects.all().filter(testID=testID)
+    Appt={}
+    for tests in lab_test_details:
+        Diag = models.Diagnosis.objects.all().filter(diagnosisID=tests.diagnosisID.diagnosisID)
+        for d in Diag:
+            Appt[tests.diagnosisID.diagnosisID] = d.appointmentID.appointmentID
+    print(Appt) 
     return Render.render('Patient/labtest/patient_view_single_lab_report.html', {'lab_test_details': lab_test_details})
 
 # Chatbot Views
@@ -790,8 +803,14 @@ def patient_book_appointment_view(request, patientID):
         Appt.date = appointmentForm.data['date']
         Appt.time = appointmentForm.data['time']
         # Appointment.type=appointmentForm.data['type']
+        # Appt.doctorID = models.Doctor.objects.get(
+        #     doctorID=appointmentForm.data['doctorID'])
         Appt.doctorID = models.Doctor.objects.get(
             doctorID=appointmentForm.data['doctorID'])
+        if appointmentForm.data['doctorID'] == "GeneralDoctor":
+            Appt.type = "General"
+        else:
+            Appt.type = "Specific"
         Appt.patientID = models.Patient.objects.get(patientID=patientID)
         Appt.status = 'requested'
         Appt.save()
