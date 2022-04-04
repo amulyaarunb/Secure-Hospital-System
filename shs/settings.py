@@ -159,4 +159,5 @@ LOGIN_URL = 'two_factor:login'
 
 # this one is optional
 LOGIN_REDIRECT_URL = 'two_factor:profile'
+LOGOUT_REDIRECT_URL = '/'
 TWO_FACTOR_PATCH_ADMIN = False
