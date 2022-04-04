@@ -84,4 +84,4 @@ class EditReportForm(forms.ModelForm):
 class DoctorAppointmentForm(forms.ModelForm):
     class Meta:
         model = models.Appointment
-        fields = ['date', 'time']
+        fields = ['date', 'time','diagnosisID']

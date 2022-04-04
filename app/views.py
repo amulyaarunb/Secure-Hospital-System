@@ -1192,17 +1192,26 @@ def doctor_search_appointment(request, ID):
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("doctor")
-def doctor_book_appointment(request, patientID):
-    print(patientID)
+def doctor_book_appointment(request, ID):
+    print(ID)
+    ap = Appointment.objects.get(appointmentID=ID)
     appointmentForm = forms.DoctorAppointmentForm(request.POST)
     print(appointmentForm.data)
     if request.method == 'POST':
         a = Appointment()
+        diag = Diagnosis()
+        diag.doctorID = models.Doctor.objects.get(doctorID=request.user.username)
+        diag.patientID = models.Patient.objects.get(patientID=ap.patientID.patientID)
+        diag.appointmentID = models.Appointment.objects.get(appointmentID=ID)
         a.date = appointmentForm.data['date']
         a.time = appointmentForm.data['time']
+        ap.diagnosisID = diag
+        print(ap.diagnosisID)
+        diag.save()
         a.doctorID = models.Doctor.objects.get(doctorID=request.user.username)
         # a.patientID=appointmentForm.data['patientID']
-        a.patientID = models.Patient.objects.get(patientID=patientID)
+        a.patientID = models.Patient.objects.get(patientID=ap.patientID.patientID)
+        # a.appointmentID = 
         a.status = 'initiated'
         a.save()
         if appointmentForm.is_valid():
