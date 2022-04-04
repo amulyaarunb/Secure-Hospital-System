@@ -779,10 +779,10 @@ def patient_book_appointment_view(request, patientID):
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("patient")
 def make_payment(request, paymentID):
-    if not (request.user.username == patientID):
-        raise PermissionDenied
     patient_payments = models.Payment.objects.get(paymentID=paymentID)
     patientID = patient_payments.patientID
+    if not (request.user.username == patientID):
+        raise PermissionDenied
     print(patientID.patientID)
     payform = forms.MakePaymentForm(request.POST)
     if request.method == 'POST':
