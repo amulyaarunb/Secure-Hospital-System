@@ -1,3 +1,4 @@
+from functools import partial
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.db.models import Q
@@ -18,6 +19,7 @@ from .render import Render
 from .models import (Appointment, Diagnosis, Doctor, Insurance, Patient,
                      Payment, Test)
 from django.core.exceptions import PermissionDenied
+from django_otp import match_token
 
 
 @otp_required(login_url="account/two_factor/setup/")
@@ -700,6 +702,9 @@ def request_test(request, patientID):
     test = Test()
     if request.method == 'POST':
         testform = forms.RequestLabTestForm(request.POST, patientID=patientID)
+        token = testform.data['otp_token']
+        if not match_token(request.user, token):
+            raise PermissionDenied
         test.date = testform.data['date']
         test.time = testform.data['time']
         test.type = testform.data['type']
@@ -806,11 +811,13 @@ def make_payment(request, paymentID):
     if not (request.user.username == patientID.patientID):
         raise PermissionDenied
     print(patientID.patientID)
-    payform = forms.MakePaymentForm(request.POST)
     if patient_payments.status == 'completed':
         return redirect('patient_payments', patientID.patientID)
     if request.method == 'POST':
-        # print(payform.data)
+        payform = forms.MakePaymentForm(request.POST)
+        token = payform.data['otp_token']
+        if not match_token(request.user, token):
+            raise PermissionDenied
         patient_payments.method = payform.data['method']
         # print(payform.data['method'])
         if patient_payments.method == 'Insurance':
@@ -830,9 +837,10 @@ def make_payment(request, paymentID):
             pass
         # print(patient_payments.amount)
         return redirect("patient_payments", patientID.patientID)
-
+    else:
+        payform = forms.MakePaymentForm()
     # mydict={'MakePaymentForm': payform}
-    return render(request, 'Patient/payments_and_transactions/make_payment.html', {"patient_payments": patient_payments})
+    return render(request, 'Patient/payments_and_transactions/make_payment.html', {"patient_payments": patient_payments, "payform": payform})
 
 
 @login_required

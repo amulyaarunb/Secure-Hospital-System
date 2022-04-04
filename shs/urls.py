@@ -3,8 +3,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
-from django.contrib.auth.views import LoginView
-from django_otp.views import LoginView
 from two_factor.urls import urlpatterns as tf_urls
 
 urlpatterns = [
@@ -118,7 +116,7 @@ urlpatterns = [
     path('doctor_update_patients/<str:ID>', views.doctor_update_patients, name='doctor_update_patients'),
     path('doctor_delete_diagnosis/<str:ID>', views.doctor_delete_diagnosis, name='doctor_delete_diagnosis'),
     path('doctor_search_appointment', views.doctor_search_appointment, name='doctor_search_appointment'),
-    path('doctor_view_labreport_view/<str:ID>', views.doctor_view_labreport_view, name='doctor_view_labreport_view')
+    path('doctor_view_labreport_view/<str:ID>', views.doctor_view_labreport_view, name='doctor_view_labreport_view'),
 
 
 
