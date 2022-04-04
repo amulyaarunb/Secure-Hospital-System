@@ -896,8 +896,7 @@ def doctor_view_patientlist(request):
                 print(d)
                 for a in d:
                     print(i.patientID.patientID)
-                    # print(d)
-                    # print(d.diagnosis)
+                    print(a.diagnosis)
                     mydict = {
                     'appointmentID' : i.appointmentID,
                     'name': p.name,
@@ -929,18 +928,26 @@ def doctor_appointmentID_search_view(request):
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("doctor")
 def doctor_create_prescription_view(request, ID):
-    d=models.Diagnosis.objects.get(patientID=ID)
+    d=Diagnosis.objects.filter(appointmentID=ID)
+    a=Appointment.objects.get(appointmentID=ID)
+    p=Patient.objects.get(patientID=a.patientID.patientID)
     CreatePrescription=forms.CreatePrescription(request.POST)
     
     if request.method=='POST':
-        d.prescription=CreatePrescription.data['prescription']
-        d.save() 
-        if  CreatePrescription.is_valid():
-            print("CreatePrescription is valid")
-            # d=CreatePrescription.save(commit=True)
-            d.save()
-
-        d=Diagnosis.objects.get(patientID=ID)   
+        if not d:
+                print('asdfghjk')
+                diag = Diagnosis()
+                diag.prescription = CreatePrescription.data['prescription']
+                diag.doctorID = models.Doctor.objects.get(doctorID=request.user.username)
+                diag.patientID  = models.Patient.objects.get(patientID=p.patientID)
+                diag.appointmentID= models.Appointment.objects.get(appointmentID=ID)
+                a.diagnosisID = diag
+                diag.save()
+                a.save()
+                return redirect('doctor_view_patientlist')
+        else:
+                d.prescription=CreatePrescription.data['prescription']
+                d.save() 
         return redirect('doctor_view_patientlist')
 
     mydict={'CreatePrescription':CreatePrescription}
@@ -977,18 +984,26 @@ def doctor_view_labreport_view(request, ID):
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("doctor")
 def doctor_recommend_labtest_view(request, ID):
-    d=models.Diagnosis.objects.get(patientID=ID)
+    d=Diagnosis.objects.filter(appointmentID=ID)
+    d=d[0]
+    a=Appointment.objects.get(appointmentID=ID)
+    p=Patient.objects.get(patientID=a.patientID.patientID)
     RecommendLabTest=forms.RecommendLabTest(request.POST)
-    
     if request.method=='POST':
-        d.test_recommendation=RecommendLabTest.data['test_recommendation']
-        d.save() 
-        if  RecommendLabTest.is_valid():
-            print("RecommendLabTest is valid")
-            # d=RecommendLabTest.save(commit=True)
-            d.save()
-
-        d=Diagnosis.objects.get(patientID=ID)   
+        if not d:
+                print('asdfghjk')
+                diag = Diagnosis()
+                diag.test_recommendation = RecommendLabTest.data['test_recommendation']
+                diag.doctorID = models.Doctor.objects.get(doctorID=request.user.username)
+                diag.patientID  = models.Patient.objects.get(patientID=p.patientID)
+                diag.appointmentID= models.Appointment.objects.get(appointmentID=ID)
+                a.diagnosisID = diag
+                diag.save()
+                a.save()
+                return redirect('doctor_view_patientlist')
+        else:
+            d.test_recommendation=RecommendLabTest.data['test_recommendation']
+            d.save()  
         return redirect('doctor_view_patientlist')
 
     mydict={'RecommendLabTest':RecommendLabTest}

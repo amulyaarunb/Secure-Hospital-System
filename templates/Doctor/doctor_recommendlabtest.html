@@ -11,9 +11,16 @@
         </div>
         <div class="form-content">
           <div class="row">
+              
               <div class="form-group">
-                {% render_field RecommendLabTest.test_recommendation class="form-control" placeholder="test_recommendation" %}
-              </div>
+                <label for="Type of test">Choose type of test:</label>
+                <select class="color_font" name="test_recommendation" id="test_recommendation">
+                <option class="color_font" value="Blood Test">Blood Test</option>
+                <option class="color_font" value="Covid Test">Covid Test</option>
+                <option class="color_font" value="Sugar Test">Sugar Test</option>
+                <option class="color_font" value="Urine Test">Urine Test</option>
+                </select>
+        </div>
               <button type="submit" class="btnSubmit">Enter</button>
           </div>
         </div>

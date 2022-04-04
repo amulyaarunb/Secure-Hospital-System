@@ -37,8 +37,6 @@ class Appointment(models.Model):
 class Payment(models.Model):
     paymentID = models.BigAutoField(primary_key=True)
     method = models.CharField(max_length=255)
-    type = models.CharField(max_length=255,blank=True, null=True)
-    mode = models.CharField(max_length=255,blank=True, null=True)
     amount = models.IntegerField(blank=True, null=True)
     status = models.CharField(max_length=255)
     patientID = models.ForeignKey(Patient, on_delete=models.CASCADE,blank=True, null=True)
@@ -61,7 +59,7 @@ class Diagnosis(models.Model):
     appointmentID = models.ForeignKey(Appointment, on_delete=models.CASCADE)
     diagnosis = models.CharField(max_length=256)
     test_recommendation = models.CharField(max_length=256)
-    prescription = models.CharField(max_length=256)
+    prescription = models.CharField(max_length=256, blank=True, null=True)
 
 
 class Test(models.Model):
