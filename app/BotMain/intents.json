@@ -26,7 +26,7 @@
         },
         {"tag": "update personal information",
          "patterns": ["update my personal information", "update my address", "update my mobile number", "update my name", "update personal details" ],
-         "responses": ["Navigate to:https://harshavamsi.com/patient_details"],
+         "responses": ["Navigate to:https://harshavamsi.com/patient_details/update_patient_details"],
          "context": [""]
         },
         {"tag": "appointment",
