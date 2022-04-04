@@ -134,7 +134,7 @@ def denyTest(request, pk):
     obj = Test.objects.get(testID=pk)
     obj.status = 'denied'
     obj.save()
-    return redirect('lab_staff/lab_staff.html')
+    return redirect('/lab_staff')
 
 
 @login_required
