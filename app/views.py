@@ -1,10 +1,10 @@
-from functools import partial
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
+from django.core.exceptions import PermissionDenied
 from django.db.models import Q
-from django.forms import modelformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
+from django_otp import match_token
 from django_otp.decorators import otp_required
 from django_registration.backends.one_step.views import RegistrationView
 from django_registration.forms import RegistrationForm
@@ -13,13 +13,9 @@ from app.decorators import check_view_permissions
 
 from . import forms, models
 from .BotMain import chatgui  # Botmain is chatbot directory
-from django_otp.decorators import otp_required
-from django.db.models import Q
-from .render import Render
 from .models import (Appointment, Diagnosis, Doctor, Insurance, Patient,
                      Payment, Test)
-from django.core.exceptions import PermissionDenied
-from django_otp import match_token
+from .render import Render
 
 
 @otp_required(login_url="account/two_factor/setup/")
@@ -62,8 +58,6 @@ def admin(request):
 
 
 ''' Lab Staff View Starts Here'''
-
-
 @login_required
 @check_view_permissions("lab_staff")
 def lab_test_search(request):
@@ -268,10 +262,10 @@ def viewClaim(request):
 
 '''Insurance Staff View ends here'''
 
+
+
 ''''------------------Hospital Staff View------------------- '''
 # To show appointments to hospital staff for approval
-
-
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("hospital_staff")
@@ -599,11 +593,11 @@ def hospital_bill(request, ID):
 
 '''---------------Hospital end-------------'''
 
+
+
 # ---------------------------------------------------------------------------------
 # ------------------------ PATIENT RELATED VIEWS START ------------------------------
 # ---------------------------------------------------------------------------------
-
-
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("patient")
@@ -877,9 +871,9 @@ def patient_payments_details(request, patientID):
 # ---------------------------------------------------------------------------------
 
 
+
+
 # ----------------------------------------doctor---------------------------------------------------
-
-
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("doctor")

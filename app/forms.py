@@ -1,9 +1,9 @@
 from django import forms
-
-#from django.contrib.auth.models import User
-from . import models
 from django.utils.translation import gettext_lazy as _
 from two_factor.utils import totp_digits
+
+from . import models
+
 
 class PatientForm(forms.ModelForm):
     class Meta:
@@ -28,7 +28,6 @@ class RequestLabTestForm(forms.ModelForm):
 
     class Meta:
         model = models.Test
-        # fields=['type','date','time']
         fields = ['type', 'date', 'time', 'diagnosisID', 'otp_token']
 
 
@@ -37,7 +36,6 @@ class MakePaymentForm(forms.ModelForm):
                                    max_value=int('9' * totp_digits()))
     class Meta:
         model = models.Payment
-        # fields=['method','type','mode','patientID','testID','appointmentID']
         fields = ['method', 'otp_token']
 
 
@@ -72,7 +70,6 @@ class CreatePrescription(forms.ModelForm):
     class Meta:
         model = models.Diagnosis
         fields = ['prescription']
-# lab staff report
 
 
 class EditReportForm(forms.ModelForm):
