@@ -1,82 +1,39 @@
 {% extends 'Patient/patient.html' %}
 {% load widget_tweaks %}
 {% block content %}
-
-<head>
-  <style media="screen">
-    a:link {
-      text-decoration: none;
-    }
-
-    .note {
-      text-align: center;
-      height: 80px;
-      background: Black;
-      color: White;
-      font-weight: bold;
-      line-height: 80px;
-    }
-
-    .form-content {
-      padding: 5%;
-      border: 1px solid #ced4da;
-      margin-bottom: 2%;
-    }
-
-    .form-control {
-      border-radius: 1.5rem;
-    }
-
-    .btnSubmit {
-      border: none;
-      border-radius: 1.5rem;
-      padding: 1%;
-      width: 20%;
-      cursor: pointer;
-      background: black;
-      color: #fff;
-    }
-
-    .menu {
-      top: 50px;
-    }
-  </style>
-
-  <!-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
-
-  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-</head>
 <br><br>
 
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
-  <div class="container register-form">
-    <div class="form">
       <div class="note">
-        <p>Request</p>
+        <p>Request Lab test</p>
       </div>
       <div class="form-content">
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group">
-              {% render_field patientForm.type class="form-control" placeholder="Type of test" %}
+            <div  class="form-group">
+              <p> Select Diagnosis for which you want to request the test</p> 
+              <p>{% render_field testform.diagnosisID class="form-control" placeholder="diagnosisID" %} </p>
             </div>
             <div class="form-group">
-              {% render_field patientForm.name class="form-control" placeholder="Patient ID" %}
-            </div>
+              <input type="date" name="date" id="date" required >
+            <input type="time" name="time" id="time" min="09:00" max="18:00" required> </div>
+            
             <div class="form-group">
-              {% render_field patientForm.age class="form-control" placeholder="Diagnosis ID" %}
-            </div>
-          </div>
+            <label for="">patientID: <span class="tab"></span> {{user.username}}</label>
+            <br></div>
+            <div class="form-group">
+                <label for="Type of test">Choose type of test:</label>
+                <select class="color_font" name="type" id="type">
+                <option class="color_font" value="Blood Test">Blood Test</option>
+                <option class="color_font" value="Covid Test">Covid Test</option>
+                <option class="color_font" value="Sugar Test">Sugar Test</option>
+                <option class="color_font" value="Urine Test">Urine Test</option>
+                </select>
         </div>
-        <button type="submit" class="btnSubmit">Update</button>
-      </div>
-    </div>
+        <button type="submit" class="btnSubmit">Request</button>
   </div>
 </form>
 
 {% endblock content %}
+
+
+

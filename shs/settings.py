@@ -12,10 +12,10 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 # import django_heroku
 import os
-from pickle import FALSE, TRUE
+from pathlib import Path
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent.parent
 print(BASE_DIR)
 
 
@@ -30,7 +30,7 @@ DEBUG = False
 
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1',
-        'damp-hollows-93595.herokuapp.com', '3.83.191.127','3.221.41.59','0.0.0.0','.harshavamsi.com']
+                 'damp-hollows-93595.herokuapp.com', '3.83.191.127', '3.221.41.59', '0.0.0.0', '.harshavamsi.com']
 
 
 # Application definition
@@ -47,6 +47,10 @@ INSTALLED_APPS = [
     'django_registration',
     'corsheaders',
     'widget_tweaks',
+    'django_otp',
+    'django_otp.plugins.otp_static',
+    'django_otp.plugins.otp_totp',
+    'two_factor',
 ]
 
 MIDDLEWARE = [
@@ -58,6 +62,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'django_otp.middleware.OTPMiddleware'
 ]
 
 ROOT_URLCONF = 'shs.urls'
@@ -65,7 +70,7 @@ ROOT_URLCONF = 'shs.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -131,9 +136,10 @@ USE_TZ = False
 STATIC_ROOT = 'staticfiles/'
 
 STATIC_URL = 'static/'
+
 STATICFILES_DIRS = [
-    BASE_DIR + "/" + "static",
-    ]
+    BASE_DIR / 'static',
+]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
@@ -144,6 +150,14 @@ ACCOUNT_ACTIVATION_DAYS = 7
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
 
-CSRF_TRUSTED_ORIGINS = ['https://damp-hollows-93595.herokuapp.com/', 'https://harshavamsi.com']
+CSRF_TRUSTED_ORIGINS = [
+    'https://damp-hollows-93595.herokuapp.com/', 'https://harshavamsi.com']
 
 # django_heroku.settings(locals())
+
+LOGIN_URL = 'two_factor:login'
+
+# this one is optional
+LOGIN_REDIRECT_URL = 'two_factor:profile'
+LOGOUT_REDIRECT_URL = '/'
+TWO_FACTOR_PATCH_ADMIN = False

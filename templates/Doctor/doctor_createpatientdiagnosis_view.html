@@ -1,40 +1,21 @@
-{% extends 'Doctor\doctor_navbar.html' %}
-
+{% extends 'Doctor/doctor_navbar.html' %}
+{% load widget_tweaks %}
 {% block content %}
+<br><br>
 
-<style>
-    th {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
-    }
-     
-</style>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+        <div class="note">
+          <p>Diagnosis</p>
+        </div>
+        <div class="form-content">
+          <div class="row">
+              <div class="form-group">
+                {% render_field EditDiagnosisForm.diagnosis class="form-control" placeholder="Diagnosis" %}
+              </div>
+              <button type="submit" class="btnSubmit">Edit</button>
+          </div>
+    </div>
+</form>
 
-<h1>Patients diagnosis</h1>
-<table>
-    <tr>
-        <th>Name</th>
-        <th>Date</th>
-        <th>Update</th>
-        <th>Modify</th>
-      </tr>
-      {% for i in appointments %}
-      <tr>
-        <th> {{ appointments.name }}</th>
-        <th> {{ appointments.date }}</th>
-        <th> 
-            <div class="btn-group">
-                <a href="#"> <button type="button" class="btn btn-secondary">Update</button> </a>
-            </div>
-        </th>
-        <th>
-            <div class="btn-group"></div>
-                <a href="#"> <button type="button" class="btn btn-secondary">Modify</button> </a>
-            </div>
-        </th>
-      </tr> 
-      {% endfor %}
-</table>
-
-{% endblock content %}
+{% endblock content%}

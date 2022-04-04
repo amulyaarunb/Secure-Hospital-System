@@ -1,67 +1,320 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans);
 body {
-    background: url('/static/images/bg.jpg') no-repeat center center fixed; 
+  background: url('/static/images/bg.jpg') no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-    font-family: 'Open Sans', sans-serif;
-    color: #FFFFFF;
-}
-html { 
-  
+  font-family: 'Open Sans', sans-serif;
+  color: #ffffff;
 }
 .shadow {
-    box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.15) inset, 0px 0px 3px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.15) inset,
+    0px 0px 3px rgba(0, 0, 0, 0.5);
 }
 .content {
-    width: 968px;
-    background: none repeat scroll 0% 0% #222326;
-    margin: 0 auto;
-    border-radius: 4px;
-    overflow: hidden;
-    padding: 2%;
-    margin-bottom: 20px;
+  width: 968px;
+  background: none repeat scroll 0% 0% #222326;
+  margin: 0 auto;
+  border-radius: 4px;
+  overflow: hidden;
+  padding: 2%;
+  margin-bottom: 20px;
 }
 .start-page {
-    padding: 20px;
-    margin: 0 auto;
+  padding: 20px;
+  margin: 0 auto;
 }
 
 p {
-   text-align: center;
+  text-align: center;
 }
-
 
 img {
-    max-width: 100%;
-    margin: 0 auto;
+  max-width: 100%;
+  margin: 0 auto;
 }
 form {
-    width: 500px;
-    margin: 0 auto;
+  width: 500px;
+  margin: 0 auto;
 }
 
 .navbar-inverse .navbar-text {
-    color: #FFFFFF;
+  color: #ffffff;
 }
 
-
 .table th {
-    color: white;
-    background: #282828;
+  color: white;
+  background: #282828;
 }
 
 .btn {
-    margin: 0 auto;
+  margin: 0 auto;
 }
 
 .navbar .navbar-header .navbar-brand {
-    color: #FFFFFF;
+  color: #ffffff;
 }
 
-@media screen and (max-width: 967px){
-    .content {
-        width: auto;
-    }
+@media screen and (max-width: 967px) {
+  .content {
+    width: auto;
+  }
+}
+
+input {
+  color: #000000;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+* {
+  box-sizing: border-box;
+}
+a:link {
+  text-decoration: none;
+}
+
+h6 {
+  text-align: center;
+}
+
+.row {
+  margin: 100px;
+}
+
+.open-button {
+  background-color: black;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  opacity: 0.8;
+  position: fixed;
+  bottom: 23px;
+  right: 28px;
+  width: 280px;
+}
+
+/* The popup chat - hidden by default */
+.chat-popup {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  right: 15px;
+  border: 3px solid #f1f1f1;
+  z-index: 9;
+}
+
+/* Add styles to the form container */
+.form-container {
+  max-width: 300px;
+  padding: 10px;
+  background-color: white;
+}
+
+/* Full-width textarea */
+.form-container textarea {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: #f1f1f1;
+  resize: none;
+  min-height: 200px;
+}
+
+/* When the textarea gets focus, do something */
+.form-container textarea:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+/* Set a style for the submit/send button */
+.form-container .btn {
+  background-color: #04aa6d;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom: 10px;
+  opacity: 0.8;
+}
+
+/* Add a red background color to the cancel button */
+.form-container .cancel {
+  background-color: red;
+}
+
+/* Add some hover effects to buttons */
+.form-container .btn:hover,
+.open-button:hover {
+  opacity: 1;
+}
+
+a:link {
+  text-decoration: none;
+}
+
+h6 {
+  /* color: black; */
+  text-align: center;
+}
+
+.order-card {
+  color: black;
+}
+
+.row {
+  margin: 100px;
+}
+
+.card {
+  border-radius: 5px;
+  -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
+  box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
+  border: none;
+  margin-bottom: 30px;
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+
+.card .card-block {
+  padding: 50px;
+}
+
+.order-card i {
+  font-size: 26px;
+}
+
+.f-left {
+  float: left;
+}
+
+.f-right {
+  float: right;
+}
+a:link {
+  text-decoration: none;
+}
+
+.note {
+  text-align: center;
+  height: 80px;
+  background: Black;
+  color: White;
+  font-weight: bold;
+  line-height: 80px;
+}
+
+.form-content {
+  padding: 5%;
+  border: 1px solid #ced4da;
+  margin-bottom: 2%;
+}
+
+.form-control {
+  border-radius: 1.5rem;
+}
+
+.btnSubmit {
+  border: none;
+  border-radius: 1.5rem;
+  padding: 1%;
+  width: 20%;
+  cursor: pointer;
+  background: black;
+  color: #fff;
+}
+
+.menu {
+  top: 50px;
+}
+
+.tab {
+  display: inline-block;
+  margin-left: 80px;
+}
+
+a:link {
+  text-decoration: none;
+}
+
+h6 {
+  /* color: black; */
+  text-align: center;
+}
+
+.order-card {
+  color: black;
+}
+
+.row {
+  margin: 100px;
+}
+
+.card {
+  border-radius: 5px;
+  -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
+  box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
+  border: none;
+  margin-bottom: 30px;
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+
+.card .card-block {
+  padding: 50px;
+}
+
+.order-card i {
+  font-size: 26px;
+}
+
+.f-left {
+  float: left;
+}
+
+.f-right {
+  float: right;
+}
+
+a:link {
+  text-decoration: none;
+}
+
+h6 {
+  text-align: center;
+}
+
+.row {
+  margin: 100px;
+}
+
+.black-table-row {
+  color: #000000;
+}
+
+.keyboardDark {
+  color: #000000;
+}
+
+.color_font {
+  color: #000000;
+}
+
+.color_font_white {
+  color: white;
+}
+
+th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+.h1_doctor {
+  text-align: center;
 }

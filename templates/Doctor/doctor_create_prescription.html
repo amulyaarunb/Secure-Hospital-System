@@ -1,17 +1,23 @@
 {% extends 'Doctor\doctor_navbar.html' %}
-
+{% load widget_tweaks %}
 {% block content %}
 
-<head>
+<br><br>
 
-    <h1>Prescription to patient</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+        <div class="note">
+          <p>Prescription</p>
+        </div>
+        <div class="form-content">
+          <div class="row">
+            <div class="form-group">
+              {% render_field CreatePrescription.prescription class="form-control" placeholder="prescription" %}
+            </div>
+              <button type="submit" class="btnSubmit">Enter</button>
+          </div>
+        </div>
+  
+</form>
 
-    <form action="" method="get">
-        <label for="prescription">Prescription for patient: </label>
-        <textarea id="prescription" name="prescription" value="{{ prescription }}" rows="4" cols="50"></textarea>
-        <input type="submit" value="Submit">
-    </form>
-
-</head>
-
-{% endblock content %}
+{% endblock content%}

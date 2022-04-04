@@ -1,13 +1,14 @@
-{% extends 'Doctor\doctor_navbar.html' %}
+{% extends 'Doctor/doctor_navbar.html' %}
 
 {% block content %}
     <center>
         {% if searched %}
-            <h2>Here are the details on - {{ searched }}</h2>
+            <h2>Appointment ID - {{ searched }}</h2>
             <br>
-            {% for patients in Patient %}
-                <a href="#">{{ patient }}</a> 
-                <!-- add patients url here {% url 'patientpage' %} -->
+            {% for i in a %}
+                <a href="#">{{ i }}</a> 
+                
+                {% url 'doctor_search_appointment' %}
             {% endfor %}
             <br>
         {% else %}

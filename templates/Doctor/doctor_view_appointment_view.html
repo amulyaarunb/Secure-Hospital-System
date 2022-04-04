@@ -1,54 +1,36 @@
-{% extends 'Doctor\doctor_navbar.html' %}
+{% extends 'Doctor/doctor_navbar.html' %}
+{% load widget_tweaks %}
 {% block content %}
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Appointments</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-</head>
-<style>
-        navbar {
-            float: right;
-            padding: 6px 10px;
-            margin-top: 8px;
-            background: #ddd;
-            font-size: 17px;
-            border: none;
-            cursor: pointer;
-            margin-right: 10px;
-        }
-        th {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
-        }
-        h1{text-align: center;}
-
-</style>
-
-<body>
-    <!-- viewing doctor's Appointments -->
-    <h1>Appointments</h1>
-        <a href="/doctor_book_appointment"> <button style="font-size:18px;color:red"><span style="color: grey">Add Appointment</span> <i class="fa fa-plus" ></i></button></a>
+    
     <br>
-    <br>
+    <h1> Appointments</h1>
+
     <table>
         <tr>
-            <th>Name</th>
-            <th>Patient ID</th>
+            <th>Appointment ID</th>
             <th>Date</th>
+            <th>Time</th>
+            <th>Doctor ID</th>
+            <th>Patient Name</th>
+            <th>Status</th>
+            <th>Test ID</th>
+            <th>Payment ID</th>
+            <th>Book Appointment</th>
+
           </tr>
           {% for i in appointments %}
           <tr>
-            <th> {{ appointments.name }}</th>
-            <th> {{ appointments.patientID }}</th>
-            <th> {{ appointments.date }}</th>
+            <th> {{ i.appointmentID }}</th>
+            <th> {{ i.date }}</th>
+            <th> {{ i.time }}</th>
+            <th> {{ i.doctorID.doctorID }}</th>
+            <th> {{ i.patientName }}</th>
+            <th> {{ i.status }}</th>
+            <th> {{ i.testID }}</th>
+            <th> {{ i.paymentID }}</th>
+            <th> <a href="{% url 'doctor_book_appointment' i.patientID.patientID %}"> <button style="font-size:18px;color:red"><i class="fa fa-plus" ></i></button></a> </th>
           </tr> 
           {% endfor %}
     </table>
-</body>
-</html>
+
 {% endblock content%}

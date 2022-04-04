@@ -3,88 +3,27 @@
 {% block content %}
 {%load static%}
 
-
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-
-    <!-- <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script> -->
-    <!-- <script src="//code.jquery.com/jquery-1.11.1.min.js"></script> -->
-    <style media="screen">
-        a:link {
-            text-decoration: none;
-        }
-
-
-        h6 {
-            /* color: black; */
-            text-align: center;
-        }
-
-        .order-card {
-            color: black;
-        }
-
-        .row {
-            margin: 100px;
-        }
-
-        .card {
-            border-radius: 5px;
-            -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
-            box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
-            border: none;
-            margin-bottom: 30px;
-            -webkit-transition: all 0.3s ease-in-out;
-            transition: all 0.3s ease-in-out;
-        }
-
-        .card .card-block {
-            padding: 50px;
-        }
-
-        .order-card i {
-            font-size: 26px;
-        }
-
-        .f-left {
-            float: left;
-        }
-
-        .f-right {
-            float: right;
-        }
-    </style>
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-</head>
-<!-- <body> -->
 <div class="container">
     <div class="row">
         <div class="col-md-4 col-xl-6">
             <div class="card-block">
-                <a href=  "{% url 'patient_view_lab_report' user.username %}" ></a>
-                <!-- <a href="patient_view_lab_report/{{user.username}}"> -->
+                <a href=  "{% url 'patient_view_lab_report' user.username %}" >
                     <h4>View Your previous lab tests</h4>
                 </a>
                 <h1 class="text-right"><i class="fas fa-file f-left"></i></h1>
 
             </div>
-            <!-- </div> -->
         </div>
 
         <div class="col-md-4 col-xl-6">
             <div class="card-block">
-                <a href=  "{% url 'request_labtest' user.username %}" ></a>
-                <!-- <a href="request_labtest"> -->
+                <a href="{% url 'request_labtest' user.username %}">
                     <h4>Request Lab Test</h4>
                 </a>
                 <h1 class="text-right"><i class="fas fa-flask f-left"></i></h1>
             </div>
-            <!-- </div> -->
         </div>
     </div>
 </div>
+
 {% endblock content %}

@@ -12,13 +12,14 @@ from keras.models import Sequential
 from keras.layers import Dense, Activation, Dropout
 from tensorflow.keras.optimizers import SGD
 import random
+import os
 
 words=[]
 classes = []
 documents = []
 ignore_words = ['?', '!']
-data_file = open('intents.json').read()
-intents = json.loads(data_file)
+dirpath = os.path.dirname(os.path.abspath(__file__))
+intents = json.loads(open(dirpath + '/intents.json').read())
 
 
 for intent in intents['intents']:
@@ -41,13 +42,11 @@ classes = sorted(list(set(classes)))
 
 print (len(documents), "documents")
 
-print (len(classes), "classes", classes)
-
 print (len(words), "unique lemmatized words", words)
 
 
-pickle.dump(words,open('words.pkl','wb'))
-pickle.dump(classes,open('classes.pkl','wb'))
+pickle.dump(words,open(dirpath + '/words.pkl','wb'))
+pickle.dump(classes,open(dirpath + '/classes.pkl','wb'))
 
 # initializing training data
 training = []
@@ -92,6 +91,6 @@ model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy
 
 #fitting and saving the model
 hist = model.fit(np.array(train_x), np.array(train_y), epochs=200, batch_size=5, verbose=1)
-model.save('chatbot_model.h5', hist)
+model.save(dirpath + '/chatbot_model.h5', hist)
 
 print("model created")
