@@ -2,7 +2,8 @@ from django import forms
 
 #from django.contrib.auth.models import User
 from . import models
-
+from django.utils.translation import gettext_lazy as _
+from two_factor.utils import totp_digits
 
 class PatientForm(forms.ModelForm):
     class Meta:
@@ -17,6 +18,8 @@ class PatientAppointmentForm(forms.ModelForm):
 
 
 class RequestLabTestForm(forms.ModelForm):
+    otp_token = forms.IntegerField(label=_("Token"), min_value=1,
+                                   max_value=int('9' * totp_digits()))
     def __init__(self, *args, **kwargs):
         self.patientID = kwargs.pop('patientID')
         super(RequestLabTestForm, self).__init__(*args, **kwargs)
@@ -26,14 +29,16 @@ class RequestLabTestForm(forms.ModelForm):
     class Meta:
         model = models.Test
         # fields=['type','date','time']
-        fields = ['type', 'date', 'time', 'diagnosisID']
+        fields = ['type', 'date', 'time', 'diagnosisID', 'otp_token']
 
 
 class MakePaymentForm(forms.ModelForm):
+    otp_token = forms.IntegerField(label=_("Token"), min_value=1,
+                                   max_value=int('9' * totp_digits()))
     class Meta:
         model = models.Payment
         # fields=['method','type','mode','patientID','testID','appointmentID']
-        fields = ['method']
+        fields = ['method', 'otp_token']
 
 
 class PatientUpdateForm(forms.Form):

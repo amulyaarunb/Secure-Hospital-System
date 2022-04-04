@@ -1,3 +1,4 @@
+from functools import partial
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.db.models import Q
@@ -18,6 +19,7 @@ from .render import Render
 from .models import (Appointment, Diagnosis, Doctor, Insurance, Patient,
                      Payment, Test)
 from django.core.exceptions import PermissionDenied
+from django_otp import match_token
 
 
 @otp_required(login_url="account/two_factor/setup/")
@@ -699,7 +701,10 @@ def request_test(request, patientID):
 
     test = Test()
     if request.method == 'POST':
-        testform = forms.RequestLabTestForm(request.POST)
+        testform = forms.RequestLabTestForm(request.POST, patientID=patientID)
+        token = testform.data['otp_token']
+        if not match_token(request.user, token):
+            raise PermissionDenied
         test.date = testform.data['date']
         test.time = testform.data['time']
         test.type = testform.data['type']
@@ -806,11 +811,13 @@ def make_payment(request, paymentID):
     if not (request.user.username == patientID.patientID):
         raise PermissionDenied
     print(patientID.patientID)
-    payform = forms.MakePaymentForm(request.POST)
     if patient_payments.status == 'completed':
         return redirect('patient_payments', patientID.patientID)
     if request.method == 'POST':
-        # print(payform.data)
+        payform = forms.MakePaymentForm(request.POST)
+        token = payform.data['otp_token']
+        if not match_token(request.user, token):
+            raise PermissionDenied
         patient_payments.method = payform.data['method']
         # print(payform.data['method'])
         if patient_payments.method == 'Insurance':
@@ -830,9 +837,10 @@ def make_payment(request, paymentID):
             pass
         # print(patient_payments.amount)
         return redirect("patient_payments", patientID.patientID)
-
+    else:
+        payform = forms.MakePaymentForm()
     # mydict={'MakePaymentForm': payform}
-    return render(request, 'Patient/payments_and_transactions/make_payment.html', {"patient_payments": patient_payments})
+    return render(request, 'Patient/payments_and_transactions/make_payment.html', {"patient_payments": patient_payments, "payform": payform})
 
 
 @login_required
@@ -849,7 +857,7 @@ def patient_payments_details(request, patientID):
 # ---------------------------------------------------------------------------------
 
 
-# ----------------------------------------doctor-------------------
+# ----------------------------------------doctor---------------------------------------------------
 
 
 @login_required
@@ -900,10 +908,10 @@ def doctor_view_patientlist(request):
     l = []
     for i in appointments:
         p = models.Patient.objects.get(patientID=i.patientID.patientID)
-        print(i.diagnosisID)
+        # print(i.diagnosisID)
 
         if i.diagnosisID is None:
-            print('I am in if')
+            # print('I am in if')
             mydict = {
                 'appointmentID': i.appointmentID,
                 'name': p.name,
@@ -918,13 +926,15 @@ def doctor_view_patientlist(request):
                 'prescription': 'null',
                 'testID': i.testID
             }
+            # print(i.testID)
+
         else:
-            print('I am in else')
+            # print('I am in else')
             d = Diagnosis.objects.all().filter(patientID=i.patientID.patientID)
-            print(d)
+            # print(d)
             for a in d:
-                print(i.patientID.patientID)
-                print(a.diagnosis)
+                # print(i.patientID.patientID)
+                # print(a.diagnosis)
                 mydict = {
                     'appointmentID': i.appointmentID,
                     'name': p.name,
@@ -939,39 +949,39 @@ def doctor_view_patientlist(request):
                     'prescription': a.prescription,
                     'testID': i.testID
                 }
+            # print(i.testID)
+
         l.append(mydict)
     return render(request, 'Doctor/doctor_view_patientlist.html', {'patients': l})
 
-
-@login_required
-@otp_required(login_url="account/two_factor/setup/")
-@check_view_permissions("doctor")
-def doctor_appointmentID_search_view(request):
-    # query stores the input given in search bar
-    query = request.GET['query']
-    # patients=models.Patient.objects.all().filter(doctorId=request.user.id).filter(Q(patientID__icontains=query)|Q(name__icontains=query))
-    appointments = models.Appointment.objects.all().filter(doctorId=request.user.id).filter(
-        Q(patientID__icontains=query) | Q(appointmentID__icontains=query) | Q(date__icontains=query))
-    return render(request, 'Doctor/doctor_view_appointment_view.html', {'appointments': appointments})
+# @login_required
+# @otp_required(login_url="account/two_factor/setup/")
+# @check_view_permissions("doctor")
+# def doctor_appointmentID_search_view(request):
+#     # query stores the input given in search bar
+#     query = request.GET['query']
+#     # patients=models.Patient.objects.all().filter(doctorId=request.user.id).filter(Q(patientID__icontains=query)|Q(name__icontains=query))
+#     appointments=models.Appointment.objects.all().filter(doctorId=request.user.id).filter(Q(patientID__icontains=query)|Q(appointmentID__icontains=query)|Q(date__icontains=query))
+#     return render(request,'Doctor/doctor_view_appointment_view.html',{'appointments':appointments})
 
 
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("doctor")
 def doctor_create_prescription_view(request, ID):
-    d = Diagnosis.objects.filter(appointmentID=ID)
     a = Appointment.objects.get(appointmentID=ID)
     p = Patient.objects.get(patientID=a.patientID.patientID)
     CreatePrescription = forms.CreatePrescription(request.POST)
 
     if request.method == 'POST':
-        if not d:
+        if a.diagnosisID is None or a.diagnosisID == 'null':
             print('asdfghjk')
             diag = Diagnosis()
             diag.prescription = CreatePrescription.data['prescription']
             diag.doctorID = models.Doctor.objects.get(
                 doctorID=request.user.username)
             diag.patientID = models.Patient.objects.get(patientID=p.patientID)
+            print(diag.patientID)
             diag.appointmentID = models.Appointment.objects.get(
                 appointmentID=ID)
             a.diagnosisID = diag
@@ -979,6 +989,7 @@ def doctor_create_prescription_view(request, ID):
             a.save()
             return redirect('doctor_view_patientlist')
         else:
+            d = Diagnosis.objects.get(appointmentID=ID)
             d.prescription = CreatePrescription.data['prescription']
             d.save()
         return redirect('doctor_view_patientlist')
@@ -1012,7 +1023,7 @@ def doctor_search_view(request):
 def doctor_view_labreport_view(request, ID):
     if(ID == "None"):
         return HttpResponse("No test report to show")
-    lab_test_details = models.Test.objects.all().filter(testID=ID)
+    lab_test_details = models.Test.objects.get(testID=ID)
     return Render.render('Patient/labtest/patient_view_single_lab_report.html', {'lab_test_details': lab_test_details})
 
 
@@ -1020,13 +1031,13 @@ def doctor_view_labreport_view(request, ID):
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("doctor")
 def doctor_recommend_labtest_view(request, ID):
-    d = Diagnosis.objects.filter(appointmentID=ID)
-    d = d[0]
+    # d=Diagnosis.objects.filter(appointmentID=ID)
+    # d=d[0]
     a = Appointment.objects.get(appointmentID=ID)
     p = Patient.objects.get(patientID=a.patientID.patientID)
     RecommendLabTest = forms.RecommendLabTest(request.POST)
     if request.method == 'POST':
-        if not d:
+        if a.diagnosisID is None or a.diagnosisID == 'null':
             print('asdfghjk')
             diag = Diagnosis()
             diag.test_recommendation = RecommendLabTest.data['test_recommendation']
@@ -1040,9 +1051,13 @@ def doctor_recommend_labtest_view(request, ID):
             a.save()
             return redirect('doctor_view_patientlist')
         else:
-            d.test_recommendation = RecommendLabTest.data['test_recommendation']
-            d.save()
-        return redirect('doctor_view_patientlist')
+            di = models.Diagnosis.objects.get(appointmentID=ID)
+            print('di', di)
+            di.test_recommendation = RecommendLabTest.data['test_recommendation']
+            di.save()
+            # d.test_recommendation=RecommendLabTest.data['test_recommendation']
+            # d.save()
+            return redirect('doctor_view_patientlist')
 
     mydict = {'RecommendLabTest': RecommendLabTest}
     return render(request, 'Doctor/doctor_recommendlabtest.html', context=mydict)
@@ -1051,15 +1066,8 @@ def doctor_recommend_labtest_view(request, ID):
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("doctor")
-def doctor_patient_diagnosis_view(request):
-    return render(request, 'Doctor/doctor_patient_diagnosis.html', {'diagnosis': l})
-
-
-@login_required
-@otp_required(login_url="account/two_factor/setup/")
-@check_view_permissions("doctor")
 def doctor_createpatientdiagnosis_view(request, ID):
-    d = models.Diagnosis.objects.filter(appointmentID=ID)
+    # d=models.Diagnosis.objects.get(appointmentID=ID)
     # print('asdfghj', d)
     a = Appointment.objects.get(appointmentID=ID)
     p = Patient.objects.get(patientID=a.patientID.patientID)
@@ -1068,7 +1076,7 @@ def doctor_createpatientdiagnosis_view(request, ID):
     if request.method == 'POST':
         if EditDiagnosisForm.is_valid():
             print("EditDiagnosisForm is valid")
-            if not d:
+            if a.diagnosisID is None or a.diagnosisID == 'null':
                 print('asdfghjk')
                 diag = Diagnosis()
                 diag.diagnosis = EditDiagnosisForm.data['diagnosis']
@@ -1081,17 +1089,15 @@ def doctor_createpatientdiagnosis_view(request, ID):
                 a.diagnosisID = diag
                 diag.save()
                 a.save()
-                return redirect('doctor_view_patientlist')
+                # return redirect('doctor_view_patientlist')
             else:
                 # print(di)
-                di = models.Diagnosis.objects.get(appointmentID=ID)
-                print(di)
-                di.diagnosis = EditDiagnosisForm.data['diagnosis']
-                di.save()
-                return redirect('doctor_view_patientlist')
-
-        # d=Diagnosis.objects.get(patientID=ID)
-        # return redirect('doctor_view_patientlist')
+                d = models.Diagnosis.objects.get(appointmentID=ID)
+                # print('di', di)
+                d.diagnosis = EditDiagnosisForm.data['diagnosis']
+                print(d)
+                d.save()
+            return redirect('doctor_view_patientlist')
 
     mydict = {'EditDiagnosisForm': EditDiagnosisForm}
     return render(request, 'Doctor/doctor_createpatientdiagnosis_view.html', context=mydict)
@@ -1130,7 +1136,7 @@ def doctor_update_patients(request, ID):
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("doctor")
 def doctor_delete_diagnosis(request, ID):
-    models.Diagnosis.objects.filter(patientID=ID).update(diagnosis='Null')
+    models.Diagnosis.objects.filter(appointmentID=ID).update(diagnosis='null')
     return redirect('doctor_view_patientlist')
 
 
