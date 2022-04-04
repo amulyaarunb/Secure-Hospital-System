@@ -874,6 +874,8 @@ def patient_payments_details(request, patientID):
 
 
 # ----------------------------------------doctor---------------------------------------------------
+
+
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("doctor")
@@ -935,6 +937,7 @@ def doctor_view_patientlist(request):
                 'doctorID': i.doctorID,
                 'height': p.height,
                 'weight': p.weight,
+                # 'diagnosisID' : i.diagnosisID,
                 'diagnosis': 'null',
                 'test_recommendation': 'null',
                 'prescription': 'null',
@@ -944,7 +947,7 @@ def doctor_view_patientlist(request):
 
         else:
             # print('I am in else')
-            d = Diagnosis.objects.all().filter(patientID=i.patientID.patientID)
+            d = Diagnosis.objects.all().filter(appointmentID=i.appointmentID)
             # print(d)
             for a in d:
                 # print(i.patientID.patientID)
@@ -958,6 +961,7 @@ def doctor_view_patientlist(request):
                     'doctorID': i.doctorID,
                     'height': p.height,
                     'weight': p.weight,
+                    # 'diagnosisID': i.diagnosisID,
                     'diagnosis': a.diagnosis,
                     'test_recommendation': a.test_recommendation,
                     'prescription': a.prescription,
@@ -989,7 +993,7 @@ def doctor_create_prescription_view(request, ID):
 
     if request.method == 'POST':
         if a.diagnosisID is None or a.diagnosisID == 'null':
-            print('asdfghjk')
+            # print('asdfghjk')
             diag = Diagnosis()
             diag.prescription = CreatePrescription.data['prescription']
             diag.doctorID = models.Doctor.objects.get(
@@ -1091,7 +1095,7 @@ def doctor_createpatientdiagnosis_view(request, ID):
         if EditDiagnosisForm.is_valid():
             print("EditDiagnosisForm is valid")
             if a.diagnosisID is None or a.diagnosisID == 'null':
-                print('asdfghjk')
+                # print('asdfghjk')
                 diag = Diagnosis()
                 diag.diagnosis = EditDiagnosisForm.data['diagnosis']
                 diag.doctorID = models.Doctor.objects.get(
@@ -1106,11 +1110,14 @@ def doctor_createpatientdiagnosis_view(request, ID):
                 # return redirect('doctor_view_patientlist')
             else:
                 # print(di)
+                print('ID', a.appointmentID)
+                print('diag ID', a.diagnosisID.diagnosisID)
                 d = models.Diagnosis.objects.get(appointmentID=ID)
-                # print('di', di)
-                d.diagnosis = EditDiagnosisForm.data['diagnosis']
                 print(d)
+                d.diagnosis = EditDiagnosisForm.data['diagnosis']
+                a.diagnosisID = d
                 d.save()
+                a.save()
             return redirect('doctor_view_patientlist')
 
     mydict = {'EditDiagnosisForm': EditDiagnosisForm}
@@ -1188,7 +1195,7 @@ def doctor_search_appointment(request, ID):
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("doctor")
 def doctor_book_appointment(request, ID):
-    print(ID)
+    print('id', ID)
     ap = Appointment.objects.get(appointmentID=ID)
     appointmentForm = forms.DoctorAppointmentForm(request.POST)
     print(appointmentForm.data)
@@ -1198,16 +1205,22 @@ def doctor_book_appointment(request, ID):
         diag.doctorID = models.Doctor.objects.get(doctorID=request.user.username)
         diag.patientID = models.Patient.objects.get(patientID=ap.patientID.patientID)
         diag.appointmentID = models.Appointment.objects.get(appointmentID=ID)
+        print(diag.appointmentID)
+        diag.diagnosis = "Null"
         a.date = appointmentForm.data['date']
         a.time = appointmentForm.data['time']
         ap.diagnosisID = diag
-        print(ap.diagnosisID)
+        a.diagnosisID = ap.diagnosisID.diagnosisID
+        # print(ap.diagnosisID)
         diag.save()
         a.doctorID = models.Doctor.objects.get(doctorID=request.user.username)
-        # a.patientID=appointmentForm.data['patientID']
         a.patientID = models.Patient.objects.get(patientID=ap.patientID.patientID)
-        # a.appointmentID = 
-        a.status = 'initiated'
+        print('appointmentID', ap.appointmentID)
+        if a.doctorID.doctorID == request.user.username:
+            a.type = "General"
+        else:
+            a.type = "Specific"
+        a.status = 'approved'
         a.save()
         if appointmentForm.is_valid():
             a.status = 'approved'
