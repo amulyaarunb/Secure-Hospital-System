@@ -17,8 +17,34 @@
 <li>
   <a href="{% url 'patient_payments' user.username %}">Payment and Transactions</a>
 </li>
+
 {% endblock navigation %} 
+
 {% block content %}
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-4 col-xl-6">
+      <div class="card-block">
+        <a href="patient_appointment/patient-view-appointment/{{user.username}}">
+          <h4 class="m-b-20">View Your Appointment</h4>
+        </a>
+        <h1 class="text-right"><i class="fas fa-calendar f-left"></i></h1>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-xl-6">
+      <div class="card-block">
+        <a href="patient_appointment/patient_book_appointment/{{user.username}}">
+          <h4 class="m-b-20">Book Appointment</h4>
+        </a>
+        <h1 class="text-right"><i class="fas fa-book-medical f-left"></i></h1>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock content %}
 {% block chatbot %}
 
@@ -66,16 +92,12 @@
 <script>
   function getResponse() {
     let userText = $('#textInput').val();
-    // let userHtml = '<p class="userText"><span>' + userText + '</span></p>';
-    // $("#textoutput").append();
     document
     .getElementById('userInput')
     .scrollIntoView({ block: 'start', behavior: 'smooth' });
     $.get('/bot', { msg: userText }).done(function (data) {
-      // var botHtml = '<p class="botText"><span>' + data + '</span></p>';
       console.log(data);
       $('#textoutput').val('');
-      //$("#textoutput").val(data)
       if (data.startsWith('Navigate')) {
         var user = '{{user.username}}';
         var temp = data.substring(12);
@@ -91,9 +113,6 @@
         document.getElementById('textoutput').innerHTML = botHtml;
         $('#textoutput').innerHtml = botHtml;
       }
-      // document.getElementById('textoutput').append(data);
-      // $('#txtarea').append(document.createTextNode($(this).val()));
-      // $("#textoutput")
       document
       .getElementById('userInput')
       .scrollIntoView({ block: 'start', behavior: 'smooth' });
