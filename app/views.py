@@ -310,7 +310,7 @@ def hospital_appointment_approve(request, ID):
     appointment.save()
     if(patient.name == ''):
         request.session['_patient_id'] = patient.patientID
-        return HttpResponseRedirect('/hospital_update_patients')
+        return HttpResponseRedirect('/hospital_create_patients')
     return redirect('/hospital_staff_appointments')
 
 
