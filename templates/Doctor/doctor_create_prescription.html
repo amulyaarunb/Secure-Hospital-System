@@ -12,12 +12,18 @@
         <div class="form-content">
           <div class="row">
               <div class="form-group">
-                {% render_field CreatePrescription.prescription class="form-control" placeholder="prescription" %}
-              </div>
+                <label for="Type of test">Choose type of test:</label>
+                <select class="color_font" name="prescription" id="prescription">
+                <option class="color_font" value="Blood Test">Blood Test</option>
+                <option class="color_font" value="Covid Test">Covid Test</option>
+                <option class="color_font" value="Sugar Test">Sugar Test</option>
+                <option class="color_font" value="Urine Test">Urine Test</option>
+                </select>
+        </div>
               <button type="submit" class="btnSubmit">Enter</button>
           </div>
         </div>
- 
+  
 </form>
 
 {% endblock content%}
