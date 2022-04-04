@@ -790,8 +790,14 @@ def patient_book_appointment_view(request, patientID):
         Appt.date = appointmentForm.data['date']
         Appt.time = appointmentForm.data['time']
         # Appointment.type=appointmentForm.data['type']
+        # Appt.doctorID = models.Doctor.objects.get(
+        #     doctorID=appointmentForm.data['doctorID'])
         Appt.doctorID = models.Doctor.objects.get(
             doctorID=appointmentForm.data['doctorID'])
+        if appointmentForm.data['doctorID'] == "general doctor":
+            Appt.type = "General"
+        else:
+            Appt.type = "Specific"
         Appt.patientID = models.Patient.objects.get(patientID=patientID)
         Appt.status = 'requested'
         Appt.save()
