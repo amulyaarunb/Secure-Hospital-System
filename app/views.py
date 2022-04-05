@@ -929,7 +929,10 @@ def doctor_view_patientlist(request):
     for i in appointments:
         p = models.Patient.objects.get(patientID=i.patientID.patientID)
         # print(i.diagnosisID)
-
+        if i.testID:
+            testID = i.testID.testID
+        else:
+            testID = 'null'
         if i.diagnosisID is None:
             # print('I am in if')
             mydict = {
@@ -945,7 +948,7 @@ def doctor_view_patientlist(request):
                 'diagnosis': 'null',
                 'test_recommendation': 'null',
                 'prescription': 'null',
-                'testID': i.testID
+                'testID': testID
             }
             # print(i.testID)
 
@@ -969,7 +972,7 @@ def doctor_view_patientlist(request):
                     'diagnosis': a.diagnosis,
                     'test_recommendation': a.test_recommendation,
                     'prescription': a.prescription,
-                    'testID': i.testID
+                    'testID': testID
                 }
             # print(i.testID)
 
