@@ -996,7 +996,7 @@ def doctor_view_patientlist(request):
 def doctor_create_prescription_view(request, ID):
     a = Appointment.objects.get(appointmentID=ID)
     p = Patient.objects.get(patientID=a.patientID.patientID)
-    CreatePrescription = forms.CreatePrescription()
+    CreatePrescription = forms.CreatePrescription(request.POST)
 
     if request.method == 'POST':
         if a.diagnosisID is None or a.diagnosisID == 'null':
