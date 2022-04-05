@@ -1,10 +1,10 @@
-from functools import partial
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
+from django.core.exceptions import PermissionDenied
 from django.db.models import Q
-from django.forms import modelformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
+from django_otp import match_token
 from django_otp.decorators import otp_required
 from django_registration.backends.one_step.views import RegistrationView
 from django_registration.forms import RegistrationForm
@@ -13,13 +13,9 @@ from app.decorators import check_view_permissions
 
 from . import forms, models
 from .BotMain import chatgui  # Botmain is chatbot directory
-from django_otp.decorators import otp_required
-from django.db.models import Q
-from .render import Render
 from .models import (Appointment, Diagnosis, Doctor, Insurance, Patient,
                      Payment, Test)
-from django.core.exceptions import PermissionDenied
-from django_otp import match_token
+from .render import Render
 
 
 @otp_required(login_url="account/two_factor/setup/")
@@ -62,8 +58,6 @@ def admin(request):
 
 
 ''' Lab Staff View Starts Here'''
-
-
 @login_required
 @check_view_permissions("lab_staff")
 def lab_test_search(request):
@@ -109,7 +103,6 @@ def updateTests(request, pk):
 
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
-@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("lab_staff")
 def viewDiagnosis(request):
     obj = Test.objects.all().filter(status='requested')
@@ -120,6 +113,7 @@ def viewDiagnosis(request):
         dict = {
             'PatientName': obj1.name,
             'Diagnosis': obj2.diagnosis,
+            'diagnosisId': i.diagnosisID.diagnosisID,
             'Recommendations': obj2.test_recommendation,
             'testID': i.testID,
             'type' : i.type
@@ -141,10 +135,16 @@ def denyTest(request, pk):
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("lab_staff")
-def approveTest(request, pk):
+def approveTest(request, diagnosisID, pk):
     obj = Test.objects.get(testID=pk)
     obj.status = 'approved'
     obj.save()
+    # update appointment table if test is approved
+    diagnosisObj = Diagnosis.objects.get(diagnosisID = diagnosisID)
+    print(diagnosisObj)
+    appointmentObject = Appointment.objects.get(appointmentID = diagnosisObj.appointmentID.appointmentID)
+    appointmentObject.testID = obj
+    appointmentObject.save()
     return redirect('/lab_staff')
 
 
@@ -268,10 +268,10 @@ def viewClaim(request):
 
 '''Insurance Staff View ends here'''
 
+
+
 ''''------------------Hospital Staff View------------------- '''
 # To show appointments to hospital staff for approval
-
-
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("hospital_staff")
@@ -599,11 +599,11 @@ def hospital_bill(request, ID):
 
 '''---------------Hospital end-------------'''
 
+
+
 # ---------------------------------------------------------------------------------
 # ------------------------ PATIENT RELATED VIEWS START ------------------------------
 # ---------------------------------------------------------------------------------
-
-
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("patient")
@@ -744,10 +744,8 @@ def view_lab_report(request, patientID):
 
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
-@check_view_permissions("patient")
-def view_one_lab_report(request, patientID, testID):
-    if not (request.user.username == patientID):
-        raise PermissionDenied
+@check_view_permissions("patient", "doctor")
+def view_one_lab_report(request, testID):
     lab_test_details = models.Test.objects.all().filter(testID=testID)
     Appt={}
     for tests in lab_test_details:
@@ -877,6 +875,8 @@ def patient_payments_details(request, patientID):
 # ---------------------------------------------------------------------------------
 
 
+
+
 # ----------------------------------------doctor---------------------------------------------------
 
 
@@ -941,6 +941,7 @@ def doctor_view_patientlist(request):
                 'doctorID': i.doctorID,
                 'height': p.height,
                 'weight': p.weight,
+                # 'diagnosisID' : i.diagnosisID,
                 'diagnosis': 'null',
                 'test_recommendation': 'null',
                 'prescription': 'null',
@@ -950,7 +951,7 @@ def doctor_view_patientlist(request):
 
         else:
             # print('I am in else')
-            d = Diagnosis.objects.all().filter(patientID=i.patientID.patientID)
+            d = Diagnosis.objects.all().filter(appointmentID=i.appointmentID)
             # print(d)
             for a in d:
                 # print(i.patientID.patientID)
@@ -964,6 +965,7 @@ def doctor_view_patientlist(request):
                     'doctorID': i.doctorID,
                     'height': p.height,
                     'weight': p.weight,
+                    # 'diagnosisID': i.diagnosisID,
                     'diagnosis': a.diagnosis,
                     'test_recommendation': a.test_recommendation,
                     'prescription': a.prescription,
@@ -995,7 +997,7 @@ def doctor_create_prescription_view(request, ID):
 
     if request.method == 'POST':
         if a.diagnosisID is None or a.diagnosisID == 'null':
-            print('asdfghjk')
+            # print('asdfghjk')
             diag = Diagnosis()
             diag.prescription = CreatePrescription.data['prescription']
             diag.doctorID = models.Doctor.objects.get(
@@ -1044,7 +1046,8 @@ def doctor_view_labreport_view(request, ID):
     if(ID == "None"):
         return HttpResponse("No test report to show")
     lab_test_details = models.Test.objects.get(testID=ID)
-    return Render.render('Patient/labtest/patient_view_single_lab_report.html', {'lab_test_details': lab_test_details})
+    print(lab_test_details)
+    return redirect('patient_view_single_lab_report', testID = ID)
 
 
 @login_required
@@ -1097,7 +1100,7 @@ def doctor_createpatientdiagnosis_view(request, ID):
         if EditDiagnosisForm.is_valid():
             print("EditDiagnosisForm is valid")
             if a.diagnosisID is None or a.diagnosisID == 'null':
-                print('asdfghjk')
+                # print('asdfghjk')
                 diag = Diagnosis()
                 diag.diagnosis = EditDiagnosisForm.data['diagnosis']
                 diag.doctorID = models.Doctor.objects.get(
@@ -1112,11 +1115,14 @@ def doctor_createpatientdiagnosis_view(request, ID):
                 # return redirect('doctor_view_patientlist')
             else:
                 # print(di)
+                print('ID', a.appointmentID)
+                print('diag ID', a.diagnosisID.diagnosisID)
                 d = models.Diagnosis.objects.get(appointmentID=ID)
-                # print('di', di)
-                d.diagnosis = EditDiagnosisForm.data['diagnosis']
                 print(d)
+                d.diagnosis = EditDiagnosisForm.data['diagnosis']
+                a.diagnosisID = d
                 d.save()
+                a.save()
             return redirect('doctor_view_patientlist')
 
     mydict = {'EditDiagnosisForm': EditDiagnosisForm}
@@ -1194,7 +1200,7 @@ def doctor_search_appointment(request, ID):
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("doctor")
 def doctor_book_appointment(request, ID):
-    print(ID)
+    print('id', ID)
     ap = Appointment.objects.get(appointmentID=ID)
     appointmentForm = forms.DoctorAppointmentForm(request.POST)
     print(appointmentForm.data)
@@ -1204,16 +1210,22 @@ def doctor_book_appointment(request, ID):
         diag.doctorID = models.Doctor.objects.get(doctorID=request.user.username)
         diag.patientID = models.Patient.objects.get(patientID=ap.patientID.patientID)
         diag.appointmentID = models.Appointment.objects.get(appointmentID=ID)
+        print(diag.appointmentID)
+        diag.diagnosis = "Null"
         a.date = appointmentForm.data['date']
         a.time = appointmentForm.data['time']
         ap.diagnosisID = diag
-        print(ap.diagnosisID)
+        a.diagnosisID = ap.diagnosisID.diagnosisID
+        # print(ap.diagnosisID)
         diag.save()
         a.doctorID = models.Doctor.objects.get(doctorID=request.user.username)
-        # a.patientID=appointmentForm.data['patientID']
         a.patientID = models.Patient.objects.get(patientID=ap.patientID.patientID)
-        # a.appointmentID = 
-        a.status = 'initiated'
+        print('appointmentID', ap.appointmentID)
+        if a.doctorID.doctorID == request.user.username:
+            a.type = "General"
+        else:
+            a.type = "Specific"
+        a.status = 'approved'
         a.save()
         if appointmentForm.is_valid():
             a.status = 'approved'
