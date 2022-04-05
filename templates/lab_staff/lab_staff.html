@@ -23,7 +23,7 @@
         <p>Diagnosis: {{ c.Diagnosis}}</p>
         <p>Test Recommendation: {{ c.Recommendations}}</p>
         <p>Test Requested by the Patient: {{c.type}}</p>
-        <a href="{% url 'lab_staff_approve' c.testID %}" style="color: black;font-size: 10px;text-decoration: none;padding: 10px;border-style: solid;background-color: gray;">Approve</a>
+        <a href="{% url 'lab_staff_approve' c.diagnosisId c.testID  %}" style="color: black;font-size: 10px;text-decoration: none;padding: 10px;border-style: solid;background-color: gray;">Approve</a>
         <a href="{% url 'lab_staff_reject' c.testID %}" style="color: black;font-size: 10px;text-decoration: none;padding: 10px;border-style: solid;background-color: gray;">Reject</a>
     </li>
     {% endfor %}

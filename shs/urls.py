@@ -27,7 +27,8 @@ urlpatterns = [
 
     # lab staff
     path('lab_staff/', views.viewDiagnosis, name='lab_staff'),
-    path('lab_staff_approve/<str:pk>',views.approveTest, name='lab_staff_approve'),
+    path('lab_staff_approve/<str:diagnosisID>/<str:pk>',
+         views.approveTest, name='lab_staff_approve'),
     path('lab_staff_reject/<str:pk>', views.denyTest, name='lab_staff_reject'),
     path('lab_staff_search/', views.lab_search, name='lab_staff_search'),
     path('lab_tests/', views.lab_test_search, name='lab_tests'),
@@ -84,7 +85,7 @@ urlpatterns = [
          views.request_test, name="request_labtest"),
     path("patient_labtest/patient_view_lab_report/<str:patientID>",
          views.view_lab_report, name="patient_view_lab_report"),
-    path("patient_view_single_lab_report/<str:patientID>/<str:testID>",
+    path("patient_view_single_lab_report/<str:testID>",
          views.view_one_lab_report, name="patient_view_single_lab_report"),
 
     path("patient_payments/<str:patientID>",

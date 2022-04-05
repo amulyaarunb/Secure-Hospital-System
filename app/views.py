@@ -103,7 +103,6 @@ def updateTests(request, pk):
 
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
-@otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("lab_staff")
 def viewDiagnosis(request):
     obj = Test.objects.all().filter(status='requested')
@@ -114,6 +113,7 @@ def viewDiagnosis(request):
         dict = {
             'PatientName': obj1.name,
             'Diagnosis': obj2.diagnosis,
+            'diagnosisId': i.diagnosisID.diagnosisID,
             'Recommendations': obj2.test_recommendation,
             'testID': i.testID,
             'type' : i.type
@@ -135,10 +135,16 @@ def denyTest(request, pk):
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
 @check_view_permissions("lab_staff")
-def approveTest(request, pk):
+def approveTest(request, diagnosisID, pk):
     obj = Test.objects.get(testID=pk)
     obj.status = 'approved'
     obj.save()
+    # update appointment table if test is approved
+    diagnosisObj = Diagnosis.objects.get(diagnosisID = diagnosisID)
+    print(diagnosisObj)
+    appointmentObject = Appointment.objects.get(appointmentID = diagnosisObj.appointmentID.appointmentID)
+    appointmentObject.testID = obj
+    appointmentObject.save()
     return redirect('/lab_staff')
 
 
@@ -738,10 +744,8 @@ def view_lab_report(request, patientID):
 
 @login_required
 @otp_required(login_url="account/two_factor/setup/")
-@check_view_permissions("patient")
-def view_one_lab_report(request, patientID, testID):
-    if not (request.user.username == patientID):
-        raise PermissionDenied
+@check_view_permissions("patient", "doctor")
+def view_one_lab_report(request, testID):
     lab_test_details = models.Test.objects.all().filter(testID=testID)
     Appt={}
     for tests in lab_test_details:
@@ -1042,7 +1046,8 @@ def doctor_view_labreport_view(request, ID):
     if(ID == "None"):
         return HttpResponse("No test report to show")
     lab_test_details = models.Test.objects.get(testID=ID)
-    return Render.render('Patient/labtest/patient_view_single_lab_report.html', {'lab_test_details': lab_test_details})
+    print(lab_test_details)
+    return redirect('patient_view_single_lab_report', testID = ID)
 
 
 @login_required

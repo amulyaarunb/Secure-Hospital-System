@@ -32,7 +32,7 @@
         <!-- <th> {{ i.diagnosisID }} -->
         <th> {{ i.diagnosis }}  <a href="{% url 'doctor_patient_diagnosis' i.appointmentID %}"> <button>Edit</span></button></a>  <a href="{% url 'doctor_delete_diagnosis' i.appointmentID %}"> <button>Delete</span></button></a></th>
         <th> {{ i.test_recommendation }}  <a href="{% url 'doctor_recommend_labtest_view' i.appointmentID %}"> <button>Edit</span></button></a></th>
-        <th> <a href="{% url 'doctor_view_labreport_view' i.testID %}"><i class="fa fa-file-pdf-o"></i> </a> </th>
+        <th> <a href="{% url 'doctor_view_labreport_view' i.testID.testID %}"><i class="fa fa-file-pdf-o"></i> </a> </th>
         <th> {{ i.prescription }} <a href="{% url 'doctor_create_prescription' i.appointmentID %}"> <button>Edit</span></button></a> </th>
         <th> <a href="{% url 'doctor_update_patients' i.patientID %}"> <button>Update</span></button></a> </th>
 
