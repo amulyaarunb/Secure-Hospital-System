@@ -932,7 +932,7 @@ def doctor_view_patientlist(request):
         if i.testID:
             testID = i.testID.testID
         else:
-            testID = 'null'
+            testID = 'None'
         if i.diagnosisID is None:
             # print('I am in if')
             mydict = {
